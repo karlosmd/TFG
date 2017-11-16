@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class FormController {
-	@GetMapping("/greeting")
+	@GetMapping("/")
     public String greetingForm(Model model) {
         model.addAttribute("greeting", new Usuario());
         return "greeting";
