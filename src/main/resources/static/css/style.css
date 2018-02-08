@@ -1,0 +1,45 @@
+body {
+	background-image: url("../images/imagenFondo.jpg");
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+div.container{
+	position: absolute;
+	min-height: 100%;
+	padding: 0px;	
+}
+
+.formulario{
+	padding: 4% 5%;
+	margin: 5% auto;
+	background: #FFFFFF;
+}
+
+div.card-deck{
+	margin: 5% 0% 5%;
+}
+
+footer{
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+	padding: 0.5% 2%;
+	background: #343A40;
+	color: white;
+}
+
+footer p{
+	margin-bottom: 0px;
+}
+
+.btn-orange{
+	background: #FF8F00;
+	color: white;
+}
+
+.btn-orange:hover{
+	background: #EF6C00;
+	cursor: pointer;
+}
