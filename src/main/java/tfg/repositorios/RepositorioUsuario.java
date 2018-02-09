@@ -1,7 +1,8 @@
 package tfg.repositorios;
 
-import tfg.modelos.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import tfg.entidades.Usuario;
 
 public interface RepositorioUsuario extends JpaRepository<Usuario, Long> {
 }

@@ -1,7 +1,7 @@
 package tfg;
 
-import tfg.modelos.Password;
-import tfg.modelos.Usuario;
+import tfg.entidades.Password;
+import tfg.entidades.Usuario;
 import tfg.repositorios.RepositorioPassword;
 import tfg.repositorios.RepositorioUsuario;
 
@@ -58,7 +58,7 @@ public class MainController {
 
 		/*n.setNombre(name);
 		n.setEmail(email);*/
-		Password password = new Password(usuario.getPassword1());
+		Password password = new Password(usuario.getPassword().getPassword());
 		repoUsuario.save(usuario);
 		repoPassword.save(password);
 		return "index";

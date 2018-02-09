@@ -1,4 +1,4 @@
-package tfg.modelos;
+package tfg.entidades;
 
 import javax.persistence.*;
 
@@ -6,13 +6,16 @@ import javax.persistence.*;
 @Table(name = "usuarios")
 public class Usuario {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
 	
-	private Integer id;	
 	private String nombre;
 	private int edad;
 	private String email;
-	private String password1;
+	
+	@OneToOne
+	private Password password;
+	@Transient
 	private String password2;
 	
 	public Integer getId() {
@@ -39,17 +42,12 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	@OneToOne
-	@JoinTable(name = "tiene", joinColumns = @JoinColumn(name = "usuarios_id"), inverseJoinColumns = @JoinColumn(name = "passwords_id"))
-	public String getPassword1() {
-		return password1;
-	}	
-	public void setPassword1(String password1) {
-		this.password1 = password1;
+	public Password getPassword() {
+		return password;
 	}
-	
-	@Transient
+	public void setPassword(Password password) {
+		this.password = password;
+	}
 	public String getPassword2() {
 		return password2;
 	}
