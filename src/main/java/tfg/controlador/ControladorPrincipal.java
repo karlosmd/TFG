@@ -71,17 +71,6 @@ public class ControladorPrincipal {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value="/admin/home", method = RequestMethod.GET)
-	public ModelAndView home(){
-		ModelAndView modelAndView = new ModelAndView();
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario usuario = servicioUsuario.findUserByEmail(auth.getName());
-		modelAndView.addObject("userName", "Welcome " + usuario.getNombre() + " " + usuario.getApellidos() + " (" + usuario.getEmail() + ")");
-		modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-		modelAndView.setViewName("admin/home");
-		return modelAndView;
-	}
-	
 	@RequestMapping(value="/menu", method = RequestMethod.GET)
 	public ModelAndView mostrarMenu(){
 		ModelAndView modelAndView = new ModelAndView();
