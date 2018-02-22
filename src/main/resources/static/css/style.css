@@ -12,27 +12,26 @@ div.container{
 }
 
 .formulario{
-	padding: 4% 5%;
-	margin: 5% auto;
+	padding: 4% 5% 3%;
+	margin: 8% auto 2%;
 	background: #FFFFFF;
+}
+
+.form-crear-cuenta{
+	margin-top: 3%;
 }
 
 div.card-deck{
 	margin: 5% 0% 5%;
 }
 
-footer{
-	position: absolute;
-	width: 100%;
-	bottom: 0px;
-	padding: 0.5% 2%;
-	background: #343A40;
-	color: white;
-	margin-top: 50px;
+.jumbotron{
+	margin: 5%;
+	opacity: 0.93;
 }
 
-footer p{
-	margin-bottom: 0px;
+.alert{
+	margin: 2% auto;
 }
 
 .btn-orange{
@@ -43,4 +42,12 @@ footer p{
 .btn-orange:hover{
 	background: #EF6C00;
 	cursor: pointer;
+}
+
+div.enlace-inicio{
+	margin: 20px 0px 0px 0px;
+}
+
+.error{
+	color: red;
 }
