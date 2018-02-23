@@ -46,8 +46,8 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping(value = "/registro", method = RequestMethod.POST)
-	public ModelAndView createNewUser(@Valid DTOUsuario dtoUsuario, BindingResult bindingResult) {
-		ModelAndView modelAndView = new ModelAndView();
+	public ModelAndView createNewUser(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario, BindingResult bindingResult) {
+		ModelAndView modelAndView = null;
 		Usuario userExists = servicioUsuario.findUserByEmail(dtoUsuario.getEmail());
 
 		if (!dtoUsuario.getPassword().equals(dtoUsuario.getConfirmarPassword())) {
@@ -55,18 +55,20 @@ public class ControladorPrincipal {
 		}
 		if (userExists != null)
 			bindingResult.rejectValue("email", "error.dtoUsuario", "Ya existe un usuario con este e-mail");		
+		
 		if (bindingResult.hasErrors()) {
+			modelAndView = new ModelAndView("registro", bindingResult.getModel());
 			modelAndView.addObject("dtoUsuario", dtoUsuario);
 		}			
 		else {
 			servicioUsuario.guardarUsuario(dtoUsuario);
+			modelAndView = new ModelAndView("registro");
 			modelAndView.addObject("successMessage", "Usuario has been registered successfully");
 			modelAndView.addObject("dtoUsuario", new DTOUsuario());
 			modelAndView.addObject("usuarioRegistrado", true);
 		}
 		
 		modelAndView.addObject("roles", servicioRol.findAll());
-		modelAndView.setViewName("registro");
 		
 		return modelAndView;
 	}
