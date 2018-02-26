@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import tfg.modelo.Usuario;
 
 @Repository("repositorioUsuario")
-public interface RepositorioUsuario extends JpaRepository<Usuario, Long> {
+public interface RepositorioUsuario extends JpaRepository<Usuario, Integer> {
 	 Usuario findByEmail(String email);
 }

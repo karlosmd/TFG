@@ -15,16 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import tfg.DTO.DTOUsuario;
 import tfg.modelo.Usuario;
-import tfg.servicio.ServicioRol;
-import tfg.servicio.ServicioUsuario;
+import tfg.servicioAplicacion.SARol;
+import tfg.servicioAplicacion.SAUsuario;
 
 @Controller
 public class ControladorPrincipal {
 	
 	@Autowired	
-	private ServicioUsuario servicioUsuario;
+	private SAUsuario saUsuario;
 	@Autowired
-	private ServicioRol servicioRol;
+	private SARol servicioRol;
 
 	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
 	public ModelAndView login(){
@@ -32,7 +32,6 @@ public class ControladorPrincipal {
 		modelAndView.setViewName("index");
 		return modelAndView;
 	}
-	
 	
 	@RequestMapping(value="/registro", method = RequestMethod.GET)
 	public ModelAndView registration(){
@@ -48,22 +47,21 @@ public class ControladorPrincipal {
 	@RequestMapping(value = "/registro", method = RequestMethod.POST)
 	public ModelAndView createNewUser(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario, BindingResult bindingResult) {
 		ModelAndView modelAndView = null;
-		Usuario userExists = servicioUsuario.findUserByEmail(dtoUsuario.getEmail());
+		Usuario userExists = saUsuario.findUserByEmail(dtoUsuario.getEmail());
 
 		if (!dtoUsuario.getPassword().equals(dtoUsuario.getConfirmarPassword())) {
-			bindingResult.rejectValue("password", "error.dtoUsuario", "Las contraseñas no coinciden");
+			bindingResult.rejectValue("password", "error.dtoUsuario", "* Las contraseñas no coinciden");
 		}
 		if (userExists != null)
-			bindingResult.rejectValue("email", "error.dtoUsuario", "Ya existe un usuario con este e-mail");		
+			bindingResult.rejectValue("email", "error.dtoUsuario", "* Ya existe un usuario con este e-mail");		
 		
 		if (bindingResult.hasErrors()) {
 			modelAndView = new ModelAndView("registro", bindingResult.getModel());
 			modelAndView.addObject("dtoUsuario", dtoUsuario);
 		}			
 		else {
-			servicioUsuario.guardarUsuario(dtoUsuario);
+			saUsuario.guardarUsuario(dtoUsuario);
 			modelAndView = new ModelAndView("registro");
-			modelAndView.addObject("successMessage", "Usuario has been registered successfully");
 			modelAndView.addObject("dtoUsuario", new DTOUsuario());
 			modelAndView.addObject("usuarioRegistrado", true);
 		}
@@ -88,7 +86,7 @@ public class ControladorPrincipal {
 	@ModelAttribute
 	public void addAttributes(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario usuario = servicioUsuario.findUserByEmail(auth.getName());
+		Usuario usuario = saUsuario.findUserByEmail(auth.getName());
 		model.addAttribute("usuario", usuario);
 	}
 }

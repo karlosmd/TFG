@@ -27,7 +27,7 @@ public class DTOUsuario {
 	@NotEmpty(message = "* Por favor, introduzca una contraseña")
 	private String confirmarPassword;
 	
-	private Set<Rol> rol;
+	private Rol rol;
 	
 	public String getApellidos() {
 		return apellidos;
@@ -69,11 +69,11 @@ public class DTOUsuario {
 		this.confirmarPassword = confirmarPassword;
 	}
 
-	public Set<Rol> getRol() {
+	public Rol getRol() {
 		return rol;
 	}
 
-	public void setRol(Set<Rol> rol) {
+	public void setRol(Rol rol) {
 		this.rol = rol;
 	}	
 }

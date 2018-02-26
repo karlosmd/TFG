@@ -1,4 +1,4 @@
-package tfg.servicio;
+package tfg.servicioAplicacion;
 
 import javax.transaction.Transactional;
 
@@ -7,11 +7,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import tfg.DTO.DTOUsuario;
+import tfg.modelo.Rol;
 import tfg.modelo.Usuario;
 import tfg.repositorio.RepositorioUsuario;
 
-@Service("servicioUsuario")
-public class ServicioUsuarioImp implements ServicioUsuario{
+@Service("saUsuario")
+public class SAUsuarioImp implements SAUsuario{
 
 	@Autowired
 	private RepositorioUsuario repositorioUsuario;

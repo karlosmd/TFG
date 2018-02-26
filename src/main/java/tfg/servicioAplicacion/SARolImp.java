@@ -1,4 +1,4 @@
-package tfg.servicio;
+package tfg.servicioAplicacion;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import tfg.modelo.Rol;
 import tfg.repositorio.RepositorioRol;
 
-@Service("servicioRol")
-public class ServicioRolImp implements ServicioRol {
+@Service("SARol")
+public class SARolImp implements SARol {
 	@Autowired
 	private RepositorioRol repoRol;
 	

@@ -1,2 +1,2 @@
-INSERT INTO `roles`(`rol`) VALUES ('usuario');
-INSERT INTO `roles`(`rol`) VALUES ('administrador');
+INSERT INTO `roles`(`nombre`) VALUES ('usuario');
+INSERT INTO `roles`(`nombre`) VALUES ('administrador');

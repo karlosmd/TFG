@@ -10,11 +10,11 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "roles")
-public class Rol {
+@Table(name = "clases")
+public class Clase {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id_rol")
+	@Column(name="id_clase")
 	private int id;
 	
 	@NotEmpty
@@ -23,12 +23,15 @@ public class Rol {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getNombre() {
 		return nombre;
 	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}

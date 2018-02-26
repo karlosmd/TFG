@@ -9,6 +9,6 @@ import tfg.modelo.Rol;
 
 @Repository("repositorioRol")
 public interface RepositorioRol extends JpaRepository<Rol, Integer>{
-	Rol findByRol(String rol);
+	Rol findByNombre(String nombre);
 	List<Rol> findAll();
 }

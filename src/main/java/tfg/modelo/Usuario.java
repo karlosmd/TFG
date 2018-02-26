@@ -1,7 +1,5 @@
 package tfg.modelo;
 
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
@@ -43,9 +41,9 @@ public class Usuario {
 
 	private int activo;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
-	private Set<Rol> rol;
+	private Rol rol;
 
 	public int getId() {
 		return id;
@@ -95,11 +93,11 @@ public class Usuario {
 		this.activo = activo;
 	}
 
-	public Set<Rol> getRol() {
+	public Rol getRol() {
 		return rol;
 	}
 
-	public void setRol(Set<Rol> rol) {
+	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
 }
