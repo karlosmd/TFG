@@ -16,6 +16,13 @@
   <body>
   <div class="container col-12">
   	<nav th:replace="fragments/navbar :: navbar"></nav>
+  	
+	<div class="alert alert-success alert-dismissible fade show col-11 col-sm-9 col-md-5" role="alert" th:if="${usuarioRegistrado} == true">
+	  <strong>¡Enhorabuena!</strong> Se ha registrado con éxito. Inicie sesión con su correo electrónico
+	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	    <span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
 	
 	<form class="formulario col-11 col-sm-8 col-md-4" th:action="@{/login}" method="POST">
 	  <h1>Iniciar Sesión</h1>

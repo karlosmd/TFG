@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tfg.DTO.DTOUsuario;
 import tfg.modelo.Usuario;
@@ -27,25 +28,26 @@ public class ControladorPrincipal {
 	private SARol servicioRol;
 
 	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
-	public ModelAndView login(){
+	public ModelAndView mostrarLogin(){
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("index");
 		return modelAndView;
 	}
 	
 	@RequestMapping(value="/registro", method = RequestMethod.GET)
-	public ModelAndView registration(){
+	public ModelAndView mostrarRegistro(){
 		ModelAndView modelAndView = new ModelAndView();
 		DTOUsuario dtoUsuario = new DTOUsuario();
 		modelAndView.addObject("dtoUsuario", dtoUsuario);		
-		modelAndView.addObject("roles", servicioRol.findAll());
-		modelAndView.addObject("usuarioRegistrado", false);
+		modelAndView.addObject("roles", servicioRol.findAll());		
 		modelAndView.setViewName("registro");
 		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/registro", method = RequestMethod.POST)
-	public ModelAndView createNewUser(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario, BindingResult bindingResult) {
+	public ModelAndView registrarUsuario(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
+			BindingResult bindingResult,
+			final RedirectAttributes redirectAttrs) {
 		ModelAndView modelAndView = null;
 		Usuario userExists = saUsuario.findUserByEmail(dtoUsuario.getEmail());
 
@@ -61,9 +63,8 @@ public class ControladorPrincipal {
 		}			
 		else {
 			saUsuario.guardarUsuario(dtoUsuario);
-			modelAndView = new ModelAndView("registro");
-			modelAndView.addObject("dtoUsuario", new DTOUsuario());
-			modelAndView.addObject("usuarioRegistrado", true);
+			redirectAttrs.addFlashAttribute("usuarioRegistrado", true);
+			return new ModelAndView("redirect:");
 		}
 		
 		modelAndView.addObject("roles", servicioRol.findAll());
@@ -84,7 +85,7 @@ public class ControladorPrincipal {
     }
 	
 	@ModelAttribute
-	public void addAttributes(Model model) {
+	public void insertarAtributos(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuario = saUsuario.findUserByEmail(auth.getName());
 		model.addAttribute("usuario", usuario);
