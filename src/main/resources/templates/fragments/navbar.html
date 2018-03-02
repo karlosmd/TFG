@@ -19,7 +19,10 @@
 		  </button>
 		
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		    <ul class="navbar-nav mr-auto" th:if="${usuario != null}">		      
+		    <ul class="navbar-nav mr-auto" th:if="${usuario != null}">
+		      <li class="nav-item" th:if="${usuario != null}">
+	          	<a class="nav-link" href="/asignaturas">Mis Asignaturas</a>
+	          </li>
 		      <li class="nav-item dropdown">
 		        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          Opciones

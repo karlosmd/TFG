@@ -31,15 +31,17 @@ div.card-deck{
 }
 
 .alert{
-	margin: 2% auto -4%;
+	width: 100%;
+	border-radius: 0px;
+	text-align: center;
 }
 
-.btn-orange{
+.btn-naranja{
 	background: #FF8F00;
 	color: white;
 }
 
-.btn-orange:hover{
+.btn-naranja:hover{
 	background: #EF6C00;
 	cursor: pointer;
 }
@@ -50,4 +52,41 @@ div.enlace-inicio{
 
 .error{
 	color: red;
+}
+
+div.tabla{
+	margin: 2% auto;
+}
+
+.titulo{
+	margin: 0px;
+	padding: 1px 0px 7px;
+	border-bottom: 5px solid #FF8F00;
+	background: #212529;
+	color: #FF8F00;
+	text-align: center;	
+}
+
+td:last-child, thead th:last-child{
+	text-align: center;
+}
+
+i{
+	margin: 0px 5px;
+}
+
+.icono-naranja{
+	color: #FF8F00;
+}
+.icono-naranja:hover{
+	color: #EF6C00;
+	cursor: pointer;
+}
+
+.icono-verde{
+	color: #64DD17;
+}
+.icono-verde:hover{
+	color: #00C853;
+	cursor: pointer;
 }

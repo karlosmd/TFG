@@ -1,4 +1,4 @@
-package tfg.configuration;
+package tfg.configuracion;
 
 import javax.sql.DataSource;
 
@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.authenticated().and().csrf().disable()
 			.formLogin()
 				.loginPage("/login").failureUrl("/login?error=true")
-				.defaultSuccessUrl("/menu")
+				.defaultSuccessUrl("/asignaturas")
 				.usernameParameter("email")
 				.passwordParameter("password")
 				.and()
