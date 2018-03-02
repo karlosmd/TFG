@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="head">
+    <title>TFG</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    
+    <!-- Style CSS -->
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+  <div class="container col-12">
+  	<nav th:replace="fragments/navbar :: navbar"></nav>
+  	
+  	<div th:class="'alert alert-' + (${mensaje.tipo}) + ' alert-dismissible fade show collapse'" id="collapseAlert" role="alert" th:if="${mensaje} != null">
+  	<strong th:text="${mensaje.cabecera}"></strong><span th:text="${mensaje.contenido}"></span>
+	  <button type="button" class="close" data-toggle="collapse" href="#collapseAlert" aria-label="Close">
+	    <span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+  	
+  	<div class="tabla col-12 col-md-10">
+  		<h1 class="titulo">Mis Asignaturas</h1>
+	  	<table class="table table-striped table-dark">
+		  <thead>
+		    <tr>
+		      <th scope="col">Id</th>
+		      <th scope="col">Nombre</th>
+		      <th scope="col">Grupo</th>
+		      <th scope="col">Curso</th>
+		      <th scope="col">Acciones</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="asignatura : ${asignaturas}">
+		      <th scope="row" th:text="${asignatura.id}"></th>
+		      <td th:text="${asignatura.nombre}"></td>
+		      <td th:text="${asignatura.grupo}"></td>
+		      <td th:text="${asignatura.curso}"></td>
+		      <td>
+		      	<a ><i class="material-icons icono-verde">border_color</i></a>
+		      	<a th:href="@{/asignaturas/eliminar(id=${asignatura.id})}"><i class="material-icons icono-naranja">delete</i></a>		      	
+		      </td>
+		    </tr>
+		  </tbody>
+		  <tfoot>
+		    <tr>
+			    <td></td>
+			    <td></td>
+			    <td></td>
+			    <td></td>
+			    <td>
+			      	<!-- Button trigger modal -->
+					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#exampleModalCenter">
+						Nueva Asignatura
+					</button>
+				</td>
+		    </tr>
+		  </tfoot>
+		</table>
+	</div>	
+	
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Nueva Asignatura</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignaturas/insertar}" th:object="${dtoAsignatura}" method="POST">
+			  <div class="form-group">
+			  	<label for="nombre">Nombre</label>
+				<input type="text" th:field="*{nombre}" class="form-control" id="nombre"/>
+				<label th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="validation-message error"></label>
+			  </div>
+			  <div class="form-group">
+			  	<label for="grupo">Grupo</label>
+				<input type="text" th:field="*{grupo}" class="form-control" id="grupo" />
+				<label th:if="${#fields.hasErrors('grupo')}" th:errors="*{grupo}" class="validation-message error"></label>
+			  </div>
+			  
+			   <div class="form-group">
+			  	<label for="curso">Curso</label>
+			  	<input type="text" th:field="*{curso}" class="form-control" id="curso"/>
+			  	<label th:if="${#fields.hasErrors('curso')}" th:errors="*{curso}" class="validation-message error"></label>
+			  </div>  
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	        <button type="submit" class="btn btn-naranja" form="insertar-asignatura">Añadir Asignatura</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="//code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>    
+  </div>
+  </body>
+</html>
