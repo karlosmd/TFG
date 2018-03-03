@@ -1,7 +1,5 @@
 package tfg.DTO;
 
-import java.util.Set;
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;

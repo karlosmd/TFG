@@ -1,9 +1,5 @@
-INSERT INTO `roles`(`nombre`) VALUES ('Alumno');
-INSERT INTO `roles`(`nombre`) VALUES ('Profesor');
+INSERT INTO `usuarios` (`id`, `activo`, `nombre`, `apellidos`, `rol`, `email`, `password`) VALUES (1, 1, 'Jorge', 'Merino', 0, 'jorge@ucm.es', '$2a$10$GoNhjsQMGaHZ5NM4SuvQZux3OubVTosOQvtXX7m1r59BN.FSOvKly');
 
-INSERT INTO `usuarios` (`id_usuario`, `activo`, `apellidos`, `email`, `nombre`, `password`) VALUES ('1', '1', 'Merino', 'jorge@ucm.es', 'Jorge', '$2a$10$GoNhjsQMGaHZ5NM4SuvQZux3OubVTosOQvtXX7m1r59BN.FSOvKly');
-INSERT INTO `usuario_rol` (`id_rol`, `id_usuario`) VALUES (2, 1);
-
-INSERT INTO `asignaturas` (`id_asignatura`, `activo`, `curso`, `grupo`, `nombre`) VALUES
-('1', '1', '2017/2018', '3ºE', 'Modelado del Software'),
-('2', '1', '2016/2017', '1ºB', 'Fundamentos de la Programación');
+INSERT INTO `asignaturas` (`id_asignatura`, `activo`, `nombre`, `grupo`, `curso`) VALUES
+(1, 1, 'Modelado del Software', '3ºE', '2017/2018'),
+(2, 1, 'Fundamentos de la Programación', '1ºB', '2016/2017');

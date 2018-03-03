@@ -7,7 +7,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import tfg.DTO.DTOUsuario;
-import tfg.modelo.Rol;
 import tfg.modelo.Usuario;
 import tfg.repositorio.RepositorioUsuario;
 

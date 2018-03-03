@@ -12,7 +12,7 @@
   </head>
     <body>
 	  <div class="container">
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
+		<nav class="navbar navbar-expand-lg navbar-dark" th:fragment="navbar">
 		  <a class="navbar-brand" href="/menu">Retos, Gamificación y Analíticas</a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		    <span class="navbar-toggler-icon"></span>
@@ -40,7 +40,7 @@
 	                <a class="nav-link" href="#">Hola, <span th:utext="${usuario.nombre}"></span></a>
 	            </li>
 	            <li class="nav-item" th:if="${usuario != null}">
-			        <a class="nav-link" href="/logout">Cerrar Sesión<span class="sr-only">(current)</span></a>
+			        <a class="nav-link" href="/logout"><i class="material-icons icono-naranja">power_settings_new</i><span class="sr-only">(current)</span></a>
 			      </li>
 	            <li class="nav-item">
 	                <a class="nav-link" href="/informacion">Acerca de</a>

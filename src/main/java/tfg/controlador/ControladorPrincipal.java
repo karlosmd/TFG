@@ -16,10 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tfg.DTO.DTOAsignatura;
 import tfg.DTO.DTOUsuario;
+import tfg.modelo.Asignatura;
 import tfg.modelo.Mensaje;
 import tfg.modelo.Usuario;
+import tfg.modelo.Rol;
 import tfg.servicioAplicacion.SAAsignatura;
-import tfg.servicioAplicacion.SARol;
 import tfg.servicioAplicacion.SAUsuario;
 
 @Controller
@@ -27,8 +28,6 @@ public class ControladorPrincipal {
 	
 	@Autowired	
 	private SAUsuario saUsuario;
-	@Autowired
-	private SARol saRol;
 	@Autowired
 	private SAAsignatura saAsignatura;
 
@@ -43,8 +42,9 @@ public class ControladorPrincipal {
 	public ModelAndView mostrarRegistro(){
 		ModelAndView modelAndView = new ModelAndView();
 		DTOUsuario dtoUsuario = new DTOUsuario();
+		
 		modelAndView.addObject("dtoUsuario", dtoUsuario);		
-		modelAndView.addObject("roles", saRol.findAll());		
+		modelAndView.addObject("roles", Rol.values());
 		modelAndView.setViewName("registro");
 		return modelAndView;
 	}
@@ -68,11 +68,13 @@ public class ControladorPrincipal {
 		}			
 		else {
 			saUsuario.guardarUsuario(dtoUsuario);
-			redirectAttrs.addFlashAttribute("usuarioRegistrado", true);
+			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
+			mensaje.setIcono("check_circle");
+			redirectAttrs.addFlashAttribute("mensaje", mensaje);
 			return new ModelAndView("redirect:/");
 		}
 		
-		modelAndView.addObject("roles", saRol.findAll());
+		modelAndView.addObject("roles", Rol.values());
 		
 		return modelAndView;
 	}
@@ -92,7 +94,7 @@ public class ControladorPrincipal {
 	@RequestMapping(value="/asignaturas", method = RequestMethod.GET)
 	public ModelAndView mostrarAsignaturas(){
 		ModelAndView modelAndView = new ModelAndView();	
-		modelAndView.addObject("asignaturas", saAsignatura.findAll());
+		modelAndView.addObject("asignaturas", saAsignatura.buscarActivos());
 		modelAndView.addObject("dtoAsignatura", new DTOAsignatura());
 		modelAndView.setViewName("asignaturas");
 		return modelAndView;
@@ -100,9 +102,20 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value="/asignaturas/eliminar", method = RequestMethod.GET)
 	public ModelAndView eliminarAsignatura(int id, final RedirectAttributes redirectAttrs){
-		saAsignatura.deleteById(id);
-		Mensaje mensaje = new Mensaje("Atención, ", "la asignatura " + "TAL" + " se ha eliminado, pulse aquí para Deshacer", "danger"); 
+		Asignatura asignatura = saAsignatura.findById(id);
+		saAsignatura.actualizarActivo(asignatura.getId(), 0);
+		Mensaje mensaje = new Mensaje("Atención", "la asignatura " + asignatura.getNombre() + " se ha eliminado", "rojo");
+		mensaje.setIcono("reply");
+		mensaje.setEnlace("/asignaturas/deshacer-baja?id=" + asignatura.getId());
+		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
+		return new ModelAndView("redirect:/asignaturas");
+	}
+	
+	@RequestMapping(value="/asignaturas/deshacer-baja", method = RequestMethod.GET)
+	public ModelAndView deshacerBajaAsignatura(int id, final RedirectAttributes redirectAttrs){
+		Asignatura asignatura = saAsignatura.findById(id);
+		saAsignatura.actualizarActivo(asignatura.getId(), 1);
 		return new ModelAndView("redirect:/asignaturas");
 	}
 	
@@ -110,20 +123,15 @@ public class ControladorPrincipal {
 	public ModelAndView insertarAsignatura(@Valid @ModelAttribute("dtoAsignatura") DTOAsignatura dtoAsignatura,
 			BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) {
-		ModelAndView modelAndView = null;	
 		
-		if (bindingResult.hasErrors()) {
-			modelAndView = new ModelAndView("asignaturas/insertar", bindingResult.getModel());
-			modelAndView.addObject("dtoAsignatura", dtoAsignatura);
-		}			
-		else {
+		if (!bindingResult.hasErrors()) {
 			saAsignatura.guardarAsignatura(dtoAsignatura);
-			Mensaje mensaje = new Mensaje("Enhorabuena, ", "la asignatura " + dtoAsignatura.getNombre() + " se ha añadido con éxito"); 
+			Mensaje mensaje = new Mensaje("Enhorabuena", "la asignatura " + dtoAsignatura.getNombre() + " se ha añadido con éxito", "verde");
+			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
-			return new ModelAndView("redirect:/asignaturas");
 		}
 		
-		return modelAndView;
+		return new ModelAndView("redirect:/asignaturas");
 	}
 	
 	@ModelAttribute

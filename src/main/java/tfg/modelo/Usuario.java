@@ -1,14 +1,9 @@
 package tfg.modelo;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
@@ -21,7 +16,6 @@ import org.springframework.data.annotation.Transient;
 public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id_usuario")
 	private int id;
 	
 	@NotEmpty
@@ -41,8 +35,6 @@ public class Usuario {
 
 	private int activo;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
 	private Rol rol;
 
 	public int getId() {

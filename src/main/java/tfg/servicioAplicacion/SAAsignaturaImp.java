@@ -34,4 +34,19 @@ public class SAAsignaturaImp implements SAAsignatura {
 	public void deleteById(int id) {
 		repositorioAsignatura.deleteById(id);
 	}
+
+	@Override
+	public Asignatura findById(int id) {
+		return repositorioAsignatura.findById(id);		
+	}
+
+	@Override
+	public void actualizarActivo(int id, int activo) {
+		repositorioAsignatura.updateActivo(id, activo);
+	}
+
+	@Override
+	public List<Asignatura> buscarActivos() {
+		return repositorioAsignatura.findActivos();
+	}
 }
