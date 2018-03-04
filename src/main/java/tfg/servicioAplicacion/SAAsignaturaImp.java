@@ -11,17 +11,12 @@ import tfg.repositorio.RepositorioAsignatura;
 
 @Service ("SAAsignatura")
 public class SAAsignaturaImp implements SAAsignatura {
-	
 	@Autowired
 	private RepositorioAsignatura repositorioAsignatura;
 	
+	// CREATE	
 	@Override
-	public List<Asignatura> findAll() {
-		return repositorioAsignatura.findAll();
-	}
-
-	@Override
-	public void guardarAsignatura(DTOAsignatura dtoAsignatura) {
+	public void crearAsignatura(DTOAsignatura dtoAsignatura) {
 		Asignatura asignatura = new Asignatura();    
 		asignatura.setNombre(dtoAsignatura.getNombre());
 		asignatura.setGrupo(dtoAsignatura.getGrupo());
@@ -30,23 +25,26 @@ public class SAAsignaturaImp implements SAAsignatura {
 	    repositorioAsignatura.save(asignatura);
 	}
 	
+	// READ
 	@Override
-	public void deleteById(int id) {
-		repositorioAsignatura.deleteById(id);
+	public Asignatura leerPorId(int id) {
+		return repositorioAsignatura.findById(id);
 	}
-
+	
 	@Override
-	public Asignatura findById(int id) {
-		return repositorioAsignatura.findById(id);		
+	public List<Asignatura> leerActivos() {
+		return repositorioAsignatura.findActivos();
 	}
-
+	
+	// UPDATE
 	@Override
 	public void actualizarActivo(int id, int activo) {
 		repositorioAsignatura.updateActivo(id, activo);
 	}
-
+	
+	// DELETE
 	@Override
-	public List<Asignatura> buscarActivos() {
-		return repositorioAsignatura.findActivos();
+	public void borrarPorId(int id) {
+		repositorioAsignatura.deleteById(id);
 	}
 }

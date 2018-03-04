@@ -1,10 +1,13 @@
 package tfg.modelo;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -23,6 +26,9 @@ public class Asignatura {
 	private String grupo;
 	@NotEmpty
 	private String curso;
+	
+	@ManyToMany(mappedBy = "asignaturas")
+	private Set<Usuario> usuarios;
 	
 	private int activo;
 	

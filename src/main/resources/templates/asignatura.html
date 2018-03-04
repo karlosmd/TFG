@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="head">
+    <title>TFG</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Style CSS -->
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+  <div class="container col-12">
+  	<nav th:replace="fragments/navbar :: navbar"></nav>
+  	<div th:replace="fragments/mensaje :: mensaje"></div>
+  	
+  	<div class="tabla col-12 col-md-10">
+  		<h1 class="titulo" th:text="${asignatura.nombre} + ' - Alumnos'"></h1>
+	  	<table class="table table-striped table-dark">
+		  <thead>
+		    <tr>
+		      <th scope="col">Apellidos</th>
+		      <th scope="col">Nombre</th>
+		      <th scope="col">Correo electrónico</th>
+		      <th scope="col">Acciones</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="alumno : ${alumnosMatriculados}">
+		      <td scope="row" th:text="${alumno.apellidos}"></td>
+		      <td th:text="${alumno.nombre}"></td>
+		      <td th:text="${alumno.email}"></td>
+		      <td>
+		      	<a th:href="@{/alumno/xxx(id=${alumno.id})}"><i class="material-icons icono-naranja">remove_circle_outline</i></a>		      	
+		      </td>
+		    </tr>
+		  </tbody>
+		  <tfoot>
+		    <tr>
+			    <td></td>
+			    <td></td>
+			    <td></td>
+			    <td>
+			      	<!-- Button trigger modal -->
+					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoAlumno">
+						Añadir Alumno
+					</button>
+				</td>
+		    </tr>
+		  </tfoot>
+		</table>
+	</div>
+	
+	<!-- Modal Añadir Alumno -->
+	<div class="modal fade" id="modalNuevoAlumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Añadir Alumno</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignatura/alta-alumno}" th:object="${dtoUsuario}" method="POST">
+			  <div class="form-group">
+			    <label for="email">Correo electrónico</label>
+			    <input type="email" class="form-control" name="email" id="email" required="true"/>
+			  </div>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	        <button type="submit" class="btn btn-naranja" form="insertar-asignatura">Añadir Alumno</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="//code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>    
+  </div>
+  </body>
+</html>

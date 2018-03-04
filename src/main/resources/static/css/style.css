@@ -75,6 +75,16 @@ td:last-child, thead th:last-child{
 	text-align: center;
 }
 
+table a{
+	color: #FF8F00;
+	font-weight: bold;
+}
+
+table a:hover{
+	color: #EF6C00;
+	text-decoration: none;
+}
+
 i{
 	vertical-align: middle;
 	margin: 0px 5px 5px 5px;

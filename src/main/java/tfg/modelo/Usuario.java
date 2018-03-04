@@ -1,9 +1,16 @@
 package tfg.modelo;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
@@ -36,7 +43,22 @@ public class Usuario {
 	private int activo;
 	
 	private Rol rol;
-
+	
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "usuario_asignatura",
+	    joinColumns = @JoinColumn(name = "usuario_id"),
+	    inverseJoinColumns = @JoinColumn(name = "asignatura_id")
+	)
+	private Set<Asignatura> asignaturas;
+	
+	public Usuario () {
+		asignaturas = new HashSet<>();
+	}
+	
+	public void insertarAsignatura(Asignatura asignatura) {
+		asignaturas.add(asignatura);
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -91,5 +113,13 @@ public class Usuario {
 
 	public void setRol(Rol rol) {
 		this.rol = rol;
+	}
+
+	public Set<Asignatura> getAsignaturas() {
+		return asignaturas;
+	}
+
+	public void setAsignaturas(Set<Asignatura> asignaturas) {
+		this.asignaturas = asignaturas;
 	}
 }
