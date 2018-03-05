@@ -59,6 +59,10 @@ public class Usuario {
 		asignaturas.add(asignatura);
 	}
 	
+	public void eliminarAsignatura(Asignatura asignatura) {
+		asignaturas.remove(asignatura);
+	}
+	
 	public int getId() {
 		return id;
 	}

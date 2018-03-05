@@ -38,7 +38,7 @@
 		      <td th:text="${alumno.nombre}"></td>
 		      <td th:text="${alumno.email}"></td>
 		      <td>
-		      	<a th:href="@{/alumno/xxx(id=${alumno.id})}"><i class="material-icons icono-naranja">remove_circle_outline</i></a>		      	
+		      	<a th:href="@{/asignatura/baja-alumno(idAsignatura=${asignatura.id}, idAlumno=${alumno.id})}"><i class="material-icons icono-naranja">remove_circle_outline</i></a>		      	
 		      </td>
 		    </tr>
 		  </tbody>
@@ -52,6 +52,7 @@
 					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoAlumno">
 						Añadir Alumno
 					</button>
+					<button type="button" class="btn btn-success">Lanzar Reto</button>
 				</td>
 		    </tr>
 		  </tfoot>

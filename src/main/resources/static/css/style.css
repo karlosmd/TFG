@@ -40,6 +40,10 @@ div.card-deck{
 	text-align: center;
 }
 
+.btn:hover{
+	cursor: pointer;
+}
+
 .btn-naranja{
 	background: #FF8F00;
 	color: white;
@@ -47,7 +51,6 @@ div.card-deck{
 
 .btn-naranja:hover{
 	background: #EF6C00;
-	cursor: pointer;
 }
 
 div.enlace-inicio{

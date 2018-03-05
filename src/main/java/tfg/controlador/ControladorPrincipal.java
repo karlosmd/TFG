@@ -149,13 +149,33 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value = "/asignatura/alta-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaAltaAlumno(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
-			BindingResult bindingResult,
+			BindingResult bindingUsuario,
+			@ModelAttribute("asignatura") Asignatura asignatura,
+			BindingResult bindingAsignatura,
 			final RedirectAttributes redirectAttrs) {
-		int idAsignatura = 1;
 		Usuario usuario = saUsuario.leerPorEmail(dtoUsuario.getEmail());		
-		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		usuario.insertarAsignatura(asignatura);		
 		saUsuario.sobrescribirUsuario(usuario);
+		
+		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido a " + usuario.getNombre() + " " + usuario.getApellidos() +
+				" en la asignatura " + asignatura.getNombre(), "verde");
+		mensaje.setIcono("check_circle");
+		redirectAttrs.addFlashAttribute("mensaje", mensaje);
+		
+		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
+	}
+	
+	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.GET)
+	public ModelAndView AsignaturaBajaAlumno(int idAsignatura, int idAlumno, final RedirectAttributes redirectAttrs){
+		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
+		Usuario alumno = saUsuario.leerPorId(idAlumno);
+		alumno.eliminarAsignatura(asignatura);
+		saUsuario.sobrescribirUsuario(alumno);
+		
+		Mensaje mensaje = new Mensaje("Atención", "se ha eliminado a " + alumno.getNombre() + " " + alumno.getApellidos() +
+				" de la asignatura " + asignatura.getNombre(), "rojo");
+		mensaje.setIcono("reply");
+		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
