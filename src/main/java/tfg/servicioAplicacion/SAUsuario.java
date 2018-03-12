@@ -3,18 +3,24 @@ package tfg.servicioAplicacion;
 import java.util.List;
 
 import tfg.DTO.DTOUsuario;
-import tfg.modelo.Usuario;
+import tfg.modelo.Alumno;
+import tfg.modelo.Profesor;
 
 public interface SAUsuario {
 	
 	// CREATE
-	public void crearUsuario(DTOUsuario dtoUsuario);
-	public void sobrescribirUsuario(Usuario usuario);
+	public void crear(DTOUsuario dtoUsuario);
+	public void sobrescribir(Alumno alumno);
+	public void sobrescribir(Profesor profesor);
 	
 	// READ
-	public Usuario leerPorEmail(String email);
-	public Usuario leerPorId(int id);
-	public List<Usuario> leerAlumnosActivos();
-	public List<Usuario> leerPorIdAsignatura(int idAsignatura);
-	public List<Usuario> leerPorNoIdAsignatura(int idAsignatura);
+	public DTOUsuario leerUsuario(String email);
+	public DTOUsuario leerUsuario(int id);
+	public Alumno leerAlumno(String email);
+	public Alumno leerAlumno(int id);
+	public Profesor leerProfesor(String email);
+	public Profesor leerProfesor(int id);
+	public List<Alumno> leerAlumnosActivos();	
+	public List<Alumno> leerMatriculadosAsignatura(int idAsignatura);
+	public List<Alumno> leerNoMatriculadosAsignatura(int idAsignatura);
 }

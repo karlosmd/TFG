@@ -1,8 +1,5 @@
 package tfg.controlador;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,9 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tfg.DTO.DTOAsignatura;
 import tfg.DTO.DTOUsuario;
+import tfg.modelo.Alumno;
 import tfg.modelo.Asignatura;
 import tfg.modelo.Mensaje;
-import tfg.modelo.Usuario;
+import tfg.modelo.Profesor;
 import tfg.modelo.Rol;
 import tfg.servicioAplicacion.SAAsignatura;
 import tfg.servicioAplicacion.SAUsuario;
@@ -57,7 +56,7 @@ public class ControladorPrincipal {
 			BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) {
 		ModelAndView modelAndView = null;
-		Usuario userExists = saUsuario.leerPorEmail(dtoUsuario.getEmail());
+		DTOUsuario userExists = saUsuario.leerUsuario(dtoUsuario.getEmail());
 
 		if (!dtoUsuario.getPassword().equals(dtoUsuario.getConfirmarPassword())) {
 			bindingResult.rejectValue("password", "error.dtoUsuario", "* Las contraseñas no coinciden");
@@ -70,7 +69,7 @@ public class ControladorPrincipal {
 			modelAndView.addObject("dtoUsuario", dtoUsuario);
 		}			
 		else {
-			saUsuario.crearUsuario(dtoUsuario);
+			saUsuario.crear(dtoUsuario);
 			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
@@ -95,9 +94,12 @@ public class ControladorPrincipal {
     }
 	
 	@RequestMapping(value="/asignaturas", method = RequestMethod.GET)
-	public ModelAndView mostrarAsignaturas(){
-		ModelAndView modelAndView = new ModelAndView();	
-		modelAndView.addObject("asignaturas", saAsignatura.leerActivos());
+	public ModelAndView mostrarAsignaturas(@ModelAttribute("usuario") DTOUsuario dtoUsuario){
+		ModelAndView modelAndView = new ModelAndView();
+		if(dtoUsuario.getRol() == Rol.Profesor)
+			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasProfesor(dtoUsuario.getId()));
+		else
+			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasAlumno(dtoUsuario.getId()));
 		modelAndView.addObject("dtoAsignatura", new DTOAsignatura());
 		modelAndView.setViewName("asignaturas");
 		return modelAndView;
@@ -125,10 +127,12 @@ public class ControladorPrincipal {
 	@RequestMapping(value = "/asignaturas/insertar", method = RequestMethod.POST)
 	public ModelAndView insertarAsignatura(@Valid @ModelAttribute("dtoAsignatura") DTOAsignatura dtoAsignatura,
 			BindingResult bindingResult,
+			@ModelAttribute("usuario") DTOUsuario dtoUsuario,
 			final RedirectAttributes redirectAttrs) {
 		
 		if (!bindingResult.hasErrors()) {
-			saAsignatura.crearAsignatura(dtoAsignatura);
+			Profesor profesor = saUsuario.leerProfesor(dtoUsuario.getId());
+			saAsignatura.crearAsignatura(dtoAsignatura, profesor);
 			Mensaje mensaje = new Mensaje("Enhorabuena", "la asignatura " + dtoAsignatura.getNombre() + " se ha añadido con éxito", "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
@@ -141,23 +145,22 @@ public class ControladorPrincipal {
 	public ModelAndView modificarAsignatura(int id) {
 		ModelAndView modelAndView = new ModelAndView();	
 		modelAndView.addObject("asignatura", saAsignatura.leerPorId(id));
-		modelAndView.addObject("alumnosMatriculados", saUsuario.leerPorIdAsignatura(id));
-		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerPorNoIdAsignatura(id));
+		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
+		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/asignatura/alta-alumno", method = RequestMethod.POST)
-	public ModelAndView AsignaturaAltaAlumno(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
-			BindingResult bindingUsuario,
-			@ModelAttribute("asignatura") Asignatura asignatura,
-			BindingResult bindingAsignatura,
+	@RequestMapping(value = "/asignatura/{idAsignatura}/alta-alumno", method = RequestMethod.POST)
+	public ModelAndView asignaturaAltaAlumno(@PathVariable("idAsignatura") int idAsignatura,
+			@ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
 			final RedirectAttributes redirectAttrs) {
-		Usuario usuario = saUsuario.leerPorEmail(dtoUsuario.getEmail());		
-		usuario.insertarAsignatura(asignatura);		
-		saUsuario.sobrescribirUsuario(usuario);
+		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
+		Alumno alumno = saUsuario.leerAlumno(dtoUsuario.getEmail());		
+		alumno.insertarAsignatura(asignatura);		
+		saUsuario.sobrescribir(alumno);
 		
-		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido a " + usuario.getNombre() + " " + usuario.getApellidos() +
+		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" en la asignatura " + asignatura.getNombre(), "verde");
 		mensaje.setIcono("check_circle");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
@@ -168,9 +171,9 @@ public class ControladorPrincipal {
 	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.GET)
 	public ModelAndView AsignaturaBajaAlumno(int idAsignatura, int idAlumno, final RedirectAttributes redirectAttrs){
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Usuario alumno = saUsuario.leerPorId(idAlumno);
+		Alumno alumno = saUsuario.leerAlumno(idAlumno);
 		alumno.eliminarAsignatura(asignatura);
-		saUsuario.sobrescribirUsuario(alumno);
+		saUsuario.sobrescribir(alumno);
 		
 		Mensaje mensaje = new Mensaje("Atención", "se ha eliminado a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" de la asignatura " + asignatura.getNombre(), "rojo");
@@ -180,10 +183,10 @@ public class ControladorPrincipal {
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
 	
-	@ModelAttribute
+	@ModelAttribute("usuario")
 	public void insertarAtributos(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario usuario = saUsuario.leerPorEmail(auth.getName());
-		model.addAttribute("usuario", usuario);
+		DTOUsuario dtoUsuario = saUsuario.leerUsuario(auth.getName());
+		model.addAttribute("usuario", dtoUsuario);
 	}
 }

@@ -1,13 +1,18 @@
 package tfg.DTO;
 
+import java.util.Set;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tfg.modelo.Asignatura;
 import tfg.modelo.Rol;
 
 
 public class DTOUsuario {
+	private int id;	
+	
 	@NotEmpty(message = "* Por favor, introduzca su nombre")
 	private String nombre;
 	
@@ -27,12 +32,14 @@ public class DTOUsuario {
 	
 	private Rol rol;
 	
-	public String getApellidos() {
-		return apellidos;
+	private Set<Asignatura> asignaturas;
+
+	public int getId() {
+		return id;
 	}
 
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNombre() {
@@ -41,6 +48,14 @@ public class DTOUsuario {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getApellidos() {
+		return apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
 	}
 
 	public String getEmail() {
@@ -73,5 +88,13 @@ public class DTOUsuario {
 
 	public void setRol(Rol rol) {
 		this.rol = rol;
-	}	
+	}
+
+	public Set<Asignatura> getAsignaturas() {
+		return asignaturas;
+	}
+
+	public void setAsignaturas(Set<Asignatura> asignaturas) {
+		this.asignaturas = asignaturas;
+	}
 }
