@@ -21,7 +21,37 @@
   	<nav th:replace="fragments/navbar :: navbar"></nav>
   	<div th:replace="fragments/mensaje :: mensaje"></div>
   	
-  	<div class="tabla col-12 col-md-10">
+  	<div class="tabla col-12 col-md-10" th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}">
+  		<h1 class="titulo" th:text="${asignatura.nombre} + ' - Retos'"></h1>
+	  	<table class="table table-striped table-dark">
+		  <thead>
+		    <tr>
+		      <th scope="col">Id</th>
+		      <th scope="col">Nombre</th>
+		      <th scope="col">Enlace</th>
+		    </tr>
+		  </thead>
+		  <tbody th:if="${#lists.isEmpty(retos)}">
+		    <tr>
+		      <td colspan="5">No hay retos que mostrar</td>
+		    </tr>
+		  </tbody>
+		  <tbody th:if="${not #lists.isEmpty(retos)}">
+		    <tr th:each="reto : ${retos}">
+		      <td scope="row" th:text="${reto.id}"></td>
+		      <td th:text="${reto.nombre}"></td>
+		      <td th:text="${reto.enlace}"></td>
+		    </tr>
+		  </tbody>
+		  <tfoot>
+		    <tr>
+		      <td colspan="5" th:text="'Profesor de la asignatura: ' + ${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}"></td>
+		    </tr>
+		  </tfoot>
+		</table>
+	</div>
+  	
+  	<div class="tabla col-12 col-md-10" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
   		<h1 class="titulo" th:text="${asignatura.nombre} + ' - Alumnos'"></h1>
 	  	<table class="table table-striped table-dark">
 		  <thead>
@@ -32,7 +62,12 @@
 		      <th scope="col">Acciones</th>
 		    </tr>
 		  </thead>
-		  <tbody>
+		  <tbody th:if="${#lists.isEmpty(alumnosMatriculados)}">
+		    <tr>
+		      <td colspan="5">No hay alumnos que mostrar</td>
+		    </tr>
+		  </tbody>
+		  <tbody th:if="${not #lists.isEmpty(alumnosMatriculados)}">
 		    <tr th:each="alumno : ${alumnosMatriculados}">
 		      <td scope="row" th:text="${alumno.apellidos}"></td>
 		      <td th:text="${alumno.nombre}"></td>
@@ -72,8 +107,16 @@
 	      <div class="modal-body">
 	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignatura/{idAsignatura}/alta-alumno(idAsignatura=${asignatura.id})}" th:object="${dtoUsuario}" method="POST">
 			  <div class="form-group">
-			    <label for="email">Correo electrónico</label>
-			    <input type="email" class="form-control" name="email" id="email" required="true"/>
+			    <label for="id">Correo electrónico</label>
+			    <select class="form-control" id="id" th:field="*{id}">
+			      <option th:each="alumno : ${alumnosNoMatriculados}"
+		                            th:value="${alumno.id}"
+		                            th:utext="${alumno.email}"/>
+			    </select>
+			  </div>
+			  <div class="form-group">
+			  	<label for="apellidos">Nombre</label>
+				<input type="text" readonly class="form-control-plaintext" th:value="${dtoUsuario.id}"/>
 			  </div>
 			</form>
 	      </div>

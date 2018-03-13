@@ -34,7 +34,12 @@
 		      <th scope="col" th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}">Profesor</th>
 		    </tr>
 		  </thead>
-		  <tbody>
+		  <tbody th:if="${#lists.isEmpty(asignaturas)}">
+		    <tr>
+		      <td colspan="5">No hay asignaturas que mostrar</td>
+		    </tr>
+		  </tbody>
+		  <tbody th:if="${not #lists.isEmpty(asignaturas)}">
 		    <tr th:each="asignatura : ${asignaturas}">
 		      <th scope="row" th:text="${asignatura.id}"></th>
 		      <td><a th:text="${asignatura.nombre}" th:href="@{/asignatura(id=${asignatura.id})}"></a></td>

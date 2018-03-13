@@ -145,8 +145,9 @@ public class ControladorPrincipal {
 	public ModelAndView modificarAsignatura(int id) {
 		ModelAndView modelAndView = new ModelAndView();	
 		modelAndView.addObject("asignatura", saAsignatura.leerPorId(id));
+		modelAndView.addObject("dtoUsuario", new DTOUsuario());
 		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
-		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
+		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerAlumnosActivos());
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
 	}
@@ -156,7 +157,7 @@ public class ControladorPrincipal {
 			@ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
 			final RedirectAttributes redirectAttrs) {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Alumno alumno = saUsuario.leerAlumno(dtoUsuario.getEmail());		
+		Alumno alumno = saUsuario.leerAlumno(dtoUsuario.getId());		
 		alumno.insertarAsignatura(asignatura);		
 		saUsuario.sobrescribir(alumno);
 		
