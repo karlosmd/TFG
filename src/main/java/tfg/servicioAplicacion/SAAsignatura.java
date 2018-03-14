@@ -13,7 +13,6 @@ public interface SAAsignatura {
 	
 	// READ
 	public Asignatura leerPorId(int id);
-	public List<Asignatura> leerActivos();
 	public List<Asignatura> leerAsignaturasProfesor(int idProfesor);
 	public List<Asignatura> leerAsignaturasAlumno(int idAlumno);
 	

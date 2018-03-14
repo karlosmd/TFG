@@ -14,10 +14,10 @@ public interface DAOAlumno extends DAOUsuario<Alumno> {
 	
 	// READ	
 	//Consulta de Entidades con relaciones ManyToMany
-	@Query("SELECT alumno FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE alumno.activo = 1 AND asignaturas.id = :idAsignatura ORDER BY alumno.apellidos ASC")
+	@Query("SELECT alumno FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE asignaturas.id = :idAsignatura ORDER BY alumno.apellidos ASC")
 	List<Alumno> findByAsignatura(@Param("idAsignatura") int idAsignatura);
 	
 	//Consulta de Entidades con relaciones ManyToMany
-	@Query("SELECT alumno FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE alumno.activo = 1 AND asignaturas.id <> :idAsignatura ORDER BY alumno.apellidos ASC")
+	@Query("SELECT alumnoNoMatriculado FROM Alumno alumnoNoMatriculado WHERE alumnoNoMatriculado.id NOT IN (SELECT alumno FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE asignaturas.id = :idAsignatura) ORDER BY alumnoNoMatriculado.apellidos ASC")
 	List<Alumno> findByNotAsignatura(@Param("idAsignatura") int idAsignatura);
 }

@@ -34,11 +34,6 @@ public class SAAsignaturaImp implements SAAsignatura {
 	}
 	
 	@Override
-	public List<Asignatura> leerActivos() {
-		return daoAsignatura.findActivos();
-	}
-	
-	@Override
 	public List<Asignatura> leerAsignaturasProfesor(int idProfesor){
 		return daoAsignatura.findAsignaturasProfesor(idProfesor);
 	}

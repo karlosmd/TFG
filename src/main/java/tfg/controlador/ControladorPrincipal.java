@@ -147,7 +147,7 @@ public class ControladorPrincipal {
 		modelAndView.addObject("asignatura", saAsignatura.leerPorId(id));
 		modelAndView.addObject("dtoUsuario", new DTOUsuario());
 		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
-		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerAlumnosActivos());
+		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
 	}

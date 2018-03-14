@@ -34,7 +34,6 @@ public class SAUsuarioImp implements SAUsuario {
     	    alumno.setApellidos(dtoUsuario.getApellidos());
     	    alumno.setEmail(dtoUsuario.getEmail());
     	    alumno.setPassword(bCryptPasswordEncoder.encode(dtoUsuario.getPassword()));
-    	    alumno.setActivo(1);
     	    daoAlumno.save(alumno);
     	}
     	else {
@@ -43,7 +42,6 @@ public class SAUsuarioImp implements SAUsuario {
 			profesor.setApellidos(dtoUsuario.getApellidos());
 			profesor.setEmail(dtoUsuario.getEmail());
 			profesor.setPassword(bCryptPasswordEncoder.encode(dtoUsuario.getPassword()));
-			profesor.setActivo(1);
 			daoProfesor.save(profesor);
     	}    	
     }
@@ -141,7 +139,7 @@ public class SAUsuarioImp implements SAUsuario {
     
     @Override
 	public List<Alumno> leerAlumnosActivos(){
-		return daoAlumno.findActivos();
+		return daoAlumno.findAll();
 	}
 	
 	@Override

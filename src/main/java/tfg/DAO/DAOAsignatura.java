@@ -16,14 +16,11 @@ import tfg.modelo.Asignatura;
 public interface DAOAsignatura extends JpaRepository<Asignatura, Integer>{
 	
 	// READ	
-	@Query("SELECT a FROM Asignatura a WHERE a.activo = 1")
-	List<Asignatura> findActivos();
-
-	@Query("SELECT p.asignaturas FROM Profesor p WHERE p.activo = 1 AND p.id = :idProfesor")
+	@Query("SELECT asignaturas FROM Profesor profesor JOIN profesor.asignaturas asignaturas WHERE asignaturas.activo = 1 AND profesor.id = :idProfesor")
 	List<Asignatura> findAsignaturasProfesor(@Param("idProfesor")int idProfesor);
 	
-	@Query("SELECT a.asignaturas FROM Alumno a WHERE a.activo = 1 AND a.id = :idProfesor")
-	List<Asignatura> findAsignaturasAlumno(@Param("idProfesor")int idAlumno);
+	@Query("SELECT asignaturas FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE asignaturas.activo = 1 AND alumno.id = :idAlumno")
+	List<Asignatura> findAsignaturasAlumno(@Param("idAlumno")int idAlumno);
 	
 	Asignatura findById(int id);
 	

@@ -20,7 +20,7 @@ public abstract class Usuario {
 	private String nombre;
 	
 	@NotEmpty
-	private String apellidos;	
+	private String apellidos;
 	
 	@Email
 	@NotEmpty
@@ -30,8 +30,12 @@ public abstract class Usuario {
 	@Length(min = 6)
 	@NotEmpty
 	private String password;
-
+	
 	private int activo;
+	
+	Usuario (){
+		activo = 1;
+	}
 	
 	public abstract void insertarAsignatura(Asignatura asignatura);
 	

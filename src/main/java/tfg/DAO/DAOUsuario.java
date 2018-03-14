@@ -14,6 +14,6 @@ public interface DAOUsuario<T> extends JpaRepository<T, Integer> {
 	
 	T findById(int id);
 	
-	@Query("SELECT u FROM #{#entityName} as u WHERE u.activo = 1 ORDER BY u.apellidos ASC")
-	List<T> findActivos();
+	@Query("SELECT u FROM #{#entityName} as u ORDER BY u.apellidos ASC")
+	List<T> findAll();
 }
