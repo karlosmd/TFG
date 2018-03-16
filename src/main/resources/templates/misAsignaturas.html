@@ -47,7 +47,7 @@
 		      <td th:text="${asignatura.curso}"></td>
 		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
 		      	<a data-toggle="modal" data-target="#modalModificarAsignatura"><i class="material-icons icono-verde">create</i></a>
-		      	<a th:href="@{/asignaturas/eliminar(id=${asignatura.id})}"><i class="material-icons icono-naranja">delete</i></a>		      	
+		      	<a th:href="@{/asignatura/eliminar(id=${asignatura.id})}"><i class="material-icons icono-naranja">delete</i></a>		      	
 		      </td>
 		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}" th:text="${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}">		      	
 		      </td>
@@ -81,7 +81,7 @@
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignaturas/insertar}" th:object="${dtoAsignatura}" method="POST">
+	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignatura/insertar}" th:object="${dtoAsignatura}" method="POST">
 			  <div class="form-group">
 			  	<label for="nombre">Nombre</label>
 				<input type="text" th:field="*{nombre}" class="form-control" id="nombre"/>

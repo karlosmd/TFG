@@ -43,17 +43,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/", "/login", "/registro", "/informacion").permitAll()
+				.antMatchers("/", "/iniciar-sesion", "/crear-cuenta", "/acerca-de").permitAll()
 				.antMatchers("/admin/**").hasAuthority("ADMINISTRADOR").anyRequest()
 				.authenticated().and().csrf().disable()
 			.formLogin()
-				.loginPage("/login").failureUrl("/login?error=true")
-				.defaultSuccessUrl("/asignaturas")
+				.loginPage("/iniciar-sesion").failureUrl("/iniciar-sesion?error=true")
+				.defaultSuccessUrl("/mis-asignaturas")
 				.usernameParameter("email")
 				.passwordParameter("password")
 				.and()
 			.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutRequestMatcher(new AntPathRequestMatcher("/desconectar"))
 				.logoutSuccessUrl("/").and().exceptionHandling()
 				.accessDeniedPage("/access-denied");
 	}

@@ -15,6 +15,28 @@ div.container{
 	background: #212529;
 }
 
+.separador-tablas{
+	background: #212529;
+	border-color: #32383E;
+}
+
+.separador-tablas a{
+	color: #FF8F00 !important;
+	border-radius: 0px !important;
+	color: #FFFFFF;
+}
+
+.separador-tablas a:hover{
+	border: 1px solid #212529 !important;
+	border-bottom: 1px solid #FF8F00 !important;
+}
+
+.separador-tablas a.active{
+	color: #FFFFFF !important;
+	background: #FF8F00 !important;
+	border-color: #FF8F00 !important;
+}
+
 .formulario{
 	padding: 4% 5% 3%;
 	margin: 8% auto 2%;

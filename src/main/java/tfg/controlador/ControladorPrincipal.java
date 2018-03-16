@@ -33,25 +33,25 @@ public class ControladorPrincipal {
 	@Autowired
 	private SAAsignatura saAsignatura;
 
-	@RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
+	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
 	public ModelAndView mostrarLogin(){
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("index");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value="/registro", method = RequestMethod.GET)
+	@RequestMapping(value="/crear-cuenta", method = RequestMethod.GET)
 	public ModelAndView mostrarRegistro(){
 		ModelAndView modelAndView = new ModelAndView();
 		DTOUsuario dtoUsuario = new DTOUsuario();
 		
 		modelAndView.addObject("dtoUsuario", dtoUsuario);		
 		modelAndView.addObject("roles", Rol.values());
-		modelAndView.setViewName("registro");
+		modelAndView.setViewName("crearCuenta");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/registro", method = RequestMethod.POST)
+	@RequestMapping(value = "/crear-cuenta", method = RequestMethod.POST)
 	public ModelAndView registrarUsuario(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
 			BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) {
@@ -65,7 +65,7 @@ public class ControladorPrincipal {
 			bindingResult.rejectValue("email", "error.dtoUsuario", "* Ya existe un usuario con este e-mail");		
 		
 		if (bindingResult.hasErrors()) {
-			modelAndView = new ModelAndView("registro", bindingResult.getModel());
+			modelAndView = new ModelAndView("crearCuenta", bindingResult.getModel());
 			modelAndView.addObject("dtoUsuario", dtoUsuario);
 		}			
 		else {
@@ -81,50 +81,36 @@ public class ControladorPrincipal {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value="/menu", method = RequestMethod.GET)
-	public ModelAndView mostrarMenu(){
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("menu");
-		return modelAndView;
-	}
-	
-	@RequestMapping("/informacion")
+	@RequestMapping("/acerca-de")
     public String mostrarInformacion() {
-        return "informacion";
+        return "acercaDe";
     }
 	
-	@RequestMapping(value="/asignaturas", method = RequestMethod.GET)
+	@RequestMapping(value="/mis-asignaturas", method = RequestMethod.GET)
 	public ModelAndView mostrarAsignaturas(@ModelAttribute("usuario") DTOUsuario dtoUsuario){
 		ModelAndView modelAndView = new ModelAndView();
 		if(dtoUsuario.getRol() == Rol.Profesor)
 			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasProfesor(dtoUsuario.getId()));
 		else
 			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasAlumno(dtoUsuario.getId()));
+		
 		modelAndView.addObject("dtoAsignatura", new DTOAsignatura());
-		modelAndView.setViewName("asignaturas");
+		modelAndView.setViewName("misAsignaturas");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value="/asignaturas/eliminar", method = RequestMethod.GET)
-	public ModelAndView eliminarAsignatura(int id, final RedirectAttributes redirectAttrs){
-		Asignatura asignatura = saAsignatura.leerPorId(id);
-		saAsignatura.actualizarActivo(asignatura.getId(), 0);
-		Mensaje mensaje = new Mensaje("Atención", "la asignatura " + asignatura.getNombre() + " se ha eliminado", "rojo");
-		mensaje.setIcono("reply");
-		mensaje.setEnlace("/asignaturas/deshacer-baja?id=" + asignatura.getId());
-		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
-		redirectAttrs.addFlashAttribute("mensaje", mensaje);
-		return new ModelAndView("redirect:/asignaturas");
+	@RequestMapping(value = "/asignatura", method = RequestMethod.GET)
+	public ModelAndView modificarAsignatura(int id) {
+		ModelAndView modelAndView = new ModelAndView();	
+		modelAndView.addObject("asignatura", saAsignatura.leerPorId(id));
+		modelAndView.addObject("dtoUsuario", new DTOUsuario());
+		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
+		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
+		modelAndView.setViewName("asignatura");
+		return modelAndView;
 	}
 	
-	@RequestMapping(value="/asignaturas/deshacer-baja", method = RequestMethod.GET)
-	public ModelAndView deshacerBajaAsignatura(int id, final RedirectAttributes redirectAttrs){
-		Asignatura asignatura = saAsignatura.leerPorId(id);
-		saAsignatura.actualizarActivo(asignatura.getId(), 1);
-		return new ModelAndView("redirect:/asignaturas");
-	}
-	
-	@RequestMapping(value = "/asignaturas/insertar", method = RequestMethod.POST)
+	@RequestMapping(value = "/asignatura/insertar", method = RequestMethod.POST)
 	public ModelAndView insertarAsignatura(@Valid @ModelAttribute("dtoAsignatura") DTOAsignatura dtoAsignatura,
 			BindingResult bindingResult,
 			@ModelAttribute("usuario") DTOUsuario dtoUsuario,
@@ -138,18 +124,26 @@ public class ControladorPrincipal {
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		}
 		
-		return new ModelAndView("redirect:/asignaturas");
+		return new ModelAndView("redirect:/mis-asignaturas");
 	}
 	
-	@RequestMapping(value = "/asignatura", method = RequestMethod.GET)
-	public ModelAndView modificarAsignatura(int id) {
-		ModelAndView modelAndView = new ModelAndView();	
-		modelAndView.addObject("asignatura", saAsignatura.leerPorId(id));
-		modelAndView.addObject("dtoUsuario", new DTOUsuario());
-		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
-		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
-		modelAndView.setViewName("asignatura");
-		return modelAndView;
+	@RequestMapping(value="/asignatura/eliminar", method = RequestMethod.GET)
+	public ModelAndView eliminarAsignatura(int id, final RedirectAttributes redirectAttrs){
+		Asignatura asignatura = saAsignatura.leerPorId(id);
+		saAsignatura.actualizarActivo(asignatura.getId(), 0);
+		Mensaje mensaje = new Mensaje("Atención", "la asignatura " + asignatura.getNombre() + " se ha eliminado", "rojo");
+		mensaje.setIcono("reply");
+		mensaje.setEnlace("/asignatura/deshacer-eliminar?id=" + asignatura.getId());
+		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
+		redirectAttrs.addFlashAttribute("mensaje", mensaje);
+		return new ModelAndView("redirect:/mis-asignaturas");
+	}
+	
+	@RequestMapping(value="/asignatura/deshacer-eliminar", method = RequestMethod.GET)
+	public ModelAndView deshacerBajaAsignatura(int id, final RedirectAttributes redirectAttrs){
+		Asignatura asignatura = saAsignatura.leerPorId(id);
+		saAsignatura.actualizarActivo(asignatura.getId(), 1);
+		return new ModelAndView("redirect:/mis-asignaturas");
 	}
 	
 	@RequestMapping(value = "/asignatura/{idAsignatura}/alta-alumno", method = RequestMethod.POST)

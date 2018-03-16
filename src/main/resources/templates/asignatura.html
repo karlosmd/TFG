@@ -21,77 +21,24 @@
   	<nav th:replace="fragments/navbar :: navbar"></nav>
   	<div th:replace="fragments/mensaje :: mensaje"></div>
   	
-  	<div class="tabla col-12 col-md-10" th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}">
-  		<h1 class="titulo" th:text="${asignatura.nombre} + ' - Retos'"></h1>
-	  	<table class="table table-striped table-dark">
-		  <thead>
-		    <tr>
-		      <th scope="col">Id</th>
-		      <th scope="col">Nombre</th>
-		      <th scope="col">Enlace</th>
-		    </tr>
-		  </thead>
-		  <tbody th:if="${#lists.isEmpty(retos)}">
-		    <tr>
-		      <td colspan="5">No hay retos que mostrar</td>
-		    </tr>
-		  </tbody>
-		  <tbody th:if="${not #lists.isEmpty(retos)}">
-		    <tr th:each="reto : ${retos}">
-		      <td scope="row" th:text="${reto.id}"></td>
-		      <td th:text="${reto.nombre}"></td>
-		      <td th:text="${reto.enlace}"></td>
-		    </tr>
-		  </tbody>
-		  <tfoot>
-		    <tr>
-		      <td colspan="5" th:text="'Profesor de la asignatura: ' + ${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}"></td>
-		    </tr>
-		  </tfoot>
-		</table>
-	</div>
-  	
-  	<div class="tabla col-12 col-md-10" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-  		<h1 class="titulo" th:text="${asignatura.nombre} + ' - Alumnos'"></h1>
-	  	<table class="table table-striped table-dark">
-		  <thead>
-		    <tr>
-		      <th scope="col">Apellidos</th>
-		      <th scope="col">Nombre</th>
-		      <th scope="col">Correo electrónico</th>
-		      <th scope="col">Acciones</th>
-		    </tr>
-		  </thead>
-		  <tbody th:if="${#lists.isEmpty(alumnosMatriculados)}">
-		    <tr>
-		      <td colspan="5">No hay alumnos que mostrar</td>
-		    </tr>
-		  </tbody>
-		  <tbody th:if="${not #lists.isEmpty(alumnosMatriculados)}">
-		    <tr th:each="alumno : ${alumnosMatriculados}">
-		      <td scope="row" th:text="${alumno.apellidos}"></td>
-		      <td th:text="${alumno.nombre}"></td>
-		      <td th:text="${alumno.email}"></td>
-		      <td>
-		      	<a th:href="@{/asignatura/baja-alumno(idAsignatura=${asignatura.id}, idAlumno=${alumno.id})}"><i class="material-icons icono-naranja">remove_circle_outline</i></a>		      	
-		      </td>
-		    </tr>
-		  </tbody>
-		  <tfoot>
-		    <tr>
-			    <td></td>
-			    <td></td>
-			    <td></td>
-			    <td>
-			      	<!-- Button trigger modal -->
-					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoAlumno">
-						Añadir Alumno
-					</button>
-					<button type="button" class="btn btn-success">Lanzar Reto</button>
-				</td>
-		    </tr>
-		  </tfoot>
-		</table>
+  	<div class="tabla col-12 col-md-10">
+  		<h1 class="titulo" th:text="${asignatura.nombre}"></h1>
+  		<ul class="nav nav-tabs separador-tablas" id="myTab" role="tablist">
+		  <li class="nav-item">
+		    <a class="nav-link active" id="retos-tab" data-toggle="tab" href="#retos" role="tab" aria-controls="retos" aria-selected="true">Retos</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="alumnos-tab" data-toggle="tab" href="#alumnos" role="tab" aria-controls="alumnos" aria-selected="false">Integrantes</a>
+		  </li>
+		</ul>
+		<div class="tab-content" id="myTabContent">
+		  <div class="tab-pane fade show active" id="retos" role="tabpanel" aria-labelledby="retos-tab">
+		  	<table th:replace="fragments/tablas :: tablaRetos"></table>
+		  </div>
+		  <div class="tab-pane fade" id="alumnos" role="tabpanel" aria-labelledby="alumnos-tab">
+			<table th:replace="fragments/tablas :: tablaAlumnos"></table>
+		  </div>
+		</div>	  	
 	</div>
 	
 	<!-- Modal Añadir Alumno -->
