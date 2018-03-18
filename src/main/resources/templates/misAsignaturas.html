@@ -23,51 +23,7 @@
   	
   	<div class="tabla col-12 col-md-10">
   		<h1 class="titulo">Mis Asignaturas</h1>
-	  	<table class="table table-striped table-dark">
-		  <thead>
-		    <tr>
-		      <th scope="col">Id</th>
-		      <th scope="col">Nombre</th>
-		      <th scope="col">Grupo</th>
-		      <th scope="col">Curso</th>
-		      <th scope="col" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">Acciones</th>
-		      <th scope="col" th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}">Profesor</th>
-		    </tr>
-		  </thead>
-		  <tbody th:if="${#lists.isEmpty(asignaturas)}">
-		    <tr>
-		      <td colspan="5">No hay asignaturas que mostrar</td>
-		    </tr>
-		  </tbody>
-		  <tbody th:if="${not #lists.isEmpty(asignaturas)}">
-		    <tr th:each="asignatura : ${asignaturas}">
-		      <th scope="row" th:text="${asignatura.id}"></th>
-		      <td><a th:text="${asignatura.nombre}" th:href="@{/asignatura(id=${asignatura.id})}"></a></td>
-		      <td th:text="${asignatura.grupo}"></td>
-		      <td th:text="${asignatura.curso}"></td>
-		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-		      	<a data-toggle="modal" data-target="#modalModificarAsignatura"><i class="material-icons icono-verde">create</i></a>
-		      	<a th:href="@{/asignatura/eliminar(id=${asignatura.id})}"><i class="material-icons icono-naranja">delete</i></a>		      	
-		      </td>
-		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}" th:text="${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}">		      	
-		      </td>
-		    </tr>
-		  </tbody>
-		  <tfoot>
-		    <tr>
-			    <td></td>
-			    <td></td>
-			    <td></td>
-			    <td></td>
-			    <td>
-			      	<!-- Button trigger modal -->
-					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevaAsignatura" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-						Nueva Asignatura
-					</button>
-				</td>
-		    </tr>
-		  </tfoot>
-		</table>
+	  	<table th:replace="fragments/tablas :: tablaMisAsignaturas"></table>
 	</div>	
 	
 	<!-- Modal Nueva Asignatura -->

@@ -1,7 +1,9 @@
 package tfg.modelo;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -35,7 +38,20 @@ public class Asignatura {
     @JoinColumn(name = "profesor")
     private Profesor profesor;
 	
+	@OneToMany(
+		mappedBy = "asignatura", 
+		cascade = CascadeType.ALL, 
+		orphanRemoval = true
+	)
+	private Set<Reto> retos;
+	
 	private int activo;
+	
+	public Asignatura(){
+		activo = 1;
+		alumnos = new HashSet<>();
+		retos = new HashSet<>();
+	}
 
 	public int getId() {
 		return id;
@@ -83,6 +99,14 @@ public class Asignatura {
 
 	public void setProfesor(Profesor profesor) {
 		this.profesor = profesor;
+	}
+
+	public Set<Reto> getRetos() {
+		return retos;
+	}
+
+	public void setRetos(Set<Reto> retos) {
+		this.retos = retos;
 	}
 
 	public int getActivo() {

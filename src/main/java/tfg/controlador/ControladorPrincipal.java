@@ -16,13 +16,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tfg.DTO.DTOAsignatura;
+import tfg.DTO.DTOReto;
 import tfg.DTO.DTOUsuario;
 import tfg.modelo.Alumno;
 import tfg.modelo.Asignatura;
 import tfg.modelo.Mensaje;
 import tfg.modelo.Profesor;
+import tfg.modelo.Reto;
 import tfg.modelo.Rol;
 import tfg.servicioAplicacion.SAAsignatura;
+import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
 
 @Controller
@@ -32,16 +35,18 @@ public class ControladorPrincipal {
 	private SAUsuario saUsuario;
 	@Autowired
 	private SAAsignatura saAsignatura;
+	@Autowired
+	private SAReto saReto;
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
-	public ModelAndView mostrarLogin(){
+	public ModelAndView mostrarInicioSesion(){
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("index");
 		return modelAndView;
 	}
 	
 	@RequestMapping(value="/crear-cuenta", method = RequestMethod.GET)
-	public ModelAndView mostrarRegistro(){
+	public ModelAndView mostrarCrearCuenta(){
 		ModelAndView modelAndView = new ModelAndView();
 		DTOUsuario dtoUsuario = new DTOUsuario();
 		
@@ -52,7 +57,7 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping(value = "/crear-cuenta", method = RequestMethod.POST)
-	public ModelAndView registrarUsuario(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
+	public ModelAndView crearCuenta(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
 			BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) {
 		ModelAndView modelAndView = null;
@@ -82,12 +87,12 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping("/acerca-de")
-    public String mostrarInformacion() {
-        return "acercaDe";
-    }
+	public String mostrarAcercaDe() {
+		return "acercaDe";
+	}
 	
 	@RequestMapping(value="/mis-asignaturas", method = RequestMethod.GET)
-	public ModelAndView mostrarAsignaturas(@ModelAttribute("usuario") DTOUsuario dtoUsuario){
+	public ModelAndView mostrarMisAsignaturas(@ModelAttribute("usuario") DTOUsuario dtoUsuario){
 		ModelAndView modelAndView = new ModelAndView();
 		if(dtoUsuario.getRol() == Rol.Profesor)
 			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasProfesor(dtoUsuario.getId()));
@@ -100,12 +105,15 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping(value = "/asignatura", method = RequestMethod.GET)
-	public ModelAndView modificarAsignatura(int id) {
-		ModelAndView modelAndView = new ModelAndView();	
-		modelAndView.addObject("asignatura", saAsignatura.leerPorId(id));
+	public ModelAndView mostrarAsignatura(int id) {
+		ModelAndView modelAndView = new ModelAndView();
+		Asignatura asignatura = saAsignatura.leerPorId(id);
+		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoUsuario", new DTOUsuario());
+		modelAndView.addObject("dtoReto", new DTOReto());
 		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
 		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
+		modelAndView.addObject("retos", saReto.leerPorAsignatura(asignatura));
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
 	}
@@ -140,7 +148,7 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping(value="/asignatura/deshacer-eliminar", method = RequestMethod.GET)
-	public ModelAndView deshacerBajaAsignatura(int id, final RedirectAttributes redirectAttrs){
+	public ModelAndView deshacerEliminarAsignatura(int id, final RedirectAttributes redirectAttrs){
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		saAsignatura.actualizarActivo(asignatura.getId(), 1);
 		return new ModelAndView("redirect:/mis-asignaturas");
@@ -173,8 +181,54 @@ public class ControladorPrincipal {
 		Mensaje mensaje = new Mensaje("Atención", "se ha eliminado a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" de la asignatura " + asignatura.getNombre(), "rojo");
 		mensaje.setIcono("reply");
+		mensaje.setEnlace("/asignatura/deshacer-baja-alumno?idAsignatura=" + asignatura.getId() + "&idAlumno=" + alumno.getId());
+		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
+		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+	}
+	
+	@RequestMapping(value="/asignatura/deshacer-baja-alumno", method = RequestMethod.GET)
+	public ModelAndView AsignaturaDeshacerBajaAlumno(int idAsignatura, int idAlumno){
+		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
+		Alumno alumno = saUsuario.leerAlumno(idAlumno);
+		alumno.insertarAsignatura(asignatura);
+		saUsuario.sobrescribir(alumno);
+		
+		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+	}
+	
+	@RequestMapping(value = "/asignatura/{idAsignatura}/insertar-reto", method = RequestMethod.POST)
+	public ModelAndView asignaturaInsertarReto(@PathVariable("idAsignatura") int idAsignatura,
+			@ModelAttribute("dtoReto") DTOReto dtoReto,
+			final RedirectAttributes redirectAttrs) {
+		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);	
+		saReto.crearReto(dtoReto, asignatura);
+		
+		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido el reto '" + dtoReto.getNombre() +
+				"' a la asignatura " + asignatura.getNombre(), "verde");
+		mensaje.setIcono("check_circle");
+		redirectAttrs.addFlashAttribute("mensaje", mensaje);
+		
+		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
+	}
+	
+	@RequestMapping(value="/asignatura/eliminar-reto", method = RequestMethod.GET)
+	public ModelAndView AsignaturaEliminarReto(int idReto, int idAsignatura, final RedirectAttributes redirectAttrs){
+		Reto reto = saReto.leerPorId(idReto);
+		saReto.actualizarActivo(reto.getId(), 0);
+		Mensaje mensaje = new Mensaje("Atención", "el reto '" + reto.getNombre() + "' se ha eliminado", "rojo");
+		mensaje.setIcono("reply");
+		mensaje.setEnlace("/asignatura/deshacer-eliminar-reto?idReto=" + reto.getId() + "&idAsignatura=" + idAsignatura);
+		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
+		redirectAttrs.addFlashAttribute("mensaje", mensaje);
+		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+	}
+	
+	@RequestMapping(value="/asignatura/deshacer-eliminar-reto", method = RequestMethod.GET)
+	public ModelAndView AsignaturaDeshacerEliminarReto(int idReto, int idAsignatura){
+		Reto reto = saReto.leerPorId(idReto);
+		saReto.actualizarActivo(reto.getId(), 1);
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
 	

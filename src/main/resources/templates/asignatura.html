@@ -52,7 +52,7 @@
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignatura/{idAsignatura}/alta-alumno(idAsignatura=${asignatura.id})}" th:object="${dtoUsuario}" method="POST">
+	        <form class="formulario form-crear-cuenta" id="insertar-alumno" action="#" th:action="@{/asignatura/{idAsignatura}/alta-alumno(idAsignatura=${asignatura.id})}" th:object="${dtoUsuario}" method="POST">
 			  <div class="form-group">
 			    <label for="id">Correo electrónico</label>
 			    <select class="form-control" id="id" th:field="*{id}">
@@ -69,7 +69,39 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-	        <button type="submit" class="btn btn-naranja" form="insertar-asignatura">Añadir Alumno</button>
+	        <button type="submit" class="btn btn-naranja" form="insertar-alumno">Añadir Alumno</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Modal Añadir Reto -->
+	<div class="modal fade" id="modalNuevoReto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Añadir Reto</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <form class="formulario form-crear-cuenta" id="insertar-reto" action="#" th:action="@{/asignatura/{idAsignatura}/insertar-reto(idAsignatura=${asignatura.id})}" th:object="${dtoReto}" method="POST">
+			  <div class="form-group">
+			  	<label for="nombre">Nombre</label>
+				<input type="text" th:field="*{nombre}" class="form-control" id="nombre"/>
+				<label th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="validation-message error"></label>
+			  </div>
+			  <div class="form-group">
+			  	<label for="enlace">Enlace</label>
+				<input type="text" th:field="*{enlace}" class="form-control" id="enlace" />
+				<label th:if="${#fields.hasErrors('enlace')}" th:errors="*{enlace}" class="validation-message error"></label>
+			  </div>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	        <button type="submit" class="btn btn-naranja" form="insertar-reto">Añadir Reto</button>
 	      </div>
 	    </div>
 	  </div>

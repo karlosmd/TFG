@@ -33,7 +33,7 @@ public abstract class Usuario {
 	
 	private int activo;
 	
-	Usuario (){
+	public Usuario (){
 		activo = 1;
 	}
 	

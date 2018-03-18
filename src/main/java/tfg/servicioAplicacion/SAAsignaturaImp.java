@@ -23,7 +23,6 @@ public class SAAsignaturaImp implements SAAsignatura {
 		asignatura.setGrupo(dtoAsignatura.getGrupo());
 		asignatura.setCurso(dtoAsignatura.getCurso());
 		asignatura.setProfesor(profesor);
-	    asignatura.setActivo(1);
 	    daoAsignatura.save(asignatura);
 	}
 	
