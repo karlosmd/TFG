@@ -135,7 +135,7 @@ public class ControladorPrincipal {
 		return new ModelAndView("redirect:/mis-asignaturas");
 	}
 	
-	@RequestMapping(value="/asignatura/eliminar", method = RequestMethod.GET)
+	@RequestMapping(value="/asignatura/eliminar", method = RequestMethod.POST)
 	public ModelAndView eliminarAsignatura(int id, final RedirectAttributes redirectAttrs){
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		saAsignatura.actualizarActivo(asignatura.getId(), 0);
@@ -171,7 +171,7 @@ public class ControladorPrincipal {
 		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
 	}
 	
-	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.GET)
+	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaBajaAlumno(int idAsignatura, int idAlumno, final RedirectAttributes redirectAttrs){
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saUsuario.leerAlumno(idAlumno);
@@ -213,7 +213,7 @@ public class ControladorPrincipal {
 		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
 	}
 	
-	@RequestMapping(value="/asignatura/eliminar-reto", method = RequestMethod.GET)
+	@RequestMapping(value="/asignatura/eliminar-reto", method = RequestMethod.POST)
 	public ModelAndView AsignaturaEliminarReto(int idReto, int idAsignatura, final RedirectAttributes redirectAttrs){
 		Reto reto = saReto.leerPorId(idReto);
 		saReto.actualizarActivo(reto.getId(), 0);

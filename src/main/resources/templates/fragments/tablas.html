@@ -9,6 +9,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+  	<!-- Style CSS -->
+    <link href="css/style.css" rel="stylesheet" />
   </head>
     <body>
 	  <div class="container">
@@ -38,7 +40,10 @@
 		      <td th:text="${asignatura.curso}"></td>
 		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
 		      	<a data-toggle="modal" data-target="#modalModificarAsignatura"><i class="material-icons icono-verde">create</i></a>
-		      	<a th:href="@{/asignatura/eliminar(id=${asignatura.id})}"><i class="material-icons icono-naranja">delete</i></a>		      	
+		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar}" method="POST">
+					<input type="hidden" name="id" th:value="${asignatura.id}" />
+					<a onclick="this.parentNode.submit()" title="Eliminar Asignatura"><i class="material-icons icono-naranja">delete</i></a>
+				</form>
 		      </td>
 		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Alumno}" th:text="${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}">		      	
 		      </td>
@@ -84,7 +89,11 @@
 		      <td><a th:href="${reto.enlace}" th:text="${reto.enlace}" target="_blank"></a></td>
 		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
 		      	<a data-toggle="modal" data-target="#modalModificarAsignatura"><i class="material-icons icono-verde">create</i></a>
-		      	<a th:href="@{/asignatura/eliminar-reto(idAsignatura=${asignatura.id}, idReto=${reto.id})}"><i class="material-icons icono-naranja">delete</i></a>		      	
+		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar-reto}" method="POST">
+					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
+					<input type="hidden" name="idReto" th:value="${reto.id}" />
+					<a onclick="this.parentNode.submit()" title="Eliminar Reto"><i class="material-icons icono-naranja">delete</i></a>
+				</form>
 		      </td>
 		    </tr>
 		  </tbody>
@@ -129,7 +138,11 @@
 		      <td th:text="${alumno.nombre}"></td>
 		      <td th:text="${alumno.email}"></td>
 		      <td th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-		      	<a th:href="@{/asignatura/baja-alumno(idAsignatura=${asignatura.id}, idAlumno=${alumno.id})}"><i class="material-icons icono-naranja">remove_circle_outline</i></a>		      	
+		      	<form class="formulario-oculto" th:action="@{/asignatura/baja-alumno}" method="POST">
+					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
+					<input type="hidden" name="idAlumno" th:value="${alumno.id}" />
+					<a onclick="this.parentNode.submit()" title="Dar de Baja"><i class="material-icons icono-naranja">remove_circle_outline</i></a>
+				</form>	      	
 		      </td>
 		    </tr>
 		  </tbody>
