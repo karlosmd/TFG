@@ -1,10 +1,13 @@
 package tfg.modelo;
 
+import java.util.Map;
+
 public class Mensaje {
 	private String titulo;
 	private String contenido;
 	private String tipo;
 	private String enlace;
+	private Map<String, Integer> campos;
 	private String textoEnlace;
 	private String icono;
 	
@@ -14,8 +17,15 @@ public class Mensaje {
 		this.contenido = contenido;
 		this.tipo = tipo;
 		this.enlace = null;
+		this.campos = null;
 		this.textoEnlace = null;
 		this.icono = null;
+	}
+	
+	public void definirPeticion(String enlace, Map<String, Integer> campos, String textoEnlace) {
+		this.enlace = enlace;
+		this.campos = campos;
+		this.textoEnlace = textoEnlace;
 	}
 	
 	public String getTitulo() {
@@ -42,6 +52,12 @@ public class Mensaje {
 	public void setEnlace(String enlace) {
 		this.enlace = enlace;
 	}
+	public Map<String, Integer> getCampos() {
+		return campos;
+	}
+	public void setCampos(Map<String, Integer> campos) {
+		this.campos = campos;
+	}
 	public String getTextoEnlace() {
 		return textoEnlace;
 	}
@@ -53,5 +69,5 @@ public class Mensaje {
 	}
 	public void setIcono(String icono) {
 		this.icono = icono;
-	}	
+	}
 }

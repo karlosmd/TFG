@@ -1,5 +1,8 @@
 package tfg.controlador;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,13 +144,16 @@ public class ControladorPrincipal {
 		saAsignatura.actualizarActivo(asignatura.getId(), 0);
 		Mensaje mensaje = new Mensaje("Atención", "la asignatura " + asignatura.getNombre() + " se ha eliminado", "rojo");
 		mensaje.setIcono("reply");
-		mensaje.setEnlace("/asignatura/deshacer-eliminar?id=" + asignatura.getId());
-		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
+		
+		Map<String, Integer> campos = new HashMap<String, Integer>();
+		campos.put("id", asignatura.getId());
+		mensaje.definirPeticion("/asignatura/deshacer-eliminar", campos, "Pulse aquí para Deshacer");
+
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		return new ModelAndView("redirect:/mis-asignaturas");
 	}
 	
-	@RequestMapping(value="/asignatura/deshacer-eliminar", method = RequestMethod.GET)
+	@RequestMapping(value="/asignatura/deshacer-eliminar", method = RequestMethod.POST)
 	public ModelAndView deshacerEliminarAsignatura(int id, final RedirectAttributes redirectAttrs){
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		saAsignatura.actualizarActivo(asignatura.getId(), 1);
@@ -181,14 +187,18 @@ public class ControladorPrincipal {
 		Mensaje mensaje = new Mensaje("Atención", "se ha eliminado a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" de la asignatura " + asignatura.getNombre(), "rojo");
 		mensaje.setIcono("reply");
-		mensaje.setEnlace("/asignatura/deshacer-baja-alumno?idAsignatura=" + asignatura.getId() + "&idAlumno=" + alumno.getId());
-		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
+		
+		Map<String, Integer> campos = new HashMap<String, Integer>();
+		campos.put("idAsignatura", asignatura.getId());
+		campos.put("idAlumno", alumno.getId());
+		mensaje.definirPeticion("/asignatura/deshacer-baja-alumno", campos, "Pulse aquí para Deshacer");
+		
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
 	
-	@RequestMapping(value="/asignatura/deshacer-baja-alumno", method = RequestMethod.GET)
+	@RequestMapping(value="/asignatura/deshacer-baja-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaDeshacerBajaAlumno(int idAsignatura, int idAlumno){
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saUsuario.leerAlumno(idAlumno);
@@ -219,13 +229,17 @@ public class ControladorPrincipal {
 		saReto.actualizarActivo(reto.getId(), 0);
 		Mensaje mensaje = new Mensaje("Atención", "el reto '" + reto.getNombre() + "' se ha eliminado", "rojo");
 		mensaje.setIcono("reply");
-		mensaje.setEnlace("/asignatura/deshacer-eliminar-reto?idReto=" + reto.getId() + "&idAsignatura=" + idAsignatura);
-		mensaje.setTextoEnlace("Pulse aquí para Deshacer");
+		
+		Map<String, Integer> campos = new HashMap<String, Integer>();
+		campos.put("idAsignatura", idAsignatura);
+		campos.put("idReto", reto.getId());
+		mensaje.definirPeticion("/asignatura/deshacer-eliminar-reto", campos, "Pulse aquí para Deshacer");
+		
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
 	
-	@RequestMapping(value="/asignatura/deshacer-eliminar-reto", method = RequestMethod.GET)
+	@RequestMapping(value="/asignatura/deshacer-eliminar-reto", method = RequestMethod.POST)
 	public ModelAndView AsignaturaDeshacerEliminarReto(int idReto, int idAsignatura){
 		Reto reto = saReto.leerPorId(idReto);
 		saReto.actualizarActivo(reto.getId(), 1);

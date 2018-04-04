@@ -9,17 +9,22 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+    <!-- Style CSS -->
+    <link href="css/style.css" rel="stylesheet" />
   </head>
     <body>
 	  <div class="container">
 		<div th:class="'alert alert-' + ${mensaje.tipo} + ' alert-dismissible fade show collapse'" id="collapseAlert" role="alert" th:if="${mensaje} != null" th:fragment="mensaje">
 		 	<strong th:text="${mensaje.titulo}"></strong><span th:text="', ' + ${mensaje.contenido} + '. '"></span>
-		 	<a th:href="${mensaje.enlace}" th:if="#{mensaje.enlace != null}" th:text="${mensaje.textoEnlace}"></a>
+		 	<form class="formulario-oculto" th:action="${mensaje.enlace}" th:if="#{mensaje.enlace != null}" method="POST">
+				<input type="hidden" th:each="campo : ${mensaje.campos}" th:name="${campo.key}" th:value="${campo.value}" />
+				<a class="enlace-mensaje" onclick="this.parentNode.submit()" th:text="${mensaje.textoEnlace}"></a>
+			</form>
 		 	<i class="material-icons" th:text="${mensaje.icono}"></i>
 			<button type="button" class="close" data-toggle="collapse" href="#collapseAlert" aria-label="Close">
 		  		<span aria-hidden="true">&times;</span>
 			</button>
-		</div>	  
+		</div>
 		
 		<!-- Optional JavaScript -->
     	<!-- jQuery first, then Popper.js, then Bootstrap JS -->

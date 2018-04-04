@@ -51,6 +51,11 @@ div.container{
 	display: inline;
 }
 
+a.enlace-mensaje{
+	text-decoration: underline !important;
+	cursor: pointer;
+}
+
 div.card-deck{
 	margin: 5% 0% 5%;
 }
