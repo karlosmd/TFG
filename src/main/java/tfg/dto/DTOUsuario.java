@@ -1,14 +1,12 @@
-package tfg.DTO;
+package tfg.dto;
 
-import java.util.Set;
+import javax.persistence.Column;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import tfg.modelo.Asignatura;
-import tfg.modelo.Rol;
-
+import tfg.objetoNegocio.Rol;
 
 public class DTOUsuario {
 	private int id;	
@@ -17,7 +15,10 @@ public class DTOUsuario {
 	private String nombre;
 	
 	@NotEmpty(message = "* Por favor, introduzca su apellido")
-	private String apellidos;	
+	private String apellidos;
+	
+	@Column(nullable=false)
+	private Rol rol;
 	
 	@Email(message = "* Por favor, introduzca un correo electrónico válido")
 	@NotEmpty(message = "* Por favor, introduzca un correo electrónico")
@@ -29,10 +30,6 @@ public class DTOUsuario {
 	
 	@NotEmpty(message = "* Por favor, introduzca una contraseña")
 	private String confirmarPassword;
-	
-	private Rol rol;
-	
-	private Set<Asignatura> asignaturas;
 
 	public int getId() {
 		return id;
@@ -58,6 +55,14 @@ public class DTOUsuario {
 		this.apellidos = apellidos;
 	}
 
+	public Rol getRol() {
+		return rol;
+	}
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -80,21 +85,5 @@ public class DTOUsuario {
 
 	public void setConfirmarPassword(String confirmarPassword) {
 		this.confirmarPassword = confirmarPassword;
-	}
-
-	public Rol getRol() {
-		return rol;
-	}
-
-	public void setRol(Rol rol) {
-		this.rol = rol;
-	}
-
-	public Set<Asignatura> getAsignaturas() {
-		return asignaturas;
-	}
-
-	public void setAsignaturas(Set<Asignatura> asignaturas) {
-		this.asignaturas = asignaturas;
 	}
 }

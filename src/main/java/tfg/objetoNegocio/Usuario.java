@@ -1,16 +1,23 @@
-package tfg.modelo;
+package tfg.objetoNegocio;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
+import javax.persistence.InheritanceType;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-@MappedSuperclass
+@Entity
+@Table(name = "usuarios")
+@Inheritance(
+    strategy = InheritanceType.JOINED
+)
 public abstract class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +29,9 @@ public abstract class Usuario {
 	@NotEmpty
 	private String apellidos;
 	
+	@Column(nullable=false)
+	private Rol rol;
+	
 	@Email
 	@NotEmpty
 	@Column(unique=true)
@@ -31,16 +41,16 @@ public abstract class Usuario {
 	@NotEmpty
 	private String password;
 	
-	private int activo;
+	private boolean activo;
 	
 	public Usuario (){
-		activo = 1;
+		activo = true;
 	}
 	
 	public abstract void insertarAsignatura(Asignatura asignatura);
 	
 	public abstract void eliminarAsignatura(Asignatura asignatura);
-	
+
 	public int getId() {
 		return id;
 	}
@@ -65,6 +75,14 @@ public abstract class Usuario {
 		this.apellidos = apellidos;
 	}
 
+	public Rol getRol() {
+		return rol;
+	}
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -81,11 +99,11 @@ public abstract class Usuario {
 		this.password = password;
 	}
 
-	public int getActivo() {
+	public boolean isActivo() {
 		return activo;
 	}
 
-	public void setActivo(int activo) {
+	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
 }

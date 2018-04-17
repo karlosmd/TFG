@@ -1,4 +1,4 @@
-package tfg.DAO;
+package tfg.repositorio;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import tfg.modelo.Asignatura;
-import tfg.modelo.Reto;
+import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Reto;
 
-@Repository("daoReto")
-public interface DAOReto extends JpaRepository<Reto, Integer> {
+@Repository("repositorioReto")
+public interface RepositorioReto extends JpaRepository<Reto, Integer> {
 	
 	// READ	
 	@Query("SELECT retos FROM Reto retos WHERE retos.activo = 1 AND retos.asignatura = :asignatura")

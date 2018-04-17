@@ -1,4 +1,4 @@
-package tfg.DAO;
+package tfg.repositorio;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface DAOUsuario<T> extends JpaRepository<T, Integer> {
+public interface RepositorioUsuarios<T> extends JpaRepository<T, Integer> {
 	
-	// READ	
+	// READ
 	T findByEmail(String email);
 	
 	T findById(int id);

@@ -2,9 +2,9 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
-import tfg.DTO.DTOReto;
-import tfg.modelo.Asignatura;
-import tfg.modelo.Reto;
+import tfg.dto.DTOReto;
+import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Reto;
 
 public interface SAReto {
 	

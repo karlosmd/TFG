@@ -1,4 +1,4 @@
-package tfg.modelo;
+package tfg.objetoNegocio;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

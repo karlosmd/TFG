@@ -1,4 +1,4 @@
-package tfg.modelo;
+package tfg.objetoNegocio;
 
 import java.util.Map;
 

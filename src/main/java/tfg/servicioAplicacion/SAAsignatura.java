@@ -2,9 +2,9 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
-import tfg.DTO.DTOAsignatura;
-import tfg.modelo.Asignatura;
-import tfg.modelo.Profesor;
+import tfg.dto.DTOAsignatura;
+import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Profesor;
 
 public interface SAAsignatura {
 	

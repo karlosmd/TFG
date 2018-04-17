@@ -1,4 +1,4 @@
-package tfg.DAO;
+package tfg.repositorio;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import tfg.modelo.Alumno;
+import tfg.objetoNegocio.Alumno;
 
 @Transactional
-public interface DAOAlumno extends DAOUsuario<Alumno> {
+public interface RepositorioAlumno extends RepositorioUsuarios<Alumno> {
 	
 	// READ	
 	//Consulta de Entidades con relaciones ManyToMany

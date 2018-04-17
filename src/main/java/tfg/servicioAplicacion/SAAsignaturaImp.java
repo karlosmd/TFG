@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tfg.DAO.DAOAsignatura;
-import tfg.DTO.DTOAsignatura;
-import tfg.modelo.Asignatura;
-import tfg.modelo.Profesor;
+import tfg.dto.DTOAsignatura;
+import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Profesor;
+import tfg.repositorio.RepositorioAsignatura;
 
 @Service ("SAAsignatura")
 public class SAAsignaturaImp implements SAAsignatura {
 	@Autowired
-	private DAOAsignatura daoAsignatura;
+	private RepositorioAsignatura repositorioAsignatura;
 	
 	// CREATE	
 	@Override
@@ -23,34 +23,34 @@ public class SAAsignaturaImp implements SAAsignatura {
 		asignatura.setGrupo(dtoAsignatura.getGrupo());
 		asignatura.setCurso(dtoAsignatura.getCurso());
 		asignatura.setProfesor(profesor);
-	    daoAsignatura.save(asignatura);
+		repositorioAsignatura.save(asignatura);
 	}
 	
 	// READ
 	@Override
 	public Asignatura leerPorId(int id) {
-		return daoAsignatura.findById(id);
+		return repositorioAsignatura.findById(id);
 	}
 	
 	@Override
 	public List<Asignatura> leerAsignaturasProfesor(int idProfesor){
-		return daoAsignatura.findAsignaturasProfesor(idProfesor);
+		return repositorioAsignatura.findAsignaturasProfesor(idProfesor);
 	}
 	
 	@Override
 	public List<Asignatura> leerAsignaturasAlumno(int idAlumno){
-		return daoAsignatura.findAsignaturasAlumno(idAlumno);
+		return repositorioAsignatura.findAsignaturasAlumno(idAlumno);
 	}
 	
 	// UPDATE
 	@Override
 	public void actualizarActivo(int id, int activo) {
-		daoAsignatura.updateActivo(id, activo);
+		repositorioAsignatura.updateActivo(id, activo);
 	}
 	
 	// DELETE
 	@Override
 	public void borrarPorId(int id) {
-		daoAsignatura.deleteById(id);
+		repositorioAsignatura.deleteById(id);
 	}
 }

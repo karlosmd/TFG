@@ -52,18 +52,14 @@
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <form class="formulario form-crear-cuenta" id="insertar-alumno" action="#" th:action="@{/asignatura/{idAsignatura}/alta-alumno(idAsignatura=${asignatura.id})}" th:object="${dtoUsuario}" method="POST">
+	        <form class="formulario form-crear-cuenta" id="insertar-alumno" action="#" th:action="@{/asignatura/{idAsignatura}/alta-alumno(idAsignatura=${asignatura.id})}" method="POST">
 			  <div class="form-group">
 			    <label for="id">Correo electrónico</label>
-			    <select class="form-control" id="id" th:field="*{id}">
+			    <select class="form-control" name="idUsuario">
 			      <option th:each="alumno : ${alumnosNoMatriculados}"
 		                            th:value="${alumno.id}"
 		                            th:utext="${alumno.email}"/>
 			    </select>
-			  </div>
-			  <div class="form-group">
-			  	<label for="apellidos">Nombre</label>
-				<input type="text" readonly class="form-control-plaintext" th:value="${dtoUsuario.id}"/>
 			  </div>
 			</form>
 	      </div>

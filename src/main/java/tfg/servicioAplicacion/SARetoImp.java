@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tfg.DAO.DAOReto;
-import tfg.DTO.DTOReto;
-import tfg.modelo.Asignatura;
-import tfg.modelo.Reto;
+import tfg.dto.DTOReto;
+import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Reto;
+import tfg.repositorio.RepositorioReto;
 
 @Service("saReto")
 public class SARetoImp implements SAReto{
 	@Autowired
-	private DAOReto daoReto;
+	private RepositorioReto repositorioReto;
 	
 	// CREATE
 	@Override
@@ -22,22 +22,22 @@ public class SARetoImp implements SAReto{
 		reto.setNombre(dtoReto.getNombre());
 		reto.setEnlace(dtoReto.getEnlace());
 		reto.setAsignatura(asignatura);
-		daoReto.save(reto);
+		repositorioReto.save(reto);
 	}
 	
 	// READ
 	@Override
 	public List<Reto> leerPorAsignatura(Asignatura asignatura) {
-		return daoReto.findPorAsignatura(asignatura);
+		return repositorioReto.findPorAsignatura(asignatura);
 	}
 	@Override
 	public Reto leerPorId(int id) {
-		return daoReto.findById(id);
+		return repositorioReto.findById(id);
 	}
 	
 	// UPDATE
 	@Override
 	public void actualizarActivo(int id, int activo) {
-		daoReto.updateActivo(id, activo);		
+		repositorioReto.updateActivo(id, activo);		
 	}
 }

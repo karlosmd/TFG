@@ -18,16 +18,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import tfg.DTO.DTOAsignatura;
-import tfg.DTO.DTOReto;
-import tfg.DTO.DTOUsuario;
-import tfg.modelo.Alumno;
-import tfg.modelo.Asignatura;
-import tfg.modelo.Mensaje;
-import tfg.modelo.Profesor;
-import tfg.modelo.Reto;
-import tfg.modelo.Rol;
+import tfg.dto.DTOAlumno;
+import tfg.dto.DTOAsignatura;
+import tfg.dto.DTOProfesor;
+import tfg.dto.DTOReto;
+import tfg.objetoNegocio.Alumno;
+import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Mensaje;
+import tfg.objetoNegocio.Profesor;
+import tfg.objetoNegocio.Reto;
+import tfg.objetoNegocio.Rol;
+import tfg.objetoNegocio.Usuario;
+import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAsignatura;
+import tfg.servicioAplicacion.SAProfesor;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
 
@@ -36,6 +40,10 @@ public class ControladorPrincipal {
 	
 	@Autowired	
 	private SAUsuario saUsuario;
+	@Autowired	
+	private SAAlumno saAlumno;
+	@Autowired	
+	private SAProfesor saProfesor;
 	@Autowired
 	private SAAsignatura saAsignatura;
 	@Autowired
@@ -50,41 +58,71 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value="/crear-cuenta", method = RequestMethod.GET)
 	public ModelAndView mostrarCrearCuenta(){
-		ModelAndView modelAndView = new ModelAndView();
-		DTOUsuario dtoUsuario = new DTOUsuario();
-		
-		modelAndView.addObject("dtoUsuario", dtoUsuario);		
+		ModelAndView modelAndView = new ModelAndView();		
+		modelAndView.addObject("dtoAlumno", new DTOAlumno());
+		modelAndView.addObject("dtoProfesor", new DTOProfesor());
 		modelAndView.addObject("roles", Rol.values());
 		modelAndView.setViewName("crearCuenta");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/crear-cuenta", method = RequestMethod.POST)
-	public ModelAndView crearCuenta(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
+	@RequestMapping(value = "/alumno/crear", method = RequestMethod.POST)
+	public ModelAndView crearAlumno(@Valid @ModelAttribute("dtoAlumno") DTOAlumno dtoAlumno,
 			BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) {
 		ModelAndView modelAndView = null;
-		DTOUsuario userExists = saUsuario.leerUsuario(dtoUsuario.getEmail());
+		Alumno alumno = saAlumno.leer(dtoAlumno.getEmail());
 
-		if (!dtoUsuario.getPassword().equals(dtoUsuario.getConfirmarPassword())) {
-			bindingResult.rejectValue("password", "error.dtoUsuario", "* Las contraseñas no coinciden");
+		if (!dtoAlumno.getPassword().equals(dtoAlumno.getConfirmarPassword())) {
+			bindingResult.rejectValue("password", "error.dtoAlumno", "* Las contraseñas no coinciden");
 		}
-		if (userExists != null)
-			bindingResult.rejectValue("email", "error.dtoUsuario", "* Ya existe un usuario con este e-mail");		
+		if (alumno != null)
+			bindingResult.rejectValue("email", "error.dtoAlumno", "* Ya existe un usuario con este e-mail");		
 		
 		if (bindingResult.hasErrors()) {
 			modelAndView = new ModelAndView("crearCuenta", bindingResult.getModel());
-			modelAndView.addObject("dtoUsuario", dtoUsuario);
+			modelAndView.addObject("dtoAlumno", dtoAlumno);
+			modelAndView.addObject("dtoProfesor", new DTOProfesor());
+			modelAndView.addObject("roles", Rol.values());
 		}			
 		else {
-			saUsuario.crear(dtoUsuario);
+			saAlumno.crear(dtoAlumno);
 			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
 			return new ModelAndView("redirect:/");
 		}
 		
-		modelAndView.addObject("roles", Rol.values());
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/profesor/crear", method = RequestMethod.POST)
+	public ModelAndView crearProfesor(@Valid @ModelAttribute("dtoProfesor") DTOProfesor dtoProfesor,
+			BindingResult bindingResult,
+			final RedirectAttributes redirectAttrs) {
+		ModelAndView modelAndView = null;
+		Profesor profesor = saProfesor.leer(dtoProfesor.getEmail());
+
+		if (!dtoProfesor.getPassword().equals(dtoProfesor.getConfirmarPassword())) {
+			bindingResult.rejectValue("password", "error.dtoAlumno", "* Las contraseñas no coinciden");
+		}
+		if (profesor != null)
+			bindingResult.rejectValue("email", "error.dtoAlumno", "* Ya existe un usuario con este e-mail");		
+		
+		if (bindingResult.hasErrors()) {
+			
+			modelAndView = new ModelAndView("crearCuenta", bindingResult.getModel());
+			modelAndView.addObject("dtoAlumno", new DTOAlumno());
+			modelAndView.addObject("dtoProfesor", dtoProfesor);
+			modelAndView.addObject("roles", Rol.values());
+		}			
+		else {
+			saProfesor.crear(dtoProfesor);
+			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
+			mensaje.setIcono("check_circle");
+			redirectAttrs.addFlashAttribute("mensaje", mensaje);
+			return new ModelAndView("redirect:/");
+		}
 		
 		return modelAndView;
 	}
@@ -95,12 +133,12 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping(value="/mis-asignaturas", method = RequestMethod.GET)
-	public ModelAndView mostrarMisAsignaturas(@ModelAttribute("usuario") DTOUsuario dtoUsuario){
+	public ModelAndView mostrarMisAsignaturas(@ModelAttribute("usuario") Usuario usuario){
 		ModelAndView modelAndView = new ModelAndView();
-		if(dtoUsuario.getRol() == Rol.Profesor)
-			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasProfesor(dtoUsuario.getId()));
+		if(usuario.getRol() == Rol.Profesor)
+			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasProfesor(usuario.getId()));
 		else
-			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasAlumno(dtoUsuario.getId()));
+			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasAlumno(usuario.getId()));
 		
 		modelAndView.addObject("dtoAsignatura", new DTOAsignatura());
 		modelAndView.setViewName("misAsignaturas");
@@ -112,10 +150,9 @@ public class ControladorPrincipal {
 		ModelAndView modelAndView = new ModelAndView();
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		modelAndView.addObject("asignatura", asignatura);
-		modelAndView.addObject("dtoUsuario", new DTOUsuario());
 		modelAndView.addObject("dtoReto", new DTOReto());
-		modelAndView.addObject("alumnosMatriculados", saUsuario.leerMatriculadosAsignatura(id));
-		modelAndView.addObject("alumnosNoMatriculados", saUsuario.leerNoMatriculadosAsignatura(id));
+		modelAndView.addObject("alumnosMatriculados", saAlumno.leerMatriculadosAsignatura(id));
+		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(id));
 		modelAndView.addObject("retos", saReto.leerPorAsignatura(asignatura));
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
@@ -124,11 +161,11 @@ public class ControladorPrincipal {
 	@RequestMapping(value = "/asignatura/insertar", method = RequestMethod.POST)
 	public ModelAndView insertarAsignatura(@Valid @ModelAttribute("dtoAsignatura") DTOAsignatura dtoAsignatura,
 			BindingResult bindingResult,
-			@ModelAttribute("usuario") DTOUsuario dtoUsuario,
+			@ModelAttribute("usuario") Usuario usuario,
 			final RedirectAttributes redirectAttrs) {
 		
 		if (!bindingResult.hasErrors()) {
-			Profesor profesor = saUsuario.leerProfesor(dtoUsuario.getId());
+			Profesor profesor = saProfesor.leer(usuario.getId());
 			saAsignatura.crearAsignatura(dtoAsignatura, profesor);
 			Mensaje mensaje = new Mensaje("Enhorabuena", "la asignatura " + dtoAsignatura.getNombre() + " se ha añadido con éxito", "verde");
 			mensaje.setIcono("check_circle");
@@ -162,12 +199,12 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value = "/asignatura/{idAsignatura}/alta-alumno", method = RequestMethod.POST)
 	public ModelAndView asignaturaAltaAlumno(@PathVariable("idAsignatura") int idAsignatura,
-			@ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
+			int idUsuario,
 			final RedirectAttributes redirectAttrs) {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Alumno alumno = saUsuario.leerAlumno(dtoUsuario.getId());		
+		Alumno alumno = saAlumno.leer(idUsuario);		
 		alumno.insertarAsignatura(asignatura);		
-		saUsuario.sobrescribir(alumno);
+		saAlumno.sobrescribir(alumno);
 		
 		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" en la asignatura " + asignatura.getNombre(), "verde");
@@ -180,9 +217,9 @@ public class ControladorPrincipal {
 	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaBajaAlumno(int idAsignatura, int idAlumno, final RedirectAttributes redirectAttrs){
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Alumno alumno = saUsuario.leerAlumno(idAlumno);
+		Alumno alumno = saAlumno.leer(idAlumno);
 		alumno.eliminarAsignatura(asignatura);
-		saUsuario.sobrescribir(alumno);
+		saAlumno.sobrescribir(alumno);
 		
 		Mensaje mensaje = new Mensaje("Atención", "se ha eliminado a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" de la asignatura " + asignatura.getNombre(), "rojo");
@@ -201,9 +238,9 @@ public class ControladorPrincipal {
 	@RequestMapping(value="/asignatura/deshacer-baja-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaDeshacerBajaAlumno(int idAsignatura, int idAlumno){
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Alumno alumno = saUsuario.leerAlumno(idAlumno);
+		Alumno alumno = saAlumno.leer(idAlumno);
 		alumno.insertarAsignatura(asignatura);
-		saUsuario.sobrescribir(alumno);
+		saAlumno.sobrescribir(alumno);
 		
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
@@ -247,9 +284,9 @@ public class ControladorPrincipal {
 	}
 	
 	@ModelAttribute("usuario")
-	public void insertarAtributos(Model model) {
+	public void atributosDelModelo(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		DTOUsuario dtoUsuario = saUsuario.leerUsuario(auth.getName());
-		model.addAttribute("usuario", dtoUsuario);
+		Usuario usuario = saUsuario.leer(auth.getName());
+		model.addAttribute("usuario", usuario);
 	}
 }

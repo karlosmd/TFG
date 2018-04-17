@@ -1,4 +1,4 @@
-package tfg.modelo;
+package tfg.objetoNegocio;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 @Table(name = "alumnos")
 public class Alumno extends Usuario {	
@@ -19,6 +21,9 @@ public class Alumno extends Usuario {
 	    inverseJoinColumns = @JoinColumn(name = "asignatura")
 	)
 	private Set<Asignatura> asignaturas;
+	
+	@NotEmpty
+	private String titulacion;
 	
 	public Alumno(){
 		super();
@@ -39,5 +44,13 @@ public class Alumno extends Usuario {
 
 	public void setAsignaturas(Set<Asignatura> asignaturas) {
 		this.asignaturas = asignaturas;
+	}
+
+	public String getTitulacion() {
+		return titulacion;
+	}
+
+	public void setTitulacion(String titulacion) {
+		this.titulacion = titulacion;
 	}
 }

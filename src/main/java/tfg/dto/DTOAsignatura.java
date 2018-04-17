@@ -1,4 +1,4 @@
-package tfg.DTO;
+package tfg.dto;
 
 import org.hibernate.validator.constraints.NotEmpty;
 

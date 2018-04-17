@@ -1,4 +1,4 @@
-package tfg.DAO;
+package tfg.repositorio;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import tfg.modelo.Asignatura;
+import tfg.objetoNegocio.Asignatura;
 
-@Repository("daoAsignatura")
-public interface DAOAsignatura extends JpaRepository<Asignatura, Integer>{
+@Repository("repositorioAsignatura")
+public interface RepositorioAsignatura extends JpaRepository<Asignatura, Integer>{
 	
 	// READ	
 	@Query("SELECT asignaturas FROM Profesor profesor JOIN profesor.asignaturas asignaturas WHERE asignaturas.activo = 1 AND profesor.id = :idProfesor")
