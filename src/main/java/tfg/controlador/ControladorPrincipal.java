@@ -161,12 +161,11 @@ public class ControladorPrincipal {
 	@RequestMapping(value = "/asignatura/insertar", method = RequestMethod.POST)
 	public ModelAndView insertarAsignatura(@Valid @ModelAttribute("dtoAsignatura") DTOAsignatura dtoAsignatura,
 			BindingResult bindingResult,
-			@ModelAttribute("usuario") Usuario usuario,
+			int idProfesor,
 			final RedirectAttributes redirectAttrs) {
 		
 		if (!bindingResult.hasErrors()) {
-			Profesor profesor = saProfesor.leer(usuario.getId());
-			saAsignatura.crearAsignatura(dtoAsignatura, profesor);
+			saAsignatura.crearAsignatura(dtoAsignatura, saProfesor.leer(idProfesor));
 			Mensaje mensaje = new Mensaje("Enhorabuena", "la asignatura " + dtoAsignatura.getNombre() + " se ha añadido con éxito", "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
@@ -199,10 +198,10 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value = "/asignatura/{idAsignatura}/alta-alumno", method = RequestMethod.POST)
 	public ModelAndView asignaturaAltaAlumno(@PathVariable("idAsignatura") int idAsignatura,
-			int idUsuario,
+			int idAlumno,
 			final RedirectAttributes redirectAttrs) {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Alumno alumno = saAlumno.leer(idUsuario);		
+		Alumno alumno = saAlumno.leer(idAlumno);		
 		alumno.insertarAsignatura(asignatura);		
 		saAlumno.sobrescribir(alumno);
 		

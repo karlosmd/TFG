@@ -55,7 +55,7 @@
 	        <form class="formulario form-crear-cuenta" id="insertar-alumno" action="#" th:action="@{/asignatura/{idAsignatura}/alta-alumno(idAsignatura=${asignatura.id})}" method="POST">
 			  <div class="form-group">
 			    <label for="id">Correo electrónico</label>
-			    <select class="form-control" name="idUsuario">
+			    <select class="form-control" name="idAlumno">
 			      <option th:each="alumno : ${alumnosNoMatriculados}"
 		                            th:value="${alumno.id}"
 		                            th:utext="${alumno.email}"/>
