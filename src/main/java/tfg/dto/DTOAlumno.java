@@ -17,6 +17,12 @@ public class DTOAlumno extends DTOUsuario {
 		super();
 		asignaturas = new HashSet<>();
 	}
+	
+	public DTOAlumno(DTOUsuario dtoUsuario, String titulacion) {
+		super(dtoUsuario);
+		asignaturas = new HashSet<>();
+		this.titulacion = titulacion;	
+	}
 
 	public Set<Asignatura> getAsignaturas() {
 		return asignaturas;

@@ -47,6 +47,11 @@ public abstract class Usuario {
 		activo = true;
 	}
 	
+	public Usuario (Rol rol){
+		activo = true;
+		this.rol = rol;
+	}
+	
 	public abstract void insertarAsignatura(Asignatura asignatura);
 	
 	public abstract void eliminarAsignatura(Asignatura asignatura);

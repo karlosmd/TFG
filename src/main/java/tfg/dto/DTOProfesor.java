@@ -22,6 +22,13 @@ public class DTOProfesor extends DTOUsuario {
 		super();
 		asignaturas = new HashSet<>();
 	}
+	
+	public DTOProfesor(DTOUsuario dtoUsuario, String departamento, int despacho) {
+		super(dtoUsuario);
+		asignaturas = new HashSet<>();
+		this.departamento = departamento;
+		this.despacho = despacho;		
+	}
 
 	public Set<Asignatura> getAsignaturas() {
 		return asignaturas;

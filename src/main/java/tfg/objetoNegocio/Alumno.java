@@ -26,7 +26,7 @@ public class Alumno extends Usuario {
 	private String titulacion;
 	
 	public Alumno(){
-		super();
+		super(Rol.Alumno);
 		asignaturas = new HashSet<>();
 	}
 	

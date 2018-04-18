@@ -30,6 +30,19 @@ public class DTOUsuario {
 	
 	@NotEmpty(message = "* Por favor, introduzca una contraseña")
 	private String confirmarPassword;
+	
+	public DTOUsuario() {
+	}
+	
+	public DTOUsuario(DTOUsuario dtoUsuario) {
+		this.id = dtoUsuario.id;
+		this.nombre = dtoUsuario.nombre;
+		this.apellidos = dtoUsuario.apellidos;
+		this.rol = dtoUsuario.rol;
+		this.email = dtoUsuario.email;
+		this.password = dtoUsuario.password;
+		this.confirmarPassword = dtoUsuario.confirmarPassword;
+	}
 
 	public int getId() {
 		return id;

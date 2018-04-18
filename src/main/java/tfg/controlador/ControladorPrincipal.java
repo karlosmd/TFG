@@ -22,10 +22,10 @@ import tfg.dto.DTOAlumno;
 import tfg.dto.DTOAsignatura;
 import tfg.dto.DTOProfesor;
 import tfg.dto.DTOReto;
+import tfg.dto.DTOUsuario;
 import tfg.objetoNegocio.Alumno;
 import tfg.objetoNegocio.Asignatura;
 import tfg.objetoNegocio.Mensaje;
-import tfg.objetoNegocio.Profesor;
 import tfg.objetoNegocio.Reto;
 import tfg.objetoNegocio.Rol;
 import tfg.objetoNegocio.Usuario;
@@ -59,65 +59,40 @@ public class ControladorPrincipal {
 	@RequestMapping(value="/crear-cuenta", method = RequestMethod.GET)
 	public ModelAndView mostrarCrearCuenta(){
 		ModelAndView modelAndView = new ModelAndView();		
-		modelAndView.addObject("dtoAlumno", new DTOAlumno());
-		modelAndView.addObject("dtoProfesor", new DTOProfesor());
-		modelAndView.addObject("roles", Rol.values());
+		modelAndView.addObject("dtoUsuario", new DTOUsuario());
 		modelAndView.setViewName("crearCuenta");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/alumno/crear", method = RequestMethod.POST)
-	public ModelAndView crearAlumno(@Valid @ModelAttribute("dtoAlumno") DTOAlumno dtoAlumno,
+	@RequestMapping(value = "/crear-cuenta", method = RequestMethod.POST)
+	public ModelAndView crearAlumno(@Valid @ModelAttribute("dtoUsuario") DTOUsuario dtoUsuario,
+			String titulacion,
+			String departamento,
+			int despacho,
 			BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) {
 		ModelAndView modelAndView = null;
-		Alumno alumno = saAlumno.leer(dtoAlumno.getEmail());
+		Usuario usuario = saUsuario.leer(dtoUsuario.getEmail());
 
-		if (!dtoAlumno.getPassword().equals(dtoAlumno.getConfirmarPassword())) {
+		if (!dtoUsuario.getPassword().equals(dtoUsuario.getConfirmarPassword())) {
 			bindingResult.rejectValue("password", "error.dtoAlumno", "* Las contraseñas no coinciden");
 		}
-		if (alumno != null)
+		if (usuario != null)
 			bindingResult.rejectValue("email", "error.dtoAlumno", "* Ya existe un usuario con este e-mail");		
 		
 		if (bindingResult.hasErrors()) {
 			modelAndView = new ModelAndView("crearCuenta", bindingResult.getModel());
-			modelAndView.addObject("dtoAlumno", dtoAlumno);
-			modelAndView.addObject("dtoProfesor", new DTOProfesor());
-			modelAndView.addObject("roles", Rol.values());
+			modelAndView.addObject("dtoUsuario", new DTOUsuario());
 		}			
 		else {
-			saAlumno.crear(dtoAlumno);
-			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
-			mensaje.setIcono("check_circle");
-			redirectAttrs.addFlashAttribute("mensaje", mensaje);
-			return new ModelAndView("redirect:/");
-		}
-		
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/profesor/crear", method = RequestMethod.POST)
-	public ModelAndView crearProfesor(@Valid @ModelAttribute("dtoProfesor") DTOProfesor dtoProfesor,
-			BindingResult bindingResult,
-			final RedirectAttributes redirectAttrs) {
-		ModelAndView modelAndView = null;
-		Profesor profesor = saProfesor.leer(dtoProfesor.getEmail());
-
-		if (!dtoProfesor.getPassword().equals(dtoProfesor.getConfirmarPassword())) {
-			bindingResult.rejectValue("password", "error.dtoAlumno", "* Las contraseñas no coinciden");
-		}
-		if (profesor != null)
-			bindingResult.rejectValue("email", "error.dtoAlumno", "* Ya existe un usuario con este e-mail");		
-		
-		if (bindingResult.hasErrors()) {
-			
-			modelAndView = new ModelAndView("crearCuenta", bindingResult.getModel());
-			modelAndView.addObject("dtoAlumno", new DTOAlumno());
-			modelAndView.addObject("dtoProfesor", dtoProfesor);
-			modelAndView.addObject("roles", Rol.values());
-		}			
-		else {
-			saProfesor.crear(dtoProfesor);
+			if(dtoUsuario.getRol()==Rol.Alumno) {
+				DTOAlumno dtoAlumno = new DTOAlumno(dtoUsuario, titulacion);
+				saAlumno.crear(dtoAlumno);
+			}
+			else {
+				DTOProfesor dtoProfesor = new DTOProfesor(dtoUsuario, departamento, despacho);
+				saProfesor.crear(dtoProfesor);
+			}
 			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);

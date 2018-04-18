@@ -28,7 +28,7 @@ public class Profesor extends Usuario {
 	private int despacho;
 	
 	public Profesor(){
-		super();
+		super(Rol.Profesor);
 		asignaturas = new HashSet<>();
 	}
 	
