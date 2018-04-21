@@ -158,3 +158,16 @@ i{
 .alert>button>span{
 	color: #FFFFFF;
 }
+
+i.insignia-Platino{
+	color: #80D8FF;
+}
+i.insignia-Oro{
+	color: #FFC400;
+}
+i.insignia-Plata{
+	color: #B0BEC5;
+}
+i.insignia-Bronce{
+	color: #FF6E40;
+}

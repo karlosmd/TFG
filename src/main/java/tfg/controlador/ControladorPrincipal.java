@@ -1,6 +1,8 @@
 package tfg.controlador;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -25,12 +27,14 @@ import tfg.dto.DTOReto;
 import tfg.dto.DTOUsuario;
 import tfg.objetoNegocio.Alumno;
 import tfg.objetoNegocio.Asignatura;
+import tfg.objetoNegocio.Insignia;
 import tfg.objetoNegocio.Mensaje;
 import tfg.objetoNegocio.Reto;
 import tfg.objetoNegocio.Rol;
 import tfg.objetoNegocio.Usuario;
 import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAsignatura;
+import tfg.servicioAplicacion.SAGamificacionREST;
 import tfg.servicioAplicacion.SAProfesor;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
@@ -48,6 +52,8 @@ public class ControladorPrincipal {
 	private SAAsignatura saAsignatura;
 	@Autowired
 	private SAReto saReto;
+	@Autowired	
+	private SAGamificacionREST saGamificacion;
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
 	public ModelAndView mostrarInicioSesion(){
@@ -88,6 +94,7 @@ public class ControladorPrincipal {
 			if(dtoUsuario.getRol()==Rol.Alumno) {
 				DTOAlumno dtoAlumno = new DTOAlumno(dtoUsuario, titulacion);
 				saAlumno.crear(dtoAlumno);
+				saGamificacion.crearUsuario(saAlumno.leer(dtoUsuario.getEmail()).getId());
 			}
 			else {
 				DTOProfesor dtoProfesor = new DTOProfesor(dtoUsuario, departamento, despacho);
@@ -124,11 +131,18 @@ public class ControladorPrincipal {
 	public ModelAndView mostrarAsignatura(int id) {
 		ModelAndView modelAndView = new ModelAndView();
 		Asignatura asignatura = saAsignatura.leerPorId(id);
+		List<Alumno> alumnosMatriculados = saAlumno.leerMatriculadosAsignatura(id);
+		List<List<Insignia>> listaInsignias = new ArrayList<List<Insignia>>();
 		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoReto", new DTOReto());
 		modelAndView.addObject("alumnosMatriculados", saAlumno.leerMatriculadosAsignatura(id));
 		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(id));
 		modelAndView.addObject("retos", saReto.leerPorAsignatura(asignatura));
+		for(Alumno alumno : alumnosMatriculados) {
+			listaInsignias.add(saGamificacion.getInsignias(id, alumno.getId()));
+		}
+		modelAndView.addObject("listaInsignias", listaInsignias);
+		
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
 	}
