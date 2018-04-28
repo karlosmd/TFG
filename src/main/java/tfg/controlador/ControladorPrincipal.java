@@ -1,5 +1,6 @@
 package tfg.controlador;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +29,6 @@ import tfg.dto.DTOReto;
 import tfg.dto.DTOUsuario;
 import tfg.objetoNegocio.Alumno;
 import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Insignia;
 import tfg.objetoNegocio.Mensaje;
 import tfg.objetoNegocio.Reto;
 import tfg.objetoNegocio.Rol;
@@ -35,6 +36,7 @@ import tfg.objetoNegocio.Usuario;
 import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAsignatura;
 import tfg.servicioAplicacion.SAGamificacionREST;
+import tfg.servicioAplicacion.SAParseExcel;
 import tfg.servicioAplicacion.SAProfesor;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
@@ -54,9 +56,12 @@ public class ControladorPrincipal {
 	private SAReto saReto;
 	@Autowired	
 	private SAGamificacionREST saGamificacion;
+	@Autowired	
+	private SAParseExcel saParseExcel;
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
-	public ModelAndView mostrarInicioSesion(){
+	public ModelAndView mostrarInicioSesion() throws InvalidFormatException, IOException{
+		//List<DTOAlumno> listaAlumnos = saParseExcel.getResultadosAlumnos();
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("index");
 		return modelAndView;
@@ -132,16 +137,19 @@ public class ControladorPrincipal {
 		ModelAndView modelAndView = new ModelAndView();
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		List<Alumno> alumnosMatriculados = saAlumno.leerMatriculadosAsignatura(id);
-		List<List<Insignia>> listaInsignias = new ArrayList<List<Insignia>>();
+		List<DTOAlumno> dtoAlumnosMatriculados = new ArrayList<DTOAlumno>();
 		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoReto", new DTOReto());
-		modelAndView.addObject("alumnosMatriculados", saAlumno.leerMatriculadosAsignatura(id));
+		
+		for(Alumno alumno : alumnosMatriculados) {
+			DTOAlumno dtoAlumno = new DTOAlumno();
+			dtoAlumno = alumno.toDTOAlumno();
+			dtoAlumno.setInsignias(saGamificacion.getInsignias(id, alumno.getId()));
+			dtoAlumnosMatriculados.add(dtoAlumno);
+		}		
+		modelAndView.addObject("alumnosMatriculados", dtoAlumnosMatriculados);
 		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(id));
 		modelAndView.addObject("retos", saReto.leerPorAsignatura(asignatura));
-		for(Alumno alumno : alumnosMatriculados) {
-			listaInsignias.add(saGamificacion.getInsignias(id, alumno.getId()));
-		}
-		modelAndView.addObject("listaInsignias", listaInsignias);
 		
 		modelAndView.setViewName("asignatura");
 		return modelAndView;

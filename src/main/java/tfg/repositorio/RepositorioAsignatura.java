@@ -19,7 +19,7 @@ public interface RepositorioAsignatura extends JpaRepository<Asignatura, Integer
 	@Query("SELECT asignaturas FROM Profesor profesor JOIN profesor.asignaturas asignaturas WHERE asignaturas.activo = 1 AND profesor.id = :idProfesor")
 	List<Asignatura> findAsignaturasProfesor(@Param("idProfesor")int idProfesor);
 	
-	@Query("SELECT asignaturas FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE asignaturas.activo = 1 AND alumno.id = :idAlumno")
+	@Query("SELECT asignaturas FROM Alumno alumno JOIN alumno.alumnosAsignaturas r JOIN r.asignatura asignaturas WHERE asignaturas.activo = 1 AND alumno.id = :idAlumno")
 	List<Asignatura> findAsignaturasAlumno(@Param("idAlumno")int idAlumno);
 	
 	Asignatura findById(int id);

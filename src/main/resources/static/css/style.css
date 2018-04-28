@@ -62,7 +62,8 @@ div.card-deck{
 
 .jumbotron{
 	margin: 5%;
-	opacity: 0.93;
+	background: #FFFFFF;
+	border-radius: 0px;
 }
 
 .alert{
@@ -103,10 +104,6 @@ div.tabla{
 	background: #212529;
 	color: #FF8F00;
 	text-align: center;	
-}
-
-td:last-child, thead th:last-child{
-	text-align: center;
 }
 
 table a{

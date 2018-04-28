@@ -21,88 +21,14 @@
   	<nav th:replace="fragments/navbar :: navbar"></nav>
   	<div th:replace="fragments/mensaje :: mensaje"></div>
   	
+  	<!-- TABLA MIS ASIGNATURAS -->
   	<div class="tabla col-12 col-md-10">
   		<h1 class="titulo">Mis Asignaturas</h1>
 	  	<table th:replace="fragments/tablas :: tablaMisAsignaturas"></table>
 	</div>	
 	
-	<!-- Modal Nueva Asignatura -->
-	<div class="modal fade" id="modalNuevaAsignatura" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLongTitle">Nueva Asignatura</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" th:action="@{/asignatura/insertar}" th:object="${dtoAsignatura}" method="POST">
-			  <div class="form-group">
-			  	<label for="nombre">Nombre</label>
-				<input type="text" th:field="*{nombre}" class="form-control"/>
-				<label th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="validation-message error"></label>
-			  </div>
-			  <div class="form-group">
-			  	<label for="grupo">Grupo</label>
-				<input type="text" th:field="*{grupo}" class="form-control"/>
-				<label th:if="${#fields.hasErrors('grupo')}" th:errors="*{grupo}" class="validation-message error"></label>
-			  </div>			  
-			  <div class="form-group">
-			  	<label for="curso">Curso</label>
-			  	<input type="text" th:field="*{curso}" class="form-control"/>
-			  	<label th:if="${#fields.hasErrors('curso')}" th:errors="*{curso}" class="validation-message error"></label>
-			  </div>
-			  <div class="form-group">
-			  	<input type="hidden" name="idProfesor" th:value="${usuario.id}" />
-			  </div>
-			</form>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-	        <button type="submit" class="btn btn-naranja" form="insertar-asignatura">Añadir Asignatura</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	
-	<!-- Modal Modificar Asignatura -->
-	<div class="modal fade" id="modalModificarAsignatura" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLongTitle">Modificar Asignatura</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <form class="formulario form-crear-cuenta" id="insertar-asignatura" action="#" th:action="@{/asignatura/modificar}" th:object="${dtoAsignatura}" method="POST">
-			  <div class="form-group">
-			  	<label for="nombre">Nombre</label>
-				<input type="text" th:field="*{nombre}" th:value="${dtoAsignatura.nombre}" class="form-control" id="nombre"/>
-				<label th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="validation-message error"></label>
-			  </div>
-			  <div class="form-group">
-			  	<label for="grupo">Grupo</label>
-				<input type="text" th:field="*{grupo}" th:value="${dtoAsignatura.grupo}" class="form-control" id="grupo" />
-				<label th:if="${#fields.hasErrors('grupo')}" th:errors="*{grupo}" class="validation-message error"></label>
-			  </div>
-			  
-			   <div class="form-group">
-			  	<label for="curso">Curso</label>
-			  	<input type="text" th:field="*{curso}" th:value="${dtoAsignatura.curso}" class="form-control" id="curso"/>
-			  	<label th:if="${#fields.hasErrors('curso')}" th:errors="*{curso}" class="validation-message error"></label>
-			  </div>  
-			</form>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-	        <button type="submit" class="btn btn-naranja" form="insertar-asignatura">Modificar Asignatura</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+	<!-- MODAL NUEVA ASIGNATURA -->
+	<div th:replace="fragments/modals :: modalNuevaAsignatura"></div>
 	
 	<!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

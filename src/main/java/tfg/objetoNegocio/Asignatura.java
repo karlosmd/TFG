@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,8 +30,8 @@ public class Asignatura {
 	@NotEmpty
 	private String curso;
 	
-	@ManyToMany(mappedBy = "asignaturas")
-	private Set<Alumno> alumnos;
+	@OneToMany(mappedBy = "asignatura")
+	private Set<AlumnoAsignatura> alumnosAsignaturas;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profesor")
@@ -49,7 +48,7 @@ public class Asignatura {
 	
 	public Asignatura(){
 		activo = 1;
-		alumnos = new HashSet<>();
+		alumnosAsignaturas = new HashSet<>();
 		retos = new HashSet<>();
 	}
 
@@ -85,12 +84,12 @@ public class Asignatura {
 		this.curso = curso;
 	}
 
-	public Set<Alumno> getAlumnos() {
-		return alumnos;
+	public Set<AlumnoAsignatura> getAlumnosAsignaturas() {
+		return alumnosAsignaturas;
 	}
 
-	public void setAlumnos(Set<Alumno> alumnos) {
-		this.alumnos = alumnos;
+	public void setAlumnosAsignaturas(Set<AlumnoAsignatura> alumnosAsignaturas) {
+		this.alumnosAsignaturas = alumnosAsignaturas;
 	}
 
 	public Profesor getProfesor() {

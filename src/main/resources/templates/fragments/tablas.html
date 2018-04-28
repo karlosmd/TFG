@@ -23,13 +23,13 @@
 		      <th scope="col">Nombre</th>
 		      <th scope="col">Grupo</th>
 		      <th scope="col">Curso</th>
-		      <th scope="col" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
+		      <th scope="col" class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
 		      <th scope="col" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Alumno}">Profesor</th>
 		    </tr>
 		  </thead>
 		  <tbody th:if="${#lists.isEmpty(asignaturas)}">
 		    <tr>
-		      <td colspan="5">No hay asignaturas que mostrar</td>
+		      <td colspan="5" class="text-center">No hay asignaturas que mostrar</td>
 		    </tr>
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(asignaturas)}">
@@ -38,8 +38,7 @@
 		      <td><a th:text="${asignatura.nombre}" th:href="@{/asignatura(id=${asignatura.id})}"></a></td>
 		      <td th:text="${asignatura.grupo}"></td>
 		      <td th:text="${asignatura.curso}"></td>
-		      <td th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
-		      	<a data-toggle="modal" data-target="#modalModificarAsignatura"><i class="material-icons icono-verde">create</i></a>
+		      <td class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar}" method="POST">
 					<input type="hidden" name="id" th:value="${asignatura.id}" />
 					<a onclick="this.parentNode.submit()" title="Eliminar Asignatura"><i class="material-icons icono-naranja">delete</i></a>
@@ -55,7 +54,7 @@
 			    <td></td>
 			    <td></td>
 			    <td></td>
-			    <td>
+			    <td class="text-center">
 			      	<!-- Button trigger modal -->
 					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevaAsignatura" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 						Nueva Asignatura
@@ -74,12 +73,12 @@
 		      <th scope="col">Id</th>
 		      <th scope="col">Nombre</th>
 		      <th scope="col">Enlace</th>
-		      <th scope="col" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
+		      <th scope="col" class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
 		    </tr>
 		  </thead>
 		  <tbody th:if="${#lists.isEmpty(retos)}">
 		    <tr>
-		      <td colspan="5">No hay retos que mostrar</td>
+		      <td colspan="5" class="text-center">No hay retos que mostrar</td>
 		    </tr>
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(retos)}">
@@ -87,8 +86,7 @@
 		      <td scope="row" th:text="${reto.id}"></td>
 		      <td th:text="${reto.nombre}"></td>
 		      <td><a th:href="${reto.enlace}" th:text="${reto.enlace}" target="_blank"></a></td>
-		      <td th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
-		      	<a data-toggle="modal" data-target="#modalModificarAsignatura"><i class="material-icons icono-verde">create</i></a>
+		      <td class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar-reto}" method="POST">
 					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
 					<input type="hidden" name="idReto" th:value="${reto.id}" />
@@ -99,13 +97,14 @@
 		  </tbody>
 		  <tfoot>
 		  	<tr th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Alumno}">
-		      <td colspan="5" th:text="'Profesor de la asignatura: ' + ${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}"></td>
+		      <td colspan="2" class="text-left" th:text="'Profesor de la asignatura: ' + ${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos} + '.'"></td>
+		      <td colspan="1" class="text-right" th:text="' Departamento: ' + ${asignatura.profesor.departamento}  + '. Despacho: ' + ${asignatura.profesor.despacho}"></td>
 		    </tr>
 		    <tr th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 			    <td></td>
 			    <td></td>
 			    <td></td>
-			    <td>
+			    <td class="text-center">
 					<!-- Button trigger modal -->
 					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoReto">
 						Añadir Reto
@@ -122,22 +121,24 @@
 		  <thead>
 		    <tr>
 		      <th scope="col">Nombre</th>
-		      <th scope="col">Correo electrónico</th>
+		      <th scope="col">Titulación</th>
+		      <th scope="col">Puntuación</th>
 		      <th scope="col">Insignias</th>
-		      <th scope="col" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
+		      <th scope="col" class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
 		    </tr>
 		  </thead>
 		  <tbody th:if="${#lists.isEmpty(alumnosMatriculados)}">
 		    <tr>
-		      <td colspan="5">No hay alumnos que mostrar</td>
+		      <td colspan="5" class="text-center">No hay alumnos que mostrar</td>
 		    </tr>
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(alumnosMatriculados)}">
-		    <tr th:each="alumno, indexAlumno : ${alumnosMatriculados}">
+		    <tr th:each="alumno : ${alumnosMatriculados}">
 		      <td scope="row" th:text="${alumno.nombre} + ' ' + ${alumno.apellidos}"></td>
-		      <td th:text="${alumno.email}"></td>
-		      <td><i th:each="insignia : *{listaInsignias[__${indexAlumno.index}__]}" th:class="'material-icons insignia-' + ${insignia.categoria}" th:title="${insignia.nombre}">stars</i></td>
-		      <td th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
+		      <td th:text="${alumno.titulacion}"></td>
+		      <td></td>
+		      <td><i th:each="insignia : ${alumno.insignias}" th:class="'material-icons insignia-' + ${insignia.categoria}" th:title="${insignia.nombre}">stars</i></td>
+		      <td class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 		      	<form class="formulario-oculto" th:action="@{/asignatura/baja-alumno}" method="POST">
 					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
 					<input type="hidden" name="idAlumno" th:value="${alumno.id}" />
@@ -148,13 +149,15 @@
 		  </tbody>
 		  <tfoot>
 		  	<tr th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Alumno}">
-		      <td colspan="5" th:text="'Profesor de la asignatura: ' + ${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos}"></td>
+		      <td colspan="2" class="text-left" th:text="'Profesor de la asignatura: ' + ${asignatura.profesor.nombre} + ' ' + ${asignatura.profesor.apellidos} + '.'"></td>
+		      <td colspan="3" class="text-right" th:text="' Departamento: ' + ${asignatura.profesor.departamento}  + '. Despacho: ' + ${asignatura.profesor.despacho}"></td>
 		    </tr>
 		    <tr th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 			    <td></td>
 			    <td></td>
 			    <td></td>
-			    <td>
+			    <td></td>
+			    <td class="text-center">
 			      	<!-- Button trigger modal -->
 					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoAlumno">
 						Añadir Alumno

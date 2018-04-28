@@ -14,10 +14,10 @@ public interface RepositorioAlumno extends RepositorioUsuarios<Alumno> {
 	
 	// READ	
 	//Consulta de Entidades con relaciones ManyToMany
-	@Query("SELECT alumno FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE asignaturas.id = :idAsignatura ORDER BY alumno.apellidos ASC")
+	@Query("SELECT alumno FROM Alumno alumno JOIN alumno.alumnosAsignaturas r JOIN r.asignatura asignatura WHERE asignatura.id = :idAsignatura ORDER BY alumno.apellidos ASC")
 	List<Alumno> findByAsignatura(@Param("idAsignatura") int idAsignatura);
 	
 	//Consulta de Entidades con relaciones ManyToMany
-	@Query("SELECT alumnoNoMatriculado FROM Alumno alumnoNoMatriculado WHERE alumnoNoMatriculado.id NOT IN (SELECT alumno FROM Alumno alumno JOIN alumno.asignaturas asignaturas WHERE asignaturas.id = :idAsignatura) ORDER BY alumnoNoMatriculado.apellidos ASC")
+	@Query(value = "SELECT alumnoNoMatriculado FROM Alumno alumnoNoMatriculado WHERE alumnoNoMatriculado.id NOT IN (SELECT alumno FROM Alumno alumno JOIN alumno.alumnosAsignaturas r JOIN r.asignatura asignatura WHERE asignatura.id = :idAsignatura ORDER BY alumno.apellidos ASC)")
 	List<Alumno> findByNotAsignatura(@Param("idAsignatura") int idAsignatura);
 }

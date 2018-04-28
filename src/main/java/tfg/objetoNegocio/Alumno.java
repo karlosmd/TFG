@@ -5,45 +5,63 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tfg.dto.DTOAlumno;
+
 @Entity
 @Table(name = "alumnos")
 public class Alumno extends Usuario {	
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "alumno_asignatura",
-	    joinColumns = @JoinColumn(name = "alumno"),
-	    inverseJoinColumns = @JoinColumn(name = "asignatura")
-	)
-	private Set<Asignatura> asignaturas;
+    @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AlumnoAsignatura> alumnosAsignaturas;
 	
 	@NotEmpty
 	private String titulacion;
 	
 	public Alumno(){
 		super(Rol.Alumno);
-		asignaturas = new HashSet<>();
+		alumnosAsignaturas = new HashSet<>();
 	}
 	
 	public void insertarAsignatura(Asignatura asignatura) {
-		asignaturas.add(asignatura);
+		AlumnoAsignatura alumnoAsignatura = new AlumnoAsignatura();
+		alumnoAsignatura.setAlumno(this);
+		alumnoAsignatura.setAsignatura(asignatura);
+		alumnosAsignaturas.add(alumnoAsignatura);
 	}
 	
 	public void eliminarAsignatura(Asignatura asignatura) {
-		asignaturas.remove(asignatura);
+		AlumnoAsignatura alumnoAsignatura = new AlumnoAsignatura();
+		for(AlumnoAsignatura a : alumnosAsignaturas) {
+			if(a.getAlumno().equals(this) && a.getAsignatura().equals(asignatura)) {
+				alumnoAsignatura = a;				
+			}
+		}
+		alumnosAsignaturas.remove(alumnoAsignatura);
+	}
+	
+	public DTOAlumno toDTOAlumno() {
+		DTOAlumno dtoAlumno = new DTOAlumno();
+		dtoAlumno.setId(this.getId());
+		dtoAlumno.setNombre(this.getNombre());
+		dtoAlumno.setApellidos(this.getApellidos());
+		dtoAlumno.setEmail(this.getEmail());
+		dtoAlumno.setRol(this.getRol());
+		dtoAlumno.setPassword(this.getPassword());
+		dtoAlumno.setTitulacion(this.getTitulacion());
+
+		return dtoAlumno;
 	}
 
-	public Set<Asignatura> getAsignaturas() {
-		return asignaturas;
+	public Set<AlumnoAsignatura> getAlumnosAsignaturas() {
+		return alumnosAsignaturas;
 	}
 
-	public void setAsignaturas(Set<Asignatura> asignaturas) {
-		this.asignaturas = asignaturas;
+	public void setAlumnosAsignaturas(Set<AlumnoAsignatura> alumnosAsignaturas) {
+		this.alumnosAsignaturas = alumnosAsignaturas;
 	}
 
 	public String getTitulacion() {
