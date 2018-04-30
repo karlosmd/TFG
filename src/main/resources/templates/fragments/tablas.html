@@ -120,6 +120,7 @@
 	  	<table class="table table-striped table-dark" th:fragment="tablaAlumnos">
 		  <thead>
 		    <tr>
+		      <th scope="col" class="text-center">#</th>
 		      <th scope="col">Nombre</th>
 		      <th scope="col">Titulación</th>
 		      <th scope="col">Puntuación</th>
@@ -129,14 +130,23 @@
 		  </thead>
 		  <tbody th:if="${#lists.isEmpty(alumnosMatriculados)}">
 		    <tr>
-		      <td colspan="5" class="text-center">No hay alumnos que mostrar</td>
+		      <td colspan="6" class="text-center">No hay alumnos que mostrar</td>
 		    </tr>
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(alumnosMatriculados)}">
-		    <tr th:each="alumno : ${alumnosMatriculados}">
-		      <td scope="row" th:text="${alumno.nombre} + ' ' + ${alumno.apellidos}"></td>
+		    <tr th:each="alumno, iterador : ${alumnosMatriculados}">
+			  <th:block th:switch="${iterador.index + 1}">
+			    <td scope="row" th:case="1" class="text-center"><i class="material-icons insignia-Oro">school</i></td>
+			    <td scope="row" th:case="2" class="text-center"><i class="material-icons insignia-Plata">school</i></td>
+			    <td scope="row" th:case="3" class="text-center"><i class="material-icons insignia-Bronce">school</i></td>
+			    <td scope="row" th:case="*" class="text-center" th:text="${iterador.index + 1}"></td>
+			    <div th:case="3">
+			     <!-- print object is new and active -->
+			    </div>
+			  </th:block>
+		      <td th:text="${alumno.nombre} + ' ' + ${alumno.apellidos}"></td>
 		      <td th:text="${alumno.titulacion}"></td>
-		      <td></td>
+		      <td th:text="${alumno.puntuacion}"></td>
 		      <td><i th:each="insignia : ${alumno.insignias}" th:class="'material-icons insignia-' + ${insignia.categoria}" th:title="${insignia.nombre}">stars</i></td>
 		      <td class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 		      	<form class="formulario-oculto" th:action="@{/asignatura/baja-alumno}" method="POST">
@@ -153,6 +163,7 @@
 		      <td colspan="3" class="text-right" th:text="' Departamento: ' + ${asignatura.profesor.departamento}  + '. Despacho: ' + ${asignatura.profesor.despacho}"></td>
 		    </tr>
 		    <tr th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
+			    <td></td>
 			    <td></td>
 			    <td></td>
 			    <td></td>

@@ -38,9 +38,23 @@ public class SAGamificacionRESTImp implements SAGamificacionREST{
 		ResponseEntity<String> response = restTemplate.postForEntity( url + idUsuario, request , String.class );
 		System.out.println(response);
 	}
+	
+	@Override
+	public void eliminarUsuario(int idUsuario) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		String url = "http://localhost:8081/delete_user/";
+		
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		//map.add("email", "first.last@example.com");
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.delete( url + idUsuario, request , String.class );
+	}
 
 	@Override
-	public List<Insignia> getInsignias(int idAsignatura, int idUsuario) {
+	public List<Insignia> getInsignias(int idUsuario) {
 		List<Insignia> insignias = new ArrayList<Insignia>();
 
 		Map<String, String> vars = new HashMap<String, String>();
@@ -80,4 +94,31 @@ public class SAGamificacionRESTImp implements SAGamificacionREST{
 		
 		return insignias;
 	}
+	
+	@Override
+	public int getPuntuacion(int idUsuario) {
+		int puntuacion = 0;
+
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("userId", Integer.toString(idUsuario));
+		RestTemplate restTemplate = new RestTemplate();
+		String result = restTemplate.getForObject("http://localhost:8081/progress/{userId}", String.class, vars);
+		System.out.println(result);
+		
+		JsonObject jsonObject = new JsonParser().parse(result).getAsJsonObject();
+		JsonArray logros = jsonObject.get("achievements").getAsJsonArray();
+		String meta, nombreLogro;
+		JsonObject logro = new JsonObject();
+		for(int i=0; i<logros.size(); i++) {
+			logro = logros.get(i).getAsJsonObject();
+			nombreLogro = logro.get("internal_name").getAsString();
+			if(nombreLogro.equals("Leyenda - Consigue la puntuación maxima del juego (1.000.000 pts)")) {
+				meta = (String) logro.getAsJsonObject("goals").keySet().toArray()[0];
+				puntuacion = logro.getAsJsonObject("goals").getAsJsonObject(meta).get("value").getAsInt();
+				break;
+			}
+		}
+		
+		return puntuacion;
+	}	
 }

@@ -2,9 +2,12 @@ package tfg.controlador;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.validation.Valid;
 
@@ -23,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tfg.dto.DTOAlumno;
+import tfg.dto.DTOAlumnoComp;
 import tfg.dto.DTOAsignatura;
 import tfg.dto.DTOProfesor;
 import tfg.dto.DTOReto;
@@ -34,6 +38,7 @@ import tfg.objetoNegocio.Reto;
 import tfg.objetoNegocio.Rol;
 import tfg.objetoNegocio.Usuario;
 import tfg.servicioAplicacion.SAAlumno;
+import tfg.servicioAplicacion.SAAlumnoAsignatura;
 import tfg.servicioAplicacion.SAAsignatura;
 import tfg.servicioAplicacion.SAGamificacionREST;
 import tfg.servicioAplicacion.SAParseExcel;
@@ -54,6 +59,8 @@ public class ControladorPrincipal {
 	private SAAsignatura saAsignatura;
 	@Autowired
 	private SAReto saReto;
+	@Autowired
+	private SAAlumnoAsignatura saAlumnoAsignatura;
 	@Autowired	
 	private SAGamificacionREST saGamificacion;
 	@Autowired	
@@ -99,7 +106,6 @@ public class ControladorPrincipal {
 			if(dtoUsuario.getRol()==Rol.Alumno) {
 				DTOAlumno dtoAlumno = new DTOAlumno(dtoUsuario, titulacion);
 				saAlumno.crear(dtoAlumno);
-				saGamificacion.crearUsuario(saAlumno.leer(dtoUsuario.getEmail()).getId());
 			}
 			else {
 				DTOProfesor dtoProfesor = new DTOProfesor(dtoUsuario, departamento, despacho);
@@ -137,16 +143,17 @@ public class ControladorPrincipal {
 		ModelAndView modelAndView = new ModelAndView();
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		List<Alumno> alumnosMatriculados = saAlumno.leerMatriculadosAsignatura(id);
-		List<DTOAlumno> dtoAlumnosMatriculados = new ArrayList<DTOAlumno>();
+		Set<DTOAlumno> dtoAlumnosMatriculados = new TreeSet<DTOAlumno>(new DTOAlumnoComp());
 		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoReto", new DTOReto());
 		
 		for(Alumno alumno : alumnosMatriculados) {
 			DTOAlumno dtoAlumno = new DTOAlumno();
 			dtoAlumno = alumno.toDTOAlumno();
-			dtoAlumno.setInsignias(saGamificacion.getInsignias(id, alumno.getId()));
+			dtoAlumno.setInsignias(saGamificacion.getInsignias(saAlumnoAsignatura.leerId(id, alumno.getId())));
+			dtoAlumno.setPuntuacion(saGamificacion.getPuntuacion(saAlumnoAsignatura.leerId(id, alumno.getId())));
 			dtoAlumnosMatriculados.add(dtoAlumno);
-		}		
+		}
 		modelAndView.addObject("alumnosMatriculados", dtoAlumnosMatriculados);
 		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(id));
 		modelAndView.addObject("retos", saReto.leerPorAsignatura(asignatura));
@@ -201,6 +208,7 @@ public class ControladorPrincipal {
 		Alumno alumno = saAlumno.leer(idAlumno);		
 		alumno.insertarAsignatura(asignatura);		
 		saAlumno.sobrescribir(alumno);
+		saGamificacion.crearUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
 		
 		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" en la asignatura " + asignatura.getNombre(), "verde");
@@ -212,10 +220,14 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaBajaAlumno(int idAsignatura, int idAlumno, final RedirectAttributes redirectAttrs){
+		//Primero borramos el usuario del Motor de Gamificación
+		saGamificacion.eliminarUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
+		//Y después de la aplicación
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saAlumno.leer(idAlumno);
 		alumno.eliminarAsignatura(asignatura);
 		saAlumno.sobrescribir(alumno);
+		
 		
 		Mensaje mensaje = new Mensaje("Atención", "se ha eliminado a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" de la asignatura " + asignatura.getNombre(), "rojo");
@@ -237,6 +249,7 @@ public class ControladorPrincipal {
 		Alumno alumno = saAlumno.leer(idAlumno);
 		alumno.insertarAsignatura(asignatura);
 		saAlumno.sobrescribir(alumno);
+		saGamificacion.crearUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
 		
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
 	}
