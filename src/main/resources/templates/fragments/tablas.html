@@ -140,9 +140,6 @@
 			    <td scope="row" th:case="2" class="text-center"><i class="material-icons insignia-Plata">school</i></td>
 			    <td scope="row" th:case="3" class="text-center"><i class="material-icons insignia-Bronce">school</i></td>
 			    <td scope="row" th:case="*" class="text-center" th:text="${iterador.index + 1}"></td>
-			    <div th:case="3">
-			     <!-- print object is new and active -->
-			    </div>
 			  </th:block>
 		      <td th:text="${alumno.nombre} + ' ' + ${alumno.apellidos}"></td>
 		      <td th:text="${alumno.titulacion}"></td>
