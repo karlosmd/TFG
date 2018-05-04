@@ -256,12 +256,14 @@ public class ControladorPrincipal {
 	
 	@RequestMapping(value = "/asignatura/{idAsignatura}/insertar-reto", method = RequestMethod.POST)
 	public ModelAndView asignaturaInsertarReto(@PathVariable("idAsignatura") int idAsignatura,
-			@ModelAttribute("dtoReto") DTOReto dtoReto,
+			int idReto,
+			String nombreReto,
 			final RedirectAttributes redirectAttrs) {
-		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);	
-		saReto.crearReto(dtoReto, asignatura);
+		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
+		Reto reto = new Reto(idReto, nombreReto);
+		saReto.crearReto(reto, asignatura);
 		
-		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido el reto '" + dtoReto.getNombre() +
+		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido el reto '" + reto.getNombre() +
 				"' a la asignatura " + asignatura.getNombre(), "verde");
 		mensaje.setIcono("check_circle");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);

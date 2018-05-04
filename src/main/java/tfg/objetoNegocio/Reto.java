@@ -14,6 +14,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = "retos")
 public class Reto {
+	public static String baseUrl ="http://localhost:8000";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -32,6 +34,13 @@ public class Reto {
 	
 	public Reto() {
 		activo = 1;
+	}
+	
+	public Reto(int id, String nombre) {
+		this.id = id;
+		this.nombre = nombre;
+		this.enlace= baseUrl + "/reto/" + id + "/resolver";
+		this.activo = 1;
 	}
 
 	public int getId() {

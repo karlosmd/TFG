@@ -17,10 +17,7 @@ public class SARetoImp implements SAReto{
 	
 	// CREATE
 	@Override
-	public void crearReto(DTOReto dtoReto, Asignatura asignatura) {
-		Reto reto = new Reto();
-		reto.setNombre(dtoReto.getNombre());
-		reto.setEnlace(dtoReto.getEnlace());
+	public void crearReto(Reto reto, Asignatura asignatura) {
 		reto.setAsignatura(asignatura);
 		repositorioReto.save(reto);
 	}
