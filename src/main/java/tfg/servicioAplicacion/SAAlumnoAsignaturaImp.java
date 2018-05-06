@@ -3,7 +3,6 @@ package tfg.servicioAplicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tfg.objetoNegocio.AlumnoAsignatura;
 import tfg.repositorio.RepositorioAlumnoAsignatura;
 
 @Service("saAlumnoAsignatura")

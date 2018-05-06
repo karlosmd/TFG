@@ -1,8 +1,6 @@
 package tfg.controlador;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,6 @@ import tfg.dto.DTOProfesor;
 import tfg.dto.DTOReto;
 import tfg.dto.DTOUsuario;
 import tfg.objetoNegocio.Alumno;
-import tfg.objetoNegocio.AlumnoAsignatura;
 import tfg.objetoNegocio.Asignatura;
 import tfg.objetoNegocio.Mensaje;
 import tfg.objetoNegocio.Reto;
@@ -42,7 +39,6 @@ import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAlumnoAsignatura;
 import tfg.servicioAplicacion.SAAsignatura;
 import tfg.servicioAplicacion.SAGamificacionREST;
-import tfg.servicioAplicacion.SAParseExcel;
 import tfg.servicioAplicacion.SAProfesor;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
@@ -64,8 +60,6 @@ public class ControladorPrincipal {
 	private SAAlumnoAsignatura saAlumnoAsignatura;
 	@Autowired	
 	private SAGamificacionREST saGamificacion;
-	@Autowired	
-	private SAParseExcel saParseExcel;
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
 	public ModelAndView mostrarInicioSesion() throws InvalidFormatException, IOException{
