@@ -10,7 +10,7 @@ import tfg.objetoNegocio.AlumnoAsignatura;
 @Repository("repositorioAlumnoAsignatura")
 public interface RepositorioAlumnoAsignatura  extends JpaRepository<AlumnoAsignatura, Integer>{
 	
-	// READ	
+	// READ
 	@Query("SELECT id FROM AlumnoAsignatura r WHERE r.asignatura.id = :idAsignatura AND r.alumno.id = :idAlumno")
 	int findId(@Param("idAsignatura")int idAsignatura, @Param("idAlumno")int idAlumno);
 

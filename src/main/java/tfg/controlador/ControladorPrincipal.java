@@ -32,6 +32,7 @@ import tfg.dto.DTOProfesor;
 import tfg.dto.DTOReto;
 import tfg.dto.DTOUsuario;
 import tfg.objetoNegocio.Alumno;
+import tfg.objetoNegocio.AlumnoAsignatura;
 import tfg.objetoNegocio.Asignatura;
 import tfg.objetoNegocio.Mensaje;
 import tfg.objetoNegocio.Reto;
@@ -292,6 +293,19 @@ public class ControladorPrincipal {
 		Reto reto = saReto.leerPorId(idReto);
 		saReto.actualizarActivo(reto.getId(), 1);
 		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+	}
+	
+	@RequestMapping(value="/recibirResultados", method = RequestMethod.POST)
+	public ModelAndView recibirResultados(int aciertos, int numPreguntas, int tiempo, int idReto, int idAlumno){
+		Reto reto = saReto.leerPorId(idReto);
+		Asignatura asignatura = reto.getAsignatura();
+		
+		//Actualiza las variables en el Motor de Gamificación
+		saGamificacion.setVariable("puntuacion", aciertos * 10, saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
+		saGamificacion.setVariable("porcentajeAciertos", (int)(aciertos * 100 / numPreguntas), saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
+		saGamificacion.setVariable("tiempo", tiempo, saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
+				
+		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
 	}
 	
 	@ModelAttribute("usuario")

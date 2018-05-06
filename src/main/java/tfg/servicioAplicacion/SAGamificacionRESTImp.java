@@ -40,20 +40,6 @@ public class SAGamificacionRESTImp implements SAGamificacionREST{
 	}
 	
 	@Override
-	public void eliminarUsuario(int idUsuario) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		String url = "http://localhost:8081/delete_user/";
-		
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-		//map.add("email", "first.last@example.com");
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-		
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.delete( url + idUsuario, request , String.class );
-	}
-
-	@Override
 	public List<Insignia> getInsignias(int idUsuario) {
 		List<Insignia> insignias = new ArrayList<Insignia>();
 
@@ -120,5 +106,36 @@ public class SAGamificacionRESTImp implements SAGamificacionREST{
 		}
 		
 		return puntuacion;
-	}	
+	}
+	
+	@Override
+	public void setVariable(String nombre, int valor, int idUsuario) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		String url = "http://localhost:8081/increase_value/";
+
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		map.add("value", Integer.toString(valor));
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.postForEntity( url + "/" + nombre + "/" + idUsuario, request , String.class );
+		System.out.println(response);
+	}
+	
+	@Override
+	public void eliminarUsuario(int idUsuario) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		String url = "http://localhost:8081/delete_user/";
+		
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		//map.add("email", "first.last@example.com");
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.delete( url + idUsuario, request , String.class );
+	}
+
+		
 }

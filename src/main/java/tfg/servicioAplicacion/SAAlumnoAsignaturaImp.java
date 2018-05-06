@@ -3,6 +3,7 @@ package tfg.servicioAplicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tfg.objetoNegocio.AlumnoAsignatura;
 import tfg.repositorio.RepositorioAlumnoAsignatura;
 
 @Service("saAlumnoAsignatura")
@@ -14,5 +15,4 @@ public class SAAlumnoAsignaturaImp implements SAAlumnoAsignatura{
 	public int leerId(int idAsignatura, int idAlumno) {
 		return repositorioAlumnoAsignatura.findId(idAsignatura, idAlumno);
 	}
-
 }
