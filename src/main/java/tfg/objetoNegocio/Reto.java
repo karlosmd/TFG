@@ -11,11 +11,12 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import tfg.dto.DTOReto;
+import tfg.servicioAplicacion.SARetoImp;
+
 @Entity
 @Table(name = "retos")
-public class Reto {
-	public static String baseUrl ="http://localhost:8000";
-	
+public class Reto {	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -23,24 +24,34 @@ public class Reto {
 	@NotEmpty
 	private String nombre;
 	
-	@NotEmpty
-	private String enlace;
+	private boolean disponible;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asignatura")
 	private Asignatura asignatura;
 	
-	private int activo;
+	private boolean activo;
 	
 	public Reto() {
-		activo = 1;
+		disponible = false;
+		activo = true;
 	}
 	
 	public Reto(int id, String nombre) {
 		this.id = id;
 		this.nombre = nombre;
-		this.enlace= baseUrl + "/reto/" + id + "/resolver";
-		this.activo = 1;
+		this.disponible = false;
+		this.activo = true;
+	}
+	
+	public static Reto toObjetoNegocio(DTOReto dtoReto) {
+		Reto reto = new Reto();
+		reto.setNombre(dtoReto.getNombre());
+		return reto;
+	}
+	
+	public String generarEnlace() {
+		return SARetoImp.baseUrl + "reto/" + this.id;
 	}
 
 	public int getId() {
@@ -59,14 +70,6 @@ public class Reto {
 		this.nombre = nombre;
 	}
 
-	public String getEnlace() {
-		return enlace;
-	}
-
-	public void setEnlace(String enlace) {
-		this.enlace = enlace;
-	}
-
 	public Asignatura getAsignatura() {
 		return asignatura;
 	}
@@ -75,11 +78,19 @@ public class Reto {
 		this.asignatura = asignatura;
 	}
 
-	public int getActivo() {
+	public boolean isDisponible() {
+		return disponible;
+	}
+
+	public void setDisponible(boolean disponible) {
+		this.disponible = disponible;
+	}
+
+	public boolean isActivo() {
 		return activo;
 	}
 
-	public void setActivo(int activo) {
+	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
 }

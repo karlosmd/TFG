@@ -1,6 +1,7 @@
 package tfg.controlador;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -135,10 +137,13 @@ public class ControladorPrincipal {
 	}
 	
 	@RequestMapping(value = "/asignatura", method = RequestMethod.GET)
-	public ModelAndView mostrarAsignatura(int id) {
+	public ModelAndView mostrarAsignatura(@ModelAttribute("usuario") Usuario usuario,
+			@RequestParam("idAsignatura") int idAsignatura) {
 		ModelAndView modelAndView = new ModelAndView();
-		Asignatura asignatura = saAsignatura.leerPorId(id);
-		List<Alumno> alumnosMatriculados = saAlumno.leerMatriculadosAsignatura(id);
+		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
+		List<Alumno> alumnosMatriculados = saAlumno.leerMatriculadosAsignatura(idAsignatura);
+		List<Reto> retos = saReto.leerPorAsignatura(asignatura);
+		List<DTOReto> dtoRetos = new ArrayList<>();
 		Set<DTOAlumno> dtoAlumnosMatriculados = new TreeSet<DTOAlumno>(new DTOAlumnoComp());
 		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoReto", new DTOReto());
@@ -146,13 +151,28 @@ public class ControladorPrincipal {
 		for(Alumno alumno : alumnosMatriculados) {
 			DTOAlumno dtoAlumno = new DTOAlumno();
 			dtoAlumno = alumno.toDTOAlumno();
-			dtoAlumno.setInsignias(saGamificacion.getInsignias(saAlumnoAsignatura.leerId(id, alumno.getId())));
-			dtoAlumno.setPuntuacion(saGamificacion.getPuntuacion(saAlumnoAsignatura.leerId(id, alumno.getId())));
+			//dtoAlumno.setInsignias(saGamificacion.getInsignias(saAlumnoAsignatura.leerId(id, alumno.getId())));
+			//dtoAlumno.setPuntuacion(saGamificacion.getPuntuacion(saAlumnoAsignatura.leerId(id, alumno.getId())));
 			dtoAlumnosMatriculados.add(dtoAlumno);
 		}
+		
+		for(int i = 0; i < retos.size(); i++) {
+			DTOReto dtoReto = DTOReto.toDTOReto(retos.get(i));
+			String enlace = retos.get(i).generarEnlace();
+			dtoReto.setEnlace(enlace);
+			if(usuario.getRol() == Rol.Alumno && retos.get(i).isDisponible()) {
+				dtoReto.setEnlace(enlace + "/insertar-nick?idUsuario=" + usuario.getId());
+			}
+			else if(usuario.getRol() == Rol.Profesor && retos.get(i).isDisponible()) {
+				dtoReto.setEnlace(enlace + "/sala-de-espera");
+			}
+			
+			dtoRetos.add(dtoReto);
+		}
+		
 		modelAndView.addObject("alumnosMatriculados", dtoAlumnosMatriculados);
-		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(id));
-		modelAndView.addObject("retos", saReto.leerPorAsignatura(asignatura));
+		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(idAsignatura));
+		modelAndView.addObject("retos", dtoRetos);
 		
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
@@ -211,7 +231,7 @@ public class ControladorPrincipal {
 		mensaje.setIcono("check_circle");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
-		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 	}
 	
 	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.POST)
@@ -236,7 +256,7 @@ public class ControladorPrincipal {
 		
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
-		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	
 	@RequestMapping(value="/asignatura/deshacer-baja-alumno", method = RequestMethod.POST)
@@ -247,16 +267,15 @@ public class ControladorPrincipal {
 		saAlumno.sobrescribir(alumno);
 		saGamificacion.crearUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
 		
-		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	
 	@RequestMapping(value = "/asignatura/{idAsignatura}/insertar-reto", method = RequestMethod.POST)
 	public ModelAndView asignaturaInsertarReto(@PathVariable("idAsignatura") int idAsignatura,
-			int idReto,
-			String nombreReto,
+			@ModelAttribute("dtoReto") DTOReto dtoReto,
 			final RedirectAttributes redirectAttrs) {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Reto reto = new Reto(idReto, nombreReto);
+		Reto reto = Reto.toObjetoNegocio(dtoReto);
 		saReto.crearReto(reto, asignatura);
 		
 		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido el reto '" + reto.getNombre() +
@@ -264,7 +283,17 @@ public class ControladorPrincipal {
 		mensaje.setIcono("check_circle");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
-		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
+	}
+	
+	@RequestMapping(value = "/reto/{idReto}/cambiar-disponibilidad", method = RequestMethod.POST)
+	public ModelAndView cambiarDisponibilidad(@PathVariable("idReto") int idReto) {
+		Reto reto = saReto.leerPorId(idReto);
+		Asignatura asignatura = reto.getAsignatura();
+		reto.setDisponible(!reto.isDisponible());
+		saReto.crearReto(reto, asignatura);
+		
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 	}
 	
 	@RequestMapping(value="/asignatura/eliminar-reto", method = RequestMethod.POST)
@@ -280,14 +309,14 @@ public class ControladorPrincipal {
 		mensaje.definirPeticion("/asignatura/deshacer-eliminar-reto", campos, "Pulse aquí para Deshacer");
 		
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);
-		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	
 	@RequestMapping(value="/asignatura/deshacer-eliminar-reto", method = RequestMethod.POST)
 	public ModelAndView AsignaturaDeshacerEliminarReto(int idReto, int idAsignatura){
 		Reto reto = saReto.leerPorId(idReto);
 		saReto.actualizarActivo(reto.getId(), 1);
-		return new ModelAndView("redirect:/asignatura?id=" + idAsignatura);
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	
 	@RequestMapping(value="/recibirResultados", method = RequestMethod.POST)
@@ -300,7 +329,7 @@ public class ControladorPrincipal {
 		saGamificacion.setVariable("porcentajeAciertos", (int)(aciertos * 100 / numPreguntas), saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
 		saGamificacion.setVariable("tiempo", tiempo, saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
 				
-		return new ModelAndView("redirect:/asignatura?id=" + asignatura.getId());
+		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 	}
 	
 	@ModelAttribute("usuario")

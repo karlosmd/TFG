@@ -35,7 +35,7 @@
 		  <tbody th:if="${not #lists.isEmpty(asignaturas)}">
 		    <tr th:each="asignatura : ${asignaturas}">
 		      <th scope="row" th:text="${asignatura.id}"></th>
-		      <td><a th:text="${asignatura.nombre}" th:href="@{/asignatura(id=${asignatura.id})}"></a></td>
+		      <td><a th:text="${asignatura.nombre}" th:href="@{/asignatura(idAsignatura=${asignatura.id})}"></a></td>
 		      <td th:text="${asignatura.grupo}"></td>
 		      <td th:text="${asignatura.curso}"></td>
 		      <td class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
@@ -72,7 +72,7 @@
 		    <tr>
 		      <th scope="col">Id</th>
 		      <th scope="col">Nombre</th>
-		      <th scope="col" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Alumno}">Enlace</th>
+		      <th scope="col">Enlace</th>
 		      <th scope="col" class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">Acciones</th>
 		    </tr>
 		  </thead>
@@ -82,11 +82,11 @@
 		    </tr>
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(retos)}">
-		    <tr th:each="reto : ${retos}">
+		    <tr th:each="reto : ${retos}" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Alumno and reto.disponible or usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 		      <td scope="row" th:text="${reto.id}"></td>
 		      <td th:text="${reto.nombre}"></td>
-		      <td  th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Alumno}">
-		      	<a th:href="${reto.enlace + '?idAlumno=' + usuario.id}">Iniciar reto</a>
+		      <td>
+		      	<a th:href="${reto.enlace}">Iniciar reto</a>
 		      </td>
 		      <td class="text-center" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar-reto}" method="POST">
@@ -105,11 +105,12 @@
 		    <tr th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 			    <td></td>
 			    <td></td>
+			    <td></td>
 			    <td class="text-center">
 					<!-- Button trigger modal -->
-					<a type="button" class="btn btn-naranja" th:href="${'http://localhost:8000/?idAsignatura=' + asignatura.id}">
+					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoReto" th:if="${usuario.rol == T(tfg.objetoNegocio.Rol).Profesor}">
 						Añadir Reto
-					</a>
+					</button>
 				</td>
 		    </tr>
 		  </tfoot>
