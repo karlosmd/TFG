@@ -51,7 +51,7 @@ public class Reto {
 	}
 	
 	public String generarEnlace() {
-		return SARetoImp.baseUrl + "reto/" + this.id;
+		return SARetoImp.baseUrl + "/reto/" + this.id;
 	}
 
 	public int getId() {

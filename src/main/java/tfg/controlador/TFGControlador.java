@@ -47,7 +47,7 @@ import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
 
 @Controller
-public class ControladorPrincipal {
+public class TFGControlador {
 	
 	@Autowired	
 	private SAUsuario saUsuario;
@@ -286,20 +286,11 @@ public class ControladorPrincipal {
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 	}
 	
-	@RequestMapping(value = "/reto/{idReto}/cambiar-disponibilidad", method = RequestMethod.POST)
-	public ModelAndView cambiarDisponibilidad(@PathVariable("idReto") int idReto) {
-		Reto reto = saReto.leerPorId(idReto);
-		Asignatura asignatura = reto.getAsignatura();
-		reto.setDisponible(!reto.isDisponible());
-		saReto.crearReto(reto, asignatura);
-		
-		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
-	}
-	
 	@RequestMapping(value="/asignatura/eliminar-reto", method = RequestMethod.POST)
 	public ModelAndView AsignaturaEliminarReto(int idReto, int idAsignatura, final RedirectAttributes redirectAttrs){
 		Reto reto = saReto.leerPorId(idReto);
-		saReto.actualizarActivo(reto.getId(), 0);
+		reto.setActivo(false);
+		saReto.modificarReto(reto);
 		Mensaje mensaje = new Mensaje("Atención", "el reto '" + reto.getNombre() + "' se ha eliminado", "rojo");
 		mensaje.setIcono("reply");
 		
@@ -315,7 +306,8 @@ public class ControladorPrincipal {
 	@RequestMapping(value="/asignatura/deshacer-eliminar-reto", method = RequestMethod.POST)
 	public ModelAndView AsignaturaDeshacerEliminarReto(int idReto, int idAsignatura){
 		Reto reto = saReto.leerPorId(idReto);
-		saReto.actualizarActivo(reto.getId(), 1);
+		reto.setActivo(true);
+		saReto.modificarReto(reto);
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	

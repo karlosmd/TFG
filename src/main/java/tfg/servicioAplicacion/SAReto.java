@@ -15,6 +15,6 @@ public interface SAReto {
 	public Reto leerPorId(int id);
 	
 	// UPDATE
-	public void actualizarActivo(int id, int activo);
+	public void modificarReto(Reto reto);
 
 }

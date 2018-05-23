@@ -21,7 +21,7 @@ public class SARetoImp implements SAReto{
 	@Autowired
 	private RepositorioReto repositorioReto;
 	
-	public static final String baseUrl = "http://localhost:8000/";
+	public static final String baseUrl = "http://localhost:8000";
 	
 	// CREATE
 	@Override
@@ -30,7 +30,7 @@ public class SARetoImp implements SAReto{
 		repositorioReto.save(reto);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		String url = baseUrl + "api/reto/" + reto.getId() + "/crear";
+		String url = baseUrl + "/api/reto/" + reto.getId() + "/crear";
 
 		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
 		map.add("nombre", reto.getNombre());
@@ -53,7 +53,7 @@ public class SARetoImp implements SAReto{
 	
 	// UPDATE
 	@Override
-	public void actualizarActivo(int id, int activo) {
-		repositorioReto.updateActivo(id, activo);		
+	public void modificarReto(Reto reto) {
+		repositorioReto.save(reto);
 	}
 }
