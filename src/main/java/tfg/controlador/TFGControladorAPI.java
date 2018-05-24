@@ -18,21 +18,25 @@ public class TFGControladorAPI {
 	@Autowired
 	private SAReto saReto;
 
-	@RequestMapping(value = "/reto/{idReto}/cambiar-disponibilidad", method = RequestMethod.POST)
+	@RequestMapping(value = "/reto/{idReto}/activar-disponibilidad", method = RequestMethod.POST)
 	@ResponseBody
-	public void cambiarDisponibilidad(@PathVariable("idReto") int idReto) {
+	public void activarDisponibilidad(@PathVariable("idReto") int idReto) {
 		Reto reto = saReto.leerPorId(idReto);
-		reto.setDisponible(!reto.isDisponible());
+		reto.setDisponible(true);
 		saReto.modificarReto(reto);
 	}
 	
-	@RequestMapping(value = "/reto/{idReto}/ir-a-asignatura", method = RequestMethod.POST)
+	@RequestMapping(value = "/reto/{idReto}/cancelar-disponibilidad", method = RequestMethod.POST)
 	@ResponseBody
-	public ModelAndView irAAsignatura(@PathVariable("idReto") int idReto) {	
+	public void cancelarDisponibilidad(@PathVariable("idReto") int idReto) {	
 		Reto reto = saReto.leerPorId(idReto);
-		reto.setDisponible(!reto.isDisponible());
+		reto.setDisponible(false);
 		saReto.modificarReto(reto);
-		
+	}
+	
+	@RequestMapping(value = "/reto/{idReto}/ir-a-asignatura", method = RequestMethod.GET)
+	public ModelAndView irAAsignatura(@PathVariable("idReto") int idReto) {	
+		Reto reto = saReto.leerPorId(idReto);		
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + reto.getAsignatura().getId());
 	}
 }
