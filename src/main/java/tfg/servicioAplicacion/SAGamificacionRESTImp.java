@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,21 +29,25 @@ import tfg.objetoNegocio.Insignia;
 
 @Service("saGamificacion")
 public class SAGamificacionRESTImp implements SAGamificacionREST{
+	public static final String baseUrl = "http://localhost:8081";
 
 	@Override
-	public void crearUsuario(int idUsuario) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		String url = "http://localhost:8081/add_or_update_user/";
+	public void crearUsuario(int idUsuario) throws Exception {
+        String payload = "PlayGen.SUGAR.Contracts.AccountRequest={" +
+                "\"Name \": \"User Name\", " +
+                "\"Password \": \"Their Password\", " +
+                "\"AutoLogin\": \"true\"" +
+                "}";
+        StringEntity entity = new StringEntity(payload,
+                ContentType.APPLICATION_FORM_URLENCODED);
 
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-		//map.add("email", "first.last@example.com");
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost request = new HttpPost(baseUrl + "/api/Account/create");
+        request.setEntity(entity);
 
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.postForEntity( url + idUsuario, request , String.class );
-		System.out.println(response);
-	}
+        HttpResponse response = httpClient.execute(request);
+        System.out.println(response.getStatusLine().getStatusCode());
+    }
 	
 	@Override
 	public List<Insignia> getInsignias(int idUsuario) {

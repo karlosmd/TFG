@@ -219,7 +219,7 @@ public class TFGControlador {
 	@RequestMapping(value = "/asignatura/{idAsignatura}/alta-alumno", method = RequestMethod.POST)
 	public ModelAndView asignaturaAltaAlumno(@PathVariable("idAsignatura") int idAsignatura,
 			int idAlumno,
-			final RedirectAttributes redirectAttrs) {
+			final RedirectAttributes redirectAttrs) throws Exception {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saAlumno.leer(idAlumno);		
 		alumno.insertarAsignatura(asignatura);		
@@ -260,7 +260,7 @@ public class TFGControlador {
 	}
 	
 	@RequestMapping(value="/asignatura/deshacer-baja-alumno", method = RequestMethod.POST)
-	public ModelAndView AsignaturaDeshacerBajaAlumno(int idAsignatura, int idAlumno){
+	public ModelAndView AsignaturaDeshacerBajaAlumno(int idAsignatura, int idAlumno) throws Exception{
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saAlumno.leer(idAlumno);
 		alumno.insertarAsignatura(asignatura);
