@@ -52,6 +52,7 @@ public class Alumno extends Usuario {
 		dtoAlumno.setRol(this.getRol());
 		dtoAlumno.setPassword(this.getPassword());
 		dtoAlumno.setTitulacion(this.getTitulacion());
+		dtoAlumno.setToken(this.getToken());
 
 		return dtoAlumno;
 	}

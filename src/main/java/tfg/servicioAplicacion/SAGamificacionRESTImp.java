@@ -33,13 +33,13 @@ public class SAGamificacionRESTImp implements SAGamificacionREST{
 
 	@Override
 	public void crearUsuario(int idUsuario) throws Exception {
-        String payload = "PlayGen.SUGAR.Contracts.AccountRequest={" +
-                "\"Name \": \"User Name\", " +
-                "\"Password \": \"Their Password\", " +
+        String payload = "accountRequest={" +
+                "\"Name\": \"Jorge\", " +
+                "\"Password\": \"Their Password\", " +
                 "\"AutoLogin\": \"true\"" +
                 "}";
         StringEntity entity = new StringEntity(payload,
-                ContentType.APPLICATION_FORM_URLENCODED);
+        		ContentType.APPLICATION_JSON);
 
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(baseUrl + "/api/Account/create");

@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import tfg.objetoNegocio.Reto;
+import tfg.objetoNegocio.Usuario;
 import tfg.servicioAplicacion.SAReto;
+import tfg.servicioAplicacion.SAUsuario;
 
 @Controller
 @RequestMapping("/api")
 public class TFGControladorAPI {
-
 	@Autowired
-	private SAReto saReto;
+	private SAUsuario saUsuario;
+	@Autowired
+	private SAReto saReto;	
 
 	@RequestMapping(value = "/reto/{idReto}/activar-disponibilidad", method = RequestMethod.POST)
 	@ResponseBody
@@ -38,5 +41,19 @@ public class TFGControladorAPI {
 	public ModelAndView irAAsignatura(@PathVariable("idReto") int idReto) {	
 		Reto reto = saReto.leerPorId(idReto);		
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + reto.getAsignatura().getId());
+	}
+	
+	@RequestMapping(value = "/comprobar-usuario", method = RequestMethod.GET)
+	@ResponseBody
+	public String comprobarUsuario(int idUsuario, String token) {		
+		boolean usuarioVerificado = false;
+		Usuario usuario = saUsuario.leer(idUsuario);
+		
+		if(usuario != null) {
+			if(usuario.getToken().equals(token)) {
+				usuarioVerificado = true;
+			}
+		}
+		return Boolean.toString(usuarioVerificado);
 	}
 }

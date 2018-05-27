@@ -1,5 +1,7 @@
 package tfg.objetoNegocio;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Inheritance(
     strategy = InheritanceType.JOINED
 )
-public abstract class Usuario {
+public abstract class Usuario {	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -41,20 +43,31 @@ public abstract class Usuario {
 	@NotEmpty
 	private String password;
 	
+	@NotEmpty
+	private String token;
+	
 	private boolean activo;
 	
 	public Usuario (){
+		token = generarToken();
 		activo = true;
 	}
 	
 	public Usuario (Rol rol){
-		activo = true;
 		this.rol = rol;
+		token = generarToken();
+		activo = true;
 	}
 	
 	public abstract void insertarAsignatura(Asignatura asignatura);
 	
 	public abstract void eliminarAsignatura(Asignatura asignatura);
+	
+	public String generarToken() {
+		UUID uuid = UUID.randomUUID();
+	    String token = uuid.toString().replace("-", "");
+	    return token;
+	}
 
 	public int getId() {
 		return id;
@@ -102,6 +115,14 @@ public abstract class Usuario {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public boolean isActivo() {

@@ -161,7 +161,7 @@ public class TFGControlador {
 			String enlace = retos.get(i).generarEnlace();
 			dtoReto.setEnlace(enlace);
 			if(usuario.getRol() == Rol.Alumno && retos.get(i).isDisponible()) {
-				dtoReto.setEnlace(enlace + "/insertar-nick?idUsuario=" + usuario.getId());
+				dtoReto.setEnlace(enlace + "/insertar-nick?idUsuario=" + usuario.getId() + "&token=" + usuario.getToken());
 			}
 			else if(usuario.getRol() == Rol.Profesor && retos.get(i).isDisponible()) {
 				dtoReto.setEnlace(enlace + "/sala-de-espera");

@@ -31,6 +31,8 @@ public class DTOUsuario {
 	@NotEmpty(message = "* Por favor, introduzca una contraseña")
 	private String confirmarPassword;
 	
+	private String token;
+	
 	public DTOUsuario() {
 	}
 	
@@ -42,6 +44,7 @@ public class DTOUsuario {
 		this.email = dtoUsuario.email;
 		this.password = dtoUsuario.password;
 		this.confirmarPassword = dtoUsuario.confirmarPassword;
+		this.token = dtoUsuario.token;
 	}
 
 	public int getId() {
@@ -98,5 +101,13 @@ public class DTOUsuario {
 
 	public void setConfirmarPassword(String confirmarPassword) {
 		this.confirmarPassword = confirmarPassword;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
