@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import javax.validation.Valid;
 
+import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +42,7 @@ import tfg.objetoNegocio.Usuario;
 import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAlumnoAsignatura;
 import tfg.servicioAplicacion.SAAsignatura;
-import tfg.servicioAplicacion.SAGamificacionREST;
+import tfg.servicioAplicacion.SAGamificacion;
 import tfg.servicioAplicacion.SAProfesor;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
@@ -62,12 +63,12 @@ public class TFGControlador {
 	@Autowired
 	private SAAlumnoAsignatura saAlumnoAsignatura;
 	@Autowired	
-	private SAGamificacionREST saGamificacion;
+	private SAGamificacion saGamificacion;
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
 	public ModelAndView mostrarInicioSesion() throws InvalidFormatException, IOException{
-		//List<DTOAlumno> listaAlumnos = saParseExcel.getResultadosAlumnos();
 		ModelAndView modelAndView = new ModelAndView();
+		saGamificacion.iniciarSesionGamificacion();
 		modelAndView.setViewName("index");
 		return modelAndView;
 	}
@@ -86,7 +87,7 @@ public class TFGControlador {
 			String departamento,
 			int despacho,
 			BindingResult bindingResult,
-			final RedirectAttributes redirectAttrs) {
+			final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException {
 		ModelAndView modelAndView = null;
 		Usuario usuario = saUsuario.leer(dtoUsuario.getEmail());
 
@@ -103,7 +104,10 @@ public class TFGControlador {
 		else {
 			if(dtoUsuario.getRol()==Rol.Alumno) {
 				DTOAlumno dtoAlumno = new DTOAlumno(dtoUsuario, titulacion);
-				saAlumno.crear(dtoAlumno);
+				Alumno alumno = Alumno.toObjetoNegocio(dtoAlumno);
+				saGamificacion.crearUsuario(alumno);
+				//Añadir atributo a Usuario "id_gamificacion"
+				saAlumno.crear(alumno);				
 			}
 			else {
 				DTOProfesor dtoProfesor = new DTOProfesor(dtoUsuario, departamento, despacho);
@@ -124,8 +128,9 @@ public class TFGControlador {
 	}
 	
 	@RequestMapping(value="/mis-asignaturas", method = RequestMethod.GET)
-	public ModelAndView mostrarMisAsignaturas(@ModelAttribute("usuario") Usuario usuario){
+	public ModelAndView mostrarMisAsignaturas(@ModelAttribute("usuario") Usuario usuario) throws ClientProtocolException, IOException {
 		ModelAndView modelAndView = new ModelAndView();
+		
 		if(usuario.getRol() == Rol.Profesor)
 			modelAndView.addObject("asignaturas", saAsignatura.leerAsignaturasProfesor(usuario.getId()));
 		else
@@ -182,10 +187,13 @@ public class TFGControlador {
 	public ModelAndView insertarAsignatura(@Valid @ModelAttribute("dtoAsignatura") DTOAsignatura dtoAsignatura,
 			BindingResult bindingResult,
 			int idProfesor,
-			final RedirectAttributes redirectAttrs) {
+			final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException {
 		
 		if (!bindingResult.hasErrors()) {
-			saAsignatura.crearAsignatura(dtoAsignatura, saProfesor.leer(idProfesor));
+			Asignatura asignatura = Asignatura.toObjetoNegocio(dtoAsignatura);
+			asignatura.setProfesor(saProfesor.leer(idProfesor));
+			saGamificacion.crearGrupo(asignatura);
+			saAsignatura.crearAsignatura(asignatura);
 			Mensaje mensaje = new Mensaje("Enhorabuena", "la asignatura " + dtoAsignatura.getNombre() + " se ha añadido con éxito", "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
@@ -222,9 +230,9 @@ public class TFGControlador {
 			final RedirectAttributes redirectAttrs) throws Exception {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saAlumno.leer(idAlumno);		
-		alumno.insertarAsignatura(asignatura);		
+		alumno.insertarAsignatura(asignatura);
+		saGamificacion.insertarUsuarioEnGrupo(alumno, asignatura);
 		saAlumno.sobrescribir(alumno);
-		saGamificacion.crearUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
 		
 		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido a " + alumno.getNombre() + " " + alumno.getApellidos() +
 				" en la asignatura " + asignatura.getNombre(), "verde");
@@ -236,8 +244,6 @@ public class TFGControlador {
 	
 	@RequestMapping(value="/asignatura/baja-alumno", method = RequestMethod.POST)
 	public ModelAndView AsignaturaBajaAlumno(int idAsignatura, int idAlumno, final RedirectAttributes redirectAttrs){
-		//Primero borramos el usuario del Motor de Gamificación
-		saGamificacion.eliminarUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
 		//Y después de la aplicación
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Alumno alumno = saAlumno.leer(idAlumno);
@@ -265,7 +271,6 @@ public class TFGControlador {
 		Alumno alumno = saAlumno.leer(idAlumno);
 		alumno.insertarAsignatura(asignatura);
 		saAlumno.sobrescribir(alumno);
-		saGamificacion.crearUsuario(saAlumnoAsignatura.leerId(idAsignatura, idAlumno));
 		
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
@@ -273,10 +278,12 @@ public class TFGControlador {
 	@RequestMapping(value = "/asignatura/{idAsignatura}/insertar-reto", method = RequestMethod.POST)
 	public ModelAndView asignaturaInsertarReto(@PathVariable("idAsignatura") int idAsignatura,
 			@ModelAttribute("dtoReto") DTOReto dtoReto,
-			final RedirectAttributes redirectAttrs) {
+			final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		Reto reto = Reto.toObjetoNegocio(dtoReto);
-		saReto.crearReto(reto, asignatura);
+		reto.setAsignatura(asignatura);
+		saGamificacion.crearJuego(reto);
+		saReto.crearReto(reto);
 		
 		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido el reto '" + reto.getNombre() +
 				"' a la asignatura " + asignatura.getNombre(), "verde");

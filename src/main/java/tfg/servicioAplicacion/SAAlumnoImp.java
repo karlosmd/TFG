@@ -21,13 +21,8 @@ public class SAAlumnoImp implements SAAlumno{
 	
 	@Transactional
 	@Override
-	public void crear(DTOAlumno dtoAlumno) {
-		Alumno alumno = new Alumno();    
-        alumno.setNombre(dtoAlumno.getNombre());
-	    alumno.setApellidos(dtoAlumno.getApellidos());
-	    alumno.setTitulacion(dtoAlumno.getTitulacion());
-	    alumno.setEmail(dtoAlumno.getEmail());
-	    alumno.setPassword(bCryptPasswordEncoder.encode(dtoAlumno.getPassword()));
+	public void crear(Alumno alumno) {
+	    alumno.setPassword(bCryptPasswordEncoder.encode(alumno.getPassword()));
 	    repositorioAlumno.save(alumno);
 	}
 	

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,6 +21,9 @@ public class Alumno extends Usuario {
 	
 	@NotEmpty
 	private String titulacion;
+	
+	@Column(nullable = false)
+	private int idGamificacion;
 	
 	public Alumno(){
 		super(Rol.Alumno);
@@ -41,6 +45,19 @@ public class Alumno extends Usuario {
 			}
 		}
 		alumnosAsignaturas.remove(alumnoAsignatura);
+	}
+	
+	public static Alumno toObjetoNegocio(DTOAlumno dtoAlumno) {
+		Alumno alumno = new Alumno();
+		alumno.setId(dtoAlumno.getId());
+		alumno.setNombre(dtoAlumno.getNombre());
+		alumno.setApellidos(dtoAlumno.getApellidos());
+		alumno.setRol(dtoAlumno.getRol());
+		alumno.setEmail(dtoAlumno.getEmail());
+		alumno.setPassword(dtoAlumno.getPassword());
+		alumno.setTitulacion(dtoAlumno.getTitulacion());
+		
+		return alumno;
 	}
 	
 	public DTOAlumno toDTOAlumno() {
@@ -71,5 +88,13 @@ public class Alumno extends Usuario {
 
 	public void setTitulacion(String titulacion) {
 		this.titulacion = titulacion;
+	}
+	
+	public int getIdGamificacion() {
+		return idGamificacion;
+	}
+
+	public void setIdGamificacion(int idGamificacion) {
+		this.idGamificacion = idGamificacion;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import tfg.dto.DTOAsignatura;
 
 @Entity
 @Table(name = "asignaturas")
@@ -44,12 +47,24 @@ public class Asignatura {
 	)
 	private Set<Reto> retos;
 	
+	@Column(nullable = false)
+	private int idGamificacion;
+	
 	private int activo;
 	
 	public Asignatura(){
 		activo = 1;
 		alumnosAsignaturas = new HashSet<>();
 		retos = new HashSet<>();
+	}
+	
+	public static Asignatura toObjetoNegocio(DTOAsignatura dtoAsignatura) {
+		Asignatura asignatura = new Asignatura();    
+		asignatura.setNombre(dtoAsignatura.getNombre());
+		asignatura.setGrupo(dtoAsignatura.getGrupo());
+		asignatura.setCurso(dtoAsignatura.getCurso());
+		
+		return asignatura;
 	}
 
 	public int getId() {
@@ -106,6 +121,14 @@ public class Asignatura {
 
 	public void setRetos(Set<Reto> retos) {
 		this.retos = retos;
+	}
+
+	public int getIdGamificacion() {
+		return idGamificacion;
+	}
+
+	public void setIdGamificacion(int idGamificacion) {
+		this.idGamificacion = idGamificacion;
 	}
 
 	public int getActivo() {

@@ -25,8 +25,7 @@ public class SARetoImp implements SAReto{
 	
 	// CREATE
 	@Override
-	public void crearReto(Reto reto, Asignatura asignatura) {
-		reto.setAsignatura(asignatura);
+	public void crearReto(Reto reto) {		
 		repositorioReto.save(reto);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

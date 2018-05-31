@@ -9,7 +9,7 @@ import tfg.objetoNegocio.Profesor;
 public interface SAAsignatura {
 	
 	// CREATE
-	public void crearAsignatura(DTOAsignatura dtoAsignatura, Profesor profesor);
+	public void crearAsignatura(Asignatura asignatura);
 	
 	// READ
 	public Asignatura leerPorId(int id);

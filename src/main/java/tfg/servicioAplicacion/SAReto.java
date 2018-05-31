@@ -8,7 +8,7 @@ import tfg.objetoNegocio.Reto;
 public interface SAReto {
 	
 	// CREATE
-	public void crearReto(Reto Reto, Asignatura asignatura);
+	public void crearReto(Reto Reto);
 	
 	// READ
 	public List<Reto> leerPorAsignatura(Asignatura asignatura);

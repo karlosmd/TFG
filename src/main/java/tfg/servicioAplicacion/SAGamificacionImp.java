@@ -1,16 +1,13 @@
 package tfg.servicioAplicacion;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.client.ClientProtocolException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,30 +21,78 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import tfg.objetoNegocio.Alumno;
+import tfg.objetoNegocio.Asignatura;
 import tfg.objetoNegocio.Categoria;
 import tfg.objetoNegocio.Insignia;
+import tfg.objetoNegocio.Reto;
 
 @Service("saGamificacion")
-public class SAGamificacionRESTImp implements SAGamificacionREST{
+public class SAGamificacionImp implements SAGamificacion{
 	public static final String baseUrl = "http://localhost:8081";
+	
+	@Autowired
+	private SAAlumno saAlumno;
+	
+	private String apiVersion = "1.0.0";
+	private String autorizacion;
+	
+	@Override
+	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException {		
+		//peticion para iniciar sesion en el motor de gamificacion
+		//actualizar autorization
+	}
 
 	@Override
-	public void crearUsuario(int idUsuario) throws Exception {
-        String payload = "accountRequest={" +
-                "\"Name\": \"Jorge\", " +
-                "\"Password\": \"Their Password\", " +
-                "\"AutoLogin\": \"true\"" +
-                "}";
-        StringEntity entity = new StringEntity(payload,
-        		ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(baseUrl + "/api/Account/create");
-        request.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(request);
-        System.out.println(response.getStatusLine().getStatusCode());
+	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException {
+		//Mandar peticion para crear usuario
+		//guardar el id de la respuesta del motor de gamificacion en alumno.idGamificacion
     }
+	
+	@Override
+	public void crearGrupo(Asignatura asignatura) throws ClientProtocolException, IOException {
+		//Mandar peticion para crear grupo
+		//guardar el id de la respuesta del motor de gamificacion en asignatura.idGamificacion
+	}
+	
+	@Override
+	public void crearJuego(Reto reto) throws ClientProtocolException, IOException {
+		//Mandar peticion para crear juego
+		//guardar el id de la respuesta del motor de gamificacion en reto.idGamificacion
+	}
+	
+	@Override
+	public void insertarUsuarioEnGrupo(Alumno alumno, Asignatura asignatura) throws ClientProtocolException, IOException {
+		//Mandar peticion para integrar usuario en grupo en el motor de gamificacion
+	}
+	
+	@Override
+	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException {
+		JsonObject jsonObject = new JsonParser().parse(resultados).getAsJsonObject();
+		JsonArray jsonUsuarios = jsonObject.get("usuarios").getAsJsonArray();
+		int idUsuario, tiempoTotal, tiempoMedio, puntos, porcentajeAciertos;
+		JsonObject jsonUsuario = new JsonObject();
+		for(int i=0; i<jsonUsuarios.size(); i++) {
+			jsonUsuario = jsonUsuarios.get(i).getAsJsonObject();
+			idUsuario = jsonUsuario.get("usuarioId").getAsInt();
+			tiempoTotal = jsonUsuario.get("tiempoTotal").getAsInt();
+			tiempoMedio = jsonUsuario.get("tiempoMedio").getAsInt();
+			puntos = jsonUsuario.get("puntos").getAsInt();
+			porcentajeAciertos = jsonUsuario.get("porcentajeAciertos").getAsInt();
+			
+			Alumno alumno = saAlumno.leer(idUsuario);
+			mandarResultado(reto, alumno, "tiempoTotal", tiempoTotal);
+			mandarResultado(reto, alumno, "tiempoMedio", tiempoMedio);
+			mandarResultado(reto, alumno, "puntos", puntos);
+			mandarResultado(reto, alumno, "porcentajeAciertos", porcentajeAciertos);
+		}
+	}
+	
+	public void mandarResultado(Reto reto, Alumno alumno, String nombre, int valor) throws ClientProtocolException, IOException {
+		//Mandar peticion con el resultado al motor de gamificacion
+	}
+	
+	//Motor de gamificacion antiguo (de aqui para abajo)
 	
 	@Override
 	public List<Insignia> getInsignias(int idUsuario) {
@@ -147,5 +192,5 @@ public class SAGamificacionRESTImp implements SAGamificacionREST{
 		restTemplate.delete( url + idUsuario, request , String.class );
 	}
 
-		
+	
 }

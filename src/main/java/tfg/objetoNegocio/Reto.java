@@ -1,5 +1,6 @@
 package tfg.objetoNegocio;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,9 @@ public class Reto {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asignatura")
 	private Asignatura asignatura;
+	
+	@Column(nullable = false)
+	private int idGamificacion;
 	
 	private boolean activo;
 	
@@ -84,6 +88,14 @@ public class Reto {
 
 	public void setDisponible(boolean disponible) {
 		this.disponible = disponible;
+	}
+
+	public int getIdGamificacion() {
+		return idGamificacion;
+	}
+
+	public void setIdGamificacion(int idGamificacion) {
+		this.idGamificacion = idGamificacion;
 	}
 
 	public boolean isActivo() {

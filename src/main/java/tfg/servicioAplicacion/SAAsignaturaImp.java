@@ -17,12 +17,7 @@ public class SAAsignaturaImp implements SAAsignatura {
 	
 	// CREATE	
 	@Override
-	public void crearAsignatura(DTOAsignatura dtoAsignatura, Profesor profesor) {
-		Asignatura asignatura = new Asignatura();    
-		asignatura.setNombre(dtoAsignatura.getNombre());
-		asignatura.setGrupo(dtoAsignatura.getGrupo());
-		asignatura.setCurso(dtoAsignatura.getCurso());
-		asignatura.setProfesor(profesor);
+	public void crearAsignatura(Asignatura asignatura) {
 		repositorioAsignatura.save(asignatura);
 	}
 	

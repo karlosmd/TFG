@@ -13,23 +13,23 @@ INSERT INTO `usuarios` (`id`, `activo`, `nombre`, `apellidos`, `rol`, `email`, `
 (12, 1, 'Clara', 'Sánchez', 1, 'clara@ucm.es', '$2a$10$GoNhjsQMGaHZ5NM4SuvQZux3OubVTosOQvtXX7m1r59BN.FSOvKly', 'da5e4b0f5e52451ea8fc07e6e52c2aa2'),
 (13, 1, 'Jose Luis', 'Fernández', 1, 'jose@ucm.es', '$2a$10$GoNhjsQMGaHZ5NM4SuvQZux3OubVTosOQvtXX7m1r59BN.FSOvKly', 'f309bb7b24a34097a410bb8402701e63');
 
-INSERT INTO `alumnos` (`id`, `titulacion`) VALUES
-(1, 'GIS'),
-(2, 'GIS'),
-(3, 'GIS'),
-(4, 'GIS'),
-(5, 'GII'),
-(6, 'GIC'),
-(7, 'GII'),
-(8, 'DGII'),
-(9, 'GIS'),
-(10, 'DGII');
+INSERT INTO `alumnos` (`id`, `titulacion`, `id_gamificacion`) VALUES
+(1, 'GIS', 20),
+(2, 'GIS', 21),
+(3, 'GIS', 22),
+(4, 'GIS', 23),
+(5, 'GII', 24),
+(6, 'GIC', 25),
+(7, 'GII', 26),
+(8, 'DGII', 27),
+(9, 'GIS', 28),
+(10, 'DGII', 29);
 
 INSERT INTO `profesores` (`id`, `departamento`, `despacho`) VALUES
 (11, "Hardware", 256),
 (12, "IA", 596),
 (13, "Informatica", 301);
 
-INSERT INTO `asignaturas` (`id`, `activo`, `nombre`, `grupo`, `curso`, `profesor`) VALUES
-(1, 1, 'Modelado del Software', '3ºE', '2017/2018', 11),
-(2, 1, 'Fundamentos de la Programación', '1ºB', '2016/2017', 11);
+INSERT INTO `asignaturas` (`id`, `activo`, `nombre`, `grupo`, `curso`, `profesor`, `id_gamificacion`) VALUES
+(1, 1, 'Modelado del Software', '3ºE', '2017/2018', 11, 33),
+(2, 1, 'Fundamentos de la Programación', '1ºB', '2016/2017', 11, 34);
