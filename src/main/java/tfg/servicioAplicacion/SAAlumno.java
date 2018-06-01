@@ -2,7 +2,6 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
-import tfg.dto.DTOAlumno;
 import tfg.objetoNegocio.Alumno;
 
 public interface SAAlumno extends SAUsuarios<Alumno> {

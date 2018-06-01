@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
-
 import tfg.objetoNegocio.Reto;
 import tfg.objetoNegocio.Usuario;
 import tfg.servicioAplicacion.SAGamificacion;

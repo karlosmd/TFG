@@ -24,9 +24,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -35,7 +33,6 @@ import tfg.objetoNegocio.Asignatura;
 import tfg.objetoNegocio.Categoria;
 import tfg.objetoNegocio.Insignia;
 import tfg.objetoNegocio.Reto;
-import tfg.objetoNegocio.Usuario;
 
 @Service("saGamificacion")
 public class SAGamificacionImp implements SAGamificacion{
@@ -145,7 +142,7 @@ public class SAGamificacionImp implements SAGamificacion{
         peticion.addHeader("Authorization", autorizacion);
         peticion.setEntity(entity);
 
-        HttpResponse respuesta = httpClient.execute(peticion);
+        httpClient.execute(peticion);
 	}
 	
 	//Motor de gamificacion antiguo (de aqui para abajo)
