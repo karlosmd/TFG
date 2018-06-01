@@ -6,7 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +24,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -26,6 +35,7 @@ import tfg.objetoNegocio.Asignatura;
 import tfg.objetoNegocio.Categoria;
 import tfg.objetoNegocio.Insignia;
 import tfg.objetoNegocio.Reto;
+import tfg.objetoNegocio.Usuario;
 
 @Service("saGamificacion")
 public class SAGamificacionImp implements SAGamificacion{
@@ -39,14 +49,45 @@ public class SAGamificacionImp implements SAGamificacion{
 	
 	@Override
 	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException {		
-		//peticion para iniciar sesion en el motor de gamificacion
-		//actualizar autorization
+		String parametros = "{" +
+                "\"Name\": \"admin\", " +
+                "\"Password\": \"admin\", " +
+                "\"SourceToken\": \"SUGAR\"" +
+                "}";
+        StringEntity entity = new StringEntity(parametros, ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost peticion = new HttpPost(baseUrl + "/api/loginplatform");
+        peticion.addHeader("APIVersion", apiVersion);
+        peticion.setEntity(entity);
+
+        HttpResponse respuesta = httpClient.execute(peticion);
+        autorizacion = respuesta.getFirstHeader("Authorization").getValue();
 	}
 
 	@Override
 	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException {
-		//Mandar peticion para crear usuario
-		//guardar el id de la respuesta del motor de gamificacion en alumno.idGamificacion
+		String parametrosRespuesta;
+		int idGamificacion;
+		
+		String parametros = "{" +
+                "\"Name\": \"" + alumno.getEmail() + "\", " +
+                "\"Password\": \"" + alumno.getPassword() + "\", " +
+                "\"SourceToken\": \"SUGAR\"" +
+                "}";
+        StringEntity entity = new StringEntity(parametros, ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost peticion = new HttpPost(baseUrl + "/api/account/create");
+        peticion.addHeader("APIVersion", apiVersion);
+        peticion.addHeader("Authorization", autorizacion);
+        peticion.setEntity(entity);
+
+        HttpResponse respuesta = httpClient.execute(peticion);
+        parametrosRespuesta = EntityUtils.toString(respuesta.getEntity());
+        JsonObject jsonObject = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
+        idGamificacion = jsonObject.getAsJsonObject("response").getAsJsonObject("user").get("id").getAsInt();
+        alumno.setIdGamificacion(idGamificacion);
     }
 	
 	@Override
@@ -89,7 +130,22 @@ public class SAGamificacionImp implements SAGamificacion{
 	}
 	
 	public void mandarResultado(Reto reto, Alumno alumno, String nombre, int valor) throws ClientProtocolException, IOException {
-		//Mandar peticion con el resultado al motor de gamificacion
+		String parametros = "{" +
+                "\"creatingActorId\": \"" + alumno.getIdGamificacion() + "\", " +
+                "\"evaluationDataType\": \"" + "long" + "\", " +
+                "\"gameId\": \"" + reto.getIdGamificacion() + "\", " +
+                "\"key\": \"" + nombre + "\", " +
+                "\"value\": \"" + valor + "\"" +
+                "}";
+        StringEntity entity = new StringEntity(parametros, ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost peticion = new HttpPost(baseUrl + "/api/actordata");
+        peticion.addHeader("APIVersion", apiVersion);
+        peticion.addHeader("Authorization", autorizacion);
+        peticion.setEntity(entity);
+
+        HttpResponse respuesta = httpClient.execute(peticion);
 	}
 	
 	//Motor de gamificacion antiguo (de aqui para abajo)
@@ -190,7 +246,5 @@ public class SAGamificacionImp implements SAGamificacion{
 		
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.delete( url + idUsuario, request , String.class );
-	}
-
-	
+	}	
 }
