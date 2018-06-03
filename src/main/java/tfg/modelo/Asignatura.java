@@ -1,4 +1,4 @@
-package tfg.objetoNegocio;
+package tfg.modelo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -58,7 +58,7 @@ public class Asignatura {
 		retos = new HashSet<>();
 	}
 	
-	public static Asignatura toObjetoNegocio(DTOAsignatura dtoAsignatura) {
+	public static Asignatura toModeloDelDominio(DTOAsignatura dtoAsignatura) {
 		Asignatura asignatura = new Asignatura();    
 		asignatura.setNombre(dtoAsignatura.getNombre());
 		asignatura.setGrupo(dtoAsignatura.getGrupo());

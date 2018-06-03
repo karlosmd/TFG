@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import tfg.objetoNegocio.Asignatura;
+import tfg.modelo.Asignatura;
 
 @Repository("repositorioAsignatura")
 public interface RepositorioAsignatura extends JpaRepository<Asignatura, Integer>{

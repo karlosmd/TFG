@@ -2,8 +2,8 @@ package tfg.dto;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Reto;
+import tfg.modelo.Asignatura;
+import tfg.modelo.Reto;
 
 public class DTOReto {
 	private int id;

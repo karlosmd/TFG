@@ -7,7 +7,7 @@ import javax.persistence.Column;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import tfg.objetoNegocio.Asignatura;
+import tfg.modelo.Asignatura;
 
 public class DTOProfesor extends DTOUsuario {
 	private Set<Asignatura> asignaturas;

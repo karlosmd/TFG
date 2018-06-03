@@ -1,4 +1,4 @@
-package tfg.objetoNegocio;
+package tfg.modelo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +47,7 @@ public class Alumno extends Usuario {
 		alumnosAsignaturas.remove(alumnoAsignatura);
 	}
 	
-	public static Alumno toObjetoNegocio(DTOAlumno dtoAlumno) {
+	public static Alumno toModeloDelDominio(DTOAlumno dtoAlumno) {
 		Alumno alumno = new Alumno();
 		alumno.setId(dtoAlumno.getId());
 		alumno.setNombre(dtoAlumno.getNombre());

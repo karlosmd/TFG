@@ -2,8 +2,8 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
-import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Reto;
+import tfg.modelo.Asignatura;
+import tfg.modelo.Reto;
 
 public interface SAReto {
 	

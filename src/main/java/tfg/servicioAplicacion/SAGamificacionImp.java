@@ -28,11 +28,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import tfg.objetoNegocio.Alumno;
-import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Categoria;
-import tfg.objetoNegocio.Insignia;
-import tfg.objetoNegocio.Reto;
+import tfg.excepcion.ExcepcionPeticionREST;
+import tfg.modelo.Alumno;
+import tfg.modelo.Asignatura;
+import tfg.modelo.Categoria;
+import tfg.modelo.Insignia;
+import tfg.modelo.Reto;
 
 @Service("saGamificacion")
 public class SAGamificacionImp implements SAGamificacion{
@@ -45,7 +46,8 @@ public class SAGamificacionImp implements SAGamificacion{
 	private String autorizacion;
 	
 	@Override
-	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException {		
+	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException, ExcepcionPeticionREST {
+		int codigoEstado;
 		String parametros = "{" +
                 "\"Name\": \"admin\", " +
                 "\"Password\": \"admin\", " +
@@ -59,13 +61,17 @@ public class SAGamificacionImp implements SAGamificacion{
         peticion.setEntity(entity);
 
         HttpResponse respuesta = httpClient.execute(peticion);
+        codigoEstado = respuesta.getStatusLine().getStatusCode();
+        if(codigoEstado >= 400) {
+        	throw new ExcepcionPeticionREST(codigoEstado);
+        }
         autorizacion = respuesta.getFirstHeader("Authorization").getValue();
 	}
 
 	@Override
-	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException {
+	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException, ExcepcionPeticionREST {
 		String parametrosRespuesta;
-		int idGamificacion;
+		int codigoEstado, idGamificacion;
 		
 		String parametros = "{" +
                 "\"Name\": \"" + alumno.getEmail() + "\", " +
@@ -81,6 +87,10 @@ public class SAGamificacionImp implements SAGamificacion{
         peticion.setEntity(entity);
 
         HttpResponse respuesta = httpClient.execute(peticion);
+        codigoEstado = respuesta.getStatusLine().getStatusCode();
+        if(codigoEstado >= 400) {
+        	throw new ExcepcionPeticionREST(codigoEstado);
+        }
         parametrosRespuesta = EntityUtils.toString(respuesta.getEntity());
         JsonObject jsonObject = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
         idGamificacion = jsonObject.getAsJsonObject("response").getAsJsonObject("user").get("id").getAsInt();
@@ -105,7 +115,7 @@ public class SAGamificacionImp implements SAGamificacion{
 	}
 	
 	@Override
-	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException {
+	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException, ExcepcionPeticionREST {
 		JsonObject jsonObject = new JsonParser().parse(resultados).getAsJsonObject();
 		JsonArray jsonUsuarios = jsonObject.get("usuarios").getAsJsonArray();
 		int idUsuario, tiempoTotal, tiempoMedio, puntos, porcentajeAciertos;
@@ -126,7 +136,9 @@ public class SAGamificacionImp implements SAGamificacion{
 		}
 	}
 	
-	public void mandarResultado(Reto reto, Alumno alumno, String nombre, int valor) throws ClientProtocolException, IOException {
+	public void mandarResultado(Reto reto, Alumno alumno, String nombre, int valor) throws ClientProtocolException, IOException, ExcepcionPeticionREST {
+		int codigoEstado;
+		
 		String parametros = "{" +
                 "\"creatingActorId\": \"" + alumno.getIdGamificacion() + "\", " +
                 "\"evaluationDataType\": \"" + "long" + "\", " +
@@ -142,7 +154,11 @@ public class SAGamificacionImp implements SAGamificacion{
         peticion.addHeader("Authorization", autorizacion);
         peticion.setEntity(entity);
 
-        httpClient.execute(peticion);
+        HttpResponse respuesta = httpClient.execute(peticion);
+        codigoEstado = respuesta.getStatusLine().getStatusCode();
+        if(codigoEstado >= 400) {
+        	throw new ExcepcionPeticionREST(codigoEstado);
+        }
 	}
 	
 	//Motor de gamificacion antiguo (de aqui para abajo)

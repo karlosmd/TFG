@@ -1,9 +1,8 @@
 package tfg.controlador;
 
-import java.io.IOException;
-
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import tfg.objetoNegocio.Reto;
-import tfg.objetoNegocio.Usuario;
+import tfg.modelo.Reto;
+import tfg.modelo.Usuario;
 import tfg.servicioAplicacion.SAGamificacion;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
@@ -46,9 +45,15 @@ public class TFGControladorAPI {
 	
 	@RequestMapping(value = "/reto/{idReto}/importar", method = RequestMethod.POST)
 	@ResponseBody
-	public void importar(@PathVariable("idReto") int idReto, @RequestBody String peticion) throws ClientProtocolException, IOException {
+	public ResponseEntity<Object> importar(@PathVariable("idReto") int idReto, @RequestBody String peticion) {
 		Reto reto = saReto.leerPorId(idReto);
-		saGamificacion.exportarResultados(reto, peticion);
+		try {
+			saGamificacion.exportarResultados(reto, peticion);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(null);
+		}
+		
+		return ResponseEntity.status(HttpStatus.SC_OK).body(null);
 	}
 	
 	@RequestMapping(value = "/reto/{idReto}/ir-a-asignatura", method = RequestMethod.GET)

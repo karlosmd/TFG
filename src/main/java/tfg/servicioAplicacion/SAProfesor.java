@@ -1,7 +1,7 @@
 package tfg.servicioAplicacion;
 
 import tfg.dto.DTOProfesor;
-import tfg.objetoNegocio.Profesor;
+import tfg.modelo.Profesor;
 
 public interface SAProfesor extends SAUsuarios<Profesor>{
 	public void crear(DTOProfesor dtoProfesor);

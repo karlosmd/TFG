@@ -2,7 +2,7 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
-import tfg.objetoNegocio.Alumno;
+import tfg.modelo.Alumno;
 
 public interface SAAlumno extends SAUsuarios<Alumno> {
 	public void crear(Alumno alumno);

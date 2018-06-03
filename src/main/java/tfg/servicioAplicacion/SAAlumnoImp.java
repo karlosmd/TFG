@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import tfg.objetoNegocio.Alumno;
+import tfg.modelo.Alumno;
 import tfg.repositorio.RepositorioAlumno;
 
 @Service("saAlumno")

@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Insignia;
+import tfg.modelo.Asignatura;
+import tfg.modelo.Insignia;
 
 public class DTOAlumno extends DTOUsuario {
 	private Set<Asignatura> asignaturas;

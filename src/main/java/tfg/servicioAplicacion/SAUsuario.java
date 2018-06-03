@@ -1,6 +1,6 @@
 package tfg.servicioAplicacion;
 
-import tfg.objetoNegocio.Usuario;
+import tfg.modelo.Usuario;
 
 public interface SAUsuario extends SAUsuarios<Usuario> {	
 }

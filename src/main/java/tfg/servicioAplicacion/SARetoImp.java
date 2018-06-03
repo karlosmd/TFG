@@ -12,8 +12,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Reto;
+import tfg.modelo.Asignatura;
+import tfg.modelo.Reto;
 import tfg.repositorio.RepositorioReto;
 
 @Service("saReto")
@@ -26,7 +26,6 @@ public class SARetoImp implements SAReto{
 	// CREATE
 	@Override
 	public void crearReto(Reto reto) {		
-		repositorioReto.save(reto);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		String url = baseUrl + "/api/reto/" + reto.getId() + "/crear";
@@ -37,7 +36,9 @@ public class SARetoImp implements SAReto{
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.postForEntity( url, request, String.class );
-		System.out.println(response);		
+		System.out.println(response);
+		
+		repositorioReto.save(reto);
 	}
 	
 	// READ

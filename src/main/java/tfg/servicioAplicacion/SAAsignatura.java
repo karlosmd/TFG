@@ -2,7 +2,7 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
-import tfg.objetoNegocio.Asignatura;
+import tfg.modelo.Asignatura;
 
 public interface SAAsignatura {
 	

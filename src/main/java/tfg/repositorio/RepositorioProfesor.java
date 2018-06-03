@@ -3,7 +3,7 @@ package tfg.repositorio;
 
 import javax.transaction.Transactional;
 
-import tfg.objetoNegocio.Profesor;
+import tfg.modelo.Profesor;
 
 @Transactional
 public interface RepositorioProfesor extends RepositorioUsuarios<Profesor> {

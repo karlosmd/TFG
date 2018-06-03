@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import tfg.dto.DTOProfesor;
-import tfg.objetoNegocio.Profesor;
+import tfg.modelo.Profesor;
 import tfg.repositorio.RepositorioProfesor;
 
 @Service("saProfesor")

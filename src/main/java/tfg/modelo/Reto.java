@@ -1,4 +1,4 @@
-package tfg.objetoNegocio;
+package tfg.modelo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,7 +48,7 @@ public class Reto {
 		this.activo = true;
 	}
 	
-	public static Reto toObjetoNegocio(DTOReto dtoReto) {
+	public static Reto toModeloDelDominio(DTOReto dtoReto) {
 		Reto reto = new Reto();
 		reto.setNombre(dtoReto.getNombre());
 		return reto;

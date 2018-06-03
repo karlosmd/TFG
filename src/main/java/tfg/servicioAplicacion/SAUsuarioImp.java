@@ -3,7 +3,7 @@ package tfg.servicioAplicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tfg.objetoNegocio.Usuario;
+import tfg.modelo.Usuario;
 import tfg.repositorio.RepositorioUsuario;
 
 @Service("saUsuario")

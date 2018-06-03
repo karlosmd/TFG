@@ -1,4 +1,4 @@
-package tfg.objetoNegocio;
+package tfg.modelo;
 
 import javax.persistence.*;
 import java.io.Serializable;

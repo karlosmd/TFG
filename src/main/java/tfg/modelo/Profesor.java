@@ -1,4 +1,4 @@
-package tfg.objetoNegocio;
+package tfg.modelo;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -35,7 +35,7 @@
 	  <div class="form-group">
 	    <label for="rol">Rol</label>
 	    <select class="form-control" th:field="*{rol}">
-	      <option th:each="rol : ${T(tfg.objetoNegocio.Rol).values()}"
+	      <option th:each="rol : ${T(tfg.modelo.Rol).values()}"
                             th:value="${rol}"
                             th:text="${rol}"/>
 	    </select>

@@ -5,18 +5,19 @@ import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
-import tfg.objetoNegocio.Alumno;
-import tfg.objetoNegocio.Asignatura;
-import tfg.objetoNegocio.Insignia;
-import tfg.objetoNegocio.Reto;
+import tfg.excepcion.ExcepcionPeticionREST;
+import tfg.modelo.Alumno;
+import tfg.modelo.Asignatura;
+import tfg.modelo.Insignia;
+import tfg.modelo.Reto;
 
 public interface SAGamificacion {
-	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException;
-	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException;
-	public void crearGrupo(Asignatura asignatura) throws ClientProtocolException, IOException;
-	public void crearJuego(Reto reto) throws ClientProtocolException, IOException;
-	public void insertarUsuarioEnGrupo(Alumno alumno, Asignatura asignatura) throws ClientProtocolException, IOException;
-	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException;
+	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException, ExcepcionPeticionREST;
+	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException, ExcepcionPeticionREST;
+	public void crearGrupo(Asignatura asignatura) throws ClientProtocolException, IOException, ExcepcionPeticionREST;
+	public void crearJuego(Reto reto) throws ClientProtocolException, IOException, ExcepcionPeticionREST, ExcepcionPeticionREST;
+	public void insertarUsuarioEnGrupo(Alumno alumno, Asignatura asignatura) throws ClientProtocolException, IOException, ExcepcionPeticionREST;
+	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException, ExcepcionPeticionREST;
 	public List<Insignia> getInsignias(int idUsuario);
 	public int getPuntuacion(int idUsuario);
 	public void setVariable(String nombre, int valor, int idUsuario);
