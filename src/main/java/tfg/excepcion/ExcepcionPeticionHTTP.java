@@ -1,9 +1,9 @@
 package tfg.excepcion;
 
-public class ExcepcionPeticionREST extends Exception {
+public class ExcepcionPeticionHTTP extends Exception {
 	private int codigoEstadoPeticion;
 	
-	public ExcepcionPeticionREST(int codigoEstadoPeticion) {
+	public ExcepcionPeticionHTTP(int codigoEstadoPeticion) {
 		super();
 		this.codigoEstadoPeticion = codigoEstadoPeticion;
 	}

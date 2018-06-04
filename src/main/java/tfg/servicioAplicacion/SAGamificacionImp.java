@@ -6,14 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +21,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import tfg.excepcion.ExcepcionPeticionREST;
+import tfg.excepcion.ExcepcionPeticionHTTP;
 import tfg.modelo.Alumno;
 import tfg.modelo.Asignatura;
 import tfg.modelo.Categoria;
+import tfg.modelo.GestorPeticionHTTP;
 import tfg.modelo.Insignia;
 import tfg.modelo.Reto;
 
@@ -46,76 +40,65 @@ public class SAGamificacionImp implements SAGamificacion{
 	private String autorizacion;
 	
 	@Override
-	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException, ExcepcionPeticionREST {
-		int codigoEstado;
-		String parametros = "{" +
-                "\"Name\": \"admin\", " +
-                "\"Password\": \"admin\", " +
-                "\"SourceToken\": \"SUGAR\"" +
-                "}";
-        StringEntity entity = new StringEntity(parametros, ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost peticion = new HttpPost(baseUrl + "/api/loginplatform");
-        peticion.addHeader("APIVersion", apiVersion);
-        peticion.setEntity(entity);
-
-        HttpResponse respuesta = httpClient.execute(peticion);
-        codigoEstado = respuesta.getStatusLine().getStatusCode();
-        if(codigoEstado >= 400) {
-        	throw new ExcepcionPeticionREST(codigoEstado);
-        }
-        autorizacion = respuesta.getFirstHeader("Authorization").getValue();
+	public void iniciarSesionGamificacion() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
+		GestorPeticionHTTP gestorPeticion;
+		Map<String, String> parametros = new HashMap<>();
+		parametros.put("Name", "admin");
+		parametros.put("Password", "admin");
+		parametros.put("SourceToken", "SUGAR");
+		
+		gestorPeticion = new GestorPeticionHTTP(baseUrl + "/api/loginplatform", parametros);
+		
+		Map<String, String> cabeceras = new HashMap<>();
+		cabeceras.put("APIVersion", apiVersion);
+		gestorPeticion.setCabeceras(cabeceras);
+		
+		gestorPeticion.ejecutar();
+		
+        autorizacion = gestorPeticion.getRespuesta().getFirstHeader("Authorization").getValue();
 	}
 
 	@Override
-	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException, ExcepcionPeticionREST {
-		String parametrosRespuesta;
-		int codigoEstado, idGamificacion;
+	public void crearUsuario(Alumno alumno) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {		
+		GestorPeticionHTTP gestorPeticion;
+		int idGamificacion;
+		Map<String, String> parametros = new HashMap<>();
+		parametros.put("Name", alumno.getEmail());
+		parametros.put("Password", alumno.getPassword());
+		parametros.put("SourceToken", "SUGAR");
 		
-		String parametros = "{" +
-                "\"Name\": \"" + alumno.getEmail() + "\", " +
-                "\"Password\": \"" + alumno.getPassword() + "\", " +
-                "\"SourceToken\": \"SUGAR\"" +
-                "}";
-        StringEntity entity = new StringEntity(parametros, ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost peticion = new HttpPost(baseUrl + "/api/account/create");
-        peticion.addHeader("APIVersion", apiVersion);
-        peticion.addHeader("Authorization", autorizacion);
-        peticion.setEntity(entity);
-
-        HttpResponse respuesta = httpClient.execute(peticion);
-        codigoEstado = respuesta.getStatusLine().getStatusCode();
-        if(codigoEstado >= 400) {
-        	throw new ExcepcionPeticionREST(codigoEstado);
-        }
-        parametrosRespuesta = EntityUtils.toString(respuesta.getEntity());
-        JsonObject jsonObject = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
-        idGamificacion = jsonObject.getAsJsonObject("response").getAsJsonObject("user").get("id").getAsInt();
+		gestorPeticion = new GestorPeticionHTTP(baseUrl + "/api/account/create", parametros);
+		
+		Map<String, String> cabeceras = new HashMap<>();
+		cabeceras.put("APIVersion", apiVersion);
+		cabeceras.put("Authorization", autorizacion);
+		gestorPeticion.setCabeceras(cabeceras);
+		
+		gestorPeticion.ejecutar();
+        JsonObject jsonRespuesta = gestorPeticion.getJsonRespuesta();
+        idGamificacion = jsonRespuesta.getAsJsonObject("response").getAsJsonObject("user").get("id").getAsInt();
         alumno.setIdGamificacion(idGamificacion);
     }
 	
 	@Override
-	public void crearGrupo(Asignatura asignatura) throws ClientProtocolException, IOException {
+	public void crearGrupo(Asignatura asignatura) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
 		//Mandar peticion para crear grupo
 		//guardar el id de la respuesta del motor de gamificacion en asignatura.idGamificacion
 	}
 	
 	@Override
-	public void crearJuego(Reto reto) throws ClientProtocolException, IOException {
+	public void crearJuego(Reto reto) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
 		//Mandar peticion para crear juego
 		//guardar el id de la respuesta del motor de gamificacion en reto.idGamificacion
 	}
 	
 	@Override
-	public void insertarUsuarioEnGrupo(Alumno alumno, Asignatura asignatura) throws ClientProtocolException, IOException {
+	public void insertarUsuarioEnGrupo(Alumno alumno, Asignatura asignatura) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
 		//Mandar peticion para integrar usuario en grupo en el motor de gamificacion
 	}
 	
 	@Override
-	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException, ExcepcionPeticionREST {
+	public void exportarResultados(Reto reto, String resultados) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
 		JsonObject jsonObject = new JsonParser().parse(resultados).getAsJsonObject();
 		JsonArray jsonUsuarios = jsonObject.get("usuarios").getAsJsonArray();
 		int idUsuario, tiempoTotal, tiempoMedio, puntos, porcentajeAciertos;
@@ -136,29 +119,24 @@ public class SAGamificacionImp implements SAGamificacion{
 		}
 	}
 	
-	public void mandarResultado(Reto reto, Alumno alumno, String nombre, int valor) throws ClientProtocolException, IOException, ExcepcionPeticionREST {
-		int codigoEstado;
+	public void mandarResultado(Reto reto, Alumno alumno, String nombre, int valor) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
+		GestorPeticionHTTP gestorPeticion;
 		
-		String parametros = "{" +
-                "\"creatingActorId\": \"" + alumno.getIdGamificacion() + "\", " +
-                "\"evaluationDataType\": \"" + "long" + "\", " +
-                "\"gameId\": \"" + reto.getIdGamificacion() + "\", " +
-                "\"key\": \"" + nombre + "\", " +
-                "\"value\": \"" + valor + "\"" +
-                "}";
-        StringEntity entity = new StringEntity(parametros, ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost peticion = new HttpPost(baseUrl + "/api/actordata");
-        peticion.addHeader("APIVersion", apiVersion);
-        peticion.addHeader("Authorization", autorizacion);
-        peticion.setEntity(entity);
-
-        HttpResponse respuesta = httpClient.execute(peticion);
-        codigoEstado = respuesta.getStatusLine().getStatusCode();
-        if(codigoEstado >= 400) {
-        	throw new ExcepcionPeticionREST(codigoEstado);
-        }
+		Map<String, String> parametros = new HashMap<>();
+		parametros.put("creatingActorId", Integer.toString(alumno.getIdGamificacion()));
+		parametros.put("evaluationDataType", "long");
+		parametros.put("gameId", Integer.toString(reto.getIdGamificacion()));
+		parametros.put("key", nombre);
+		parametros.put("value", Integer.toString(valor));
+		
+		gestorPeticion = new GestorPeticionHTTP(baseUrl + "/api/actordata", parametros);
+		
+		Map<String, String> cabeceras = new HashMap<>();
+		cabeceras.put("APIVersion", apiVersion);
+		cabeceras.put("Authorization", autorizacion);
+		gestorPeticion.setCabeceras(cabeceras);
+		
+		gestorPeticion.ejecutar();
 	}
 	
 	//Motor de gamificacion antiguo (de aqui para abajo)
