@@ -48,7 +48,7 @@ public class Reto {
 		this.activo = true;
 	}
 	
-	public static Reto toModeloDelDominio(DTOReto dtoReto) {
+	public static Reto toReto(DTOReto dtoReto) {
 		Reto reto = new Reto();
 		reto.setNombre(dtoReto.getNombre());
 		return reto;

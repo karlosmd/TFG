@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import tfg.dto.DTOProfesor;
 import tfg.modelo.Profesor;
 import tfg.repositorio.RepositorioProfesor;
 
@@ -19,14 +18,8 @@ public class SAProfesorImp implements SAProfesor{
     
     @Transactional
 	@Override
-	public void crear(DTOProfesor dtoProfesor) {
-		Profesor profesor = new Profesor();    
-		profesor.setNombre(dtoProfesor.getNombre());
-		profesor.setApellidos(dtoProfesor.getApellidos());
-		profesor.setDepartamento(dtoProfesor.getDepartamento());
-		profesor.setDespacho(dtoProfesor.getDespacho());
-		profesor.setEmail(dtoProfesor.getEmail());
-		profesor.setPassword(bCryptPasswordEncoder.encode(dtoProfesor.getPassword()));
+	public void crear(Profesor profesor) {
+    	profesor.setPassword(bCryptPasswordEncoder.encode(profesor.getPassword()));
 		repositorioProfesor.save(profesor);
 	}
 	

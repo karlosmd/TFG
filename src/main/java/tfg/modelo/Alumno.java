@@ -47,7 +47,7 @@ public class Alumno extends Usuario {
 		alumnosAsignaturas.remove(alumnoAsignatura);
 	}
 	
-	public static Alumno toModeloDelDominio(DTOAlumno dtoAlumno) {
+	public static Alumno toAlumno (DTOAlumno dtoAlumno) {
 		Alumno alumno = new Alumno();
 		alumno.setId(dtoAlumno.getId());
 		alumno.setNombre(dtoAlumno.getNombre());

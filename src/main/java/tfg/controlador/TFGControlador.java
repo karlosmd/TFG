@@ -36,6 +36,7 @@ import tfg.dto.DTOUsuario;
 import tfg.modelo.Alumno;
 import tfg.modelo.Asignatura;
 import tfg.modelo.Mensaje;
+import tfg.modelo.Profesor;
 import tfg.modelo.Reto;
 import tfg.modelo.Rol;
 import tfg.modelo.Usuario;
@@ -110,7 +111,7 @@ public class TFGControlador {
 		else {
 			if(dtoUsuario.getRol()==Rol.Alumno) {
 				DTOAlumno dtoAlumno = new DTOAlumno(dtoUsuario, titulacion);
-				Alumno alumno = Alumno.toModeloDelDominio(dtoAlumno);
+				Alumno alumno = Alumno.toAlumno(dtoAlumno);
 				try {					
 					saGamificacion.crearUsuario(alumno); // Lo guardamos en el Motor de Gamificación
 					saAlumno.crear(alumno); // Lo guardamos en nuestro sistema	
@@ -123,7 +124,8 @@ public class TFGControlador {
 			}
 			else {
 				DTOProfesor dtoProfesor = new DTOProfesor(dtoUsuario, departamento, despacho);
-				saProfesor.crear(dtoProfesor);
+				Profesor profesor = Profesor.toProfesor(dtoProfesor);
+				saProfesor.crear(profesor);
 			}
 			Mensaje mensaje = new Mensaje("Enhorabuena", "Se ha registrado con éxito. Inicie sesión con su correo electrónico", "verde");
 			mensaje.setIcono("check_circle");
@@ -205,7 +207,7 @@ public class TFGControlador {
 			final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException {
 		
 		if (!bindingResult.hasErrors()) {
-			Asignatura asignatura = Asignatura.toModeloDelDominio(dtoAsignatura);
+			Asignatura asignatura = Asignatura.toAsignatura(dtoAsignatura);
 			asignatura.setProfesor(saProfesor.leer(idProfesor));
 			try {					
 				saGamificacion.crearGrupo(asignatura); // Lo guardamos en el Motor de Gamificación
@@ -311,7 +313,7 @@ public class TFGControlador {
 			@ModelAttribute("dtoReto") DTOReto dtoReto,
 			final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException {
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Reto reto = Reto.toModeloDelDominio(dtoReto);
+		Reto reto = Reto.toReto(dtoReto);
 		reto.setAsignatura(asignatura);
 		
 		try {					

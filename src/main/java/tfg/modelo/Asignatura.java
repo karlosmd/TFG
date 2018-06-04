@@ -58,7 +58,7 @@ public class Asignatura {
 		retos = new HashSet<>();
 	}
 	
-	public static Asignatura toModeloDelDominio(DTOAsignatura dtoAsignatura) {
+	public static Asignatura toAsignatura (DTOAsignatura dtoAsignatura) {
 		Asignatura asignatura = new Asignatura();    
 		asignatura.setNombre(dtoAsignatura.getNombre());
 		asignatura.setGrupo(dtoAsignatura.getGrupo());
