@@ -89,7 +89,11 @@
 		      	<a th:href="${reto.enlace}">Iniciar reto</a>
 		      </td>
 		      <td class="text-center" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-		      	<a th:href="|http://localhost:8000/reto/${reto.id}|" title="Modificar Reto"><i class="material-icons icono-verde">create</i></a>
+		      	<form class="formulario-oculto" th:action="@{|http://localhost:8000/reto/${reto.id}/validar-profesor|}" method="POST">
+					<input type="hidden" name="idUsuario" th:value="${usuario.id}" />
+					<input type="hidden" name="token" th:value="${usuario.token}" />
+					<a onclick="this.parentNode.submit()" title="Modificar Reto"><i class="material-icons icono-verde">create</i></a>
+				</form>
 		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar-reto}" method="POST">
 					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
 					<input type="hidden" name="idReto" th:value="${reto.id}" />

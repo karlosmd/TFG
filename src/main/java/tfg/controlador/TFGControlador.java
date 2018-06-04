@@ -71,7 +71,7 @@ public class TFGControlador {
 		try {
 			saGamificacion.iniciarSesionGamificacion();
 		} catch (Exception e) {
-			Mensaje mensaje = new Mensaje("Error", "No se ha podido conectar con el Motor de Gamificación. La aplicación podría no funcionar correctamente", "rojo");
+			Mensaje mensaje = new Mensaje("Error", "no se ha podido conectar con el Motor de Gamificación. La aplicación podría no funcionar correctamente", "rojo");
 			mensaje.setIcono("block");
 			modelAndView.addObject("mensaje", mensaje);
 		}
@@ -115,7 +115,7 @@ public class TFGControlador {
 					saGamificacion.crearUsuario(alumno); // Lo guardamos en el Motor de Gamificación
 					saAlumno.crear(alumno); // Lo guardamos en nuestro sistema	
 				} catch (Exception e) {
-					Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente el alumno. Operación cancelada", "rojo");
+					Mensaje mensaje = new Mensaje("Error", "no se ha podido crear correctamente el alumno. Operación cancelada", "rojo");
 					mensaje.setIcono("block");
 					redirectAttrs.addFlashAttribute("mensaje", mensaje);
 					return new ModelAndView("redirect:/");
@@ -183,6 +183,9 @@ public class TFGControlador {
 			else if(usuario.getRol() == Rol.Profesor && retos.get(i).isDisponible()) {
 				dtoReto.setEnlace(enlace + "/sala-de-espera");
 			}
+			else if(usuario.getRol() == Rol.Profesor && !retos.get(i).isDisponible()) {
+				dtoReto.setEnlace(enlace + "?idUsuario=" + usuario.getId() + "&token=" + usuario.getToken());
+			}
 			
 			dtoRetos.add(dtoReto);
 		}
@@ -208,7 +211,7 @@ public class TFGControlador {
 				saGamificacion.crearGrupo(asignatura); // Lo guardamos en el Motor de Gamificación
 				saAsignatura.crearAsignatura(asignatura); // Lo guardamos en nuestro sistema
 			} catch (Exception e) {
-				Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente la asignatura. Operación cancelada", "rojo");
+				Mensaje mensaje = new Mensaje("Error", "no se ha podido crear correctamente la asignatura. Operación cancelada", "rojo");
 				mensaje.setIcono("block");
 				redirectAttrs.addFlashAttribute("mensaje", mensaje);
 				return new ModelAndView("redirect:/mis-asignaturas");
@@ -256,7 +259,7 @@ public class TFGControlador {
 			saGamificacion.insertarUsuarioEnGrupo(alumno, asignatura); // Lo guardamos en el Motor de Gamificación
 			saAlumno.sobrescribir(alumno); // Lo guardamos en nuestro sistema
 		} catch (Exception e) {
-			Mensaje mensaje = new Mensaje("Error", "No se ha podido insertar correctamente a " + alumno.getNombre() + " " + alumno.getApellidos() + 
+			Mensaje mensaje = new Mensaje("Error", "no se ha podido insertar correctamente a " + alumno.getNombre() + " " + alumno.getApellidos() + 
 					" en la asignatura " + asignatura.getNombre() + ". Operación cancelada", "rojo");
 			mensaje.setIcono("block");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
@@ -315,7 +318,7 @@ public class TFGControlador {
 			saGamificacion.crearJuego(reto); // Lo guardamos en el Motor de Gamificación
 			saReto.crearReto(reto); // Lo guardamos en nuestro sistema
 		} catch (Exception e) {
-			Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente el reto " + reto.getNombre() + ". Operación cancelada", "rojo");
+			Mensaje mensaje = new Mensaje("Error", "no se ha podido crear correctamente el reto " + reto.getNombre() + ". Operación cancelada", "rojo");
 			mensaje.setIcono("block");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
 			return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
@@ -366,7 +369,7 @@ public class TFGControlador {
 			saGamificacion.setVariable("porcentajeAciertos", (int)(aciertos * 100 / numPreguntas), saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
 			saGamificacion.setVariable("tiempo", tiempo, saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
 		} catch (Exception e) {
-			Mensaje mensaje = new Mensaje("Error", "No se han podido mandar correctamente las puntuaciones al Motor de Gamificación. Operación cancelada", "rojo");
+			Mensaje mensaje = new Mensaje("Error", "no se han podido mandar correctamente las puntuaciones al Motor de Gamificación. Operación cancelada", "rojo");
 			mensaje.setIcono("block");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
 			return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());

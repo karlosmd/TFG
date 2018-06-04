@@ -2,6 +2,8 @@ package tfg.servicioAplicacion;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import tfg.modelo.Reto;
 import tfg.repositorio.RepositorioReto;
 
 @Service("saReto")
+@Transactional
 public class SARetoImp implements SAReto{
 	@Autowired
 	private RepositorioReto repositorioReto;
@@ -25,7 +28,9 @@ public class SARetoImp implements SAReto{
 	
 	// CREATE
 	@Override
-	public void crearReto(Reto reto) {		
+	public void crearReto(Reto reto) {
+		repositorioReto.save(reto);
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		String url = baseUrl + "/api/reto/" + reto.getId() + "/crear";
@@ -36,9 +41,7 @@ public class SARetoImp implements SAReto{
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.postForEntity( url, request, String.class );
-		System.out.println(response);
-		
-		repositorioReto.save(reto);
+		System.out.println(response);		
 	}
 	
 	// READ
