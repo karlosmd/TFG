@@ -72,9 +72,9 @@
 				  <div class="form-group">
 				    <label for="id">Correo electrónico</label>
 				    <select class="form-control" name="idAlumno">
-				      <option th:each="alumno : ${alumnosNoMatriculados}"
+				       <option th:each="alumno : ${alumnosNoMatriculados}"
 			                            th:value="${alumno.id}"
-			                            th:utext="${alumno.email}"/>
+			                            th:utext="${alumno.email}"/>     
 				    </select>
 				  </div>
 				</form>
@@ -116,43 +116,71 @@
 		</div>
 		<!-- ****** -->
 		
-		<!-- MODAL CREAR LOGRO -->
-		<div class="modal fade" id="modalNuevoLogro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" th:fragment="modalNuevoLogro">
+		<!-- MODAL CREAR insignia -->
+		<div class="modal fade" id="modalNuevaInsignia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" th:fragment="modalNuevaInsignia">
 		  <div class="modal-dialog modal-dialog-centered" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Logro</h5>
+		        <h5 class="modal-title" id="exampleModalLongTitle">Añadir Insignia</h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		        <form class="formulario form-crear-cuenta" id="insertar-logro" th:action="@{/asignatura/{idAsignatura}/insertar-logro(idAsignatura=${asignatura.id})}" th:object="${dtoLogro}" method="POST"">
+		        <form class="formulario form-crear-cuenta" id="insertar-insignia" th:action="@{/asignatura/{idAsignatura}/insertar-insignia(idAsignatura=${asignatura.id})}" th:object="${dtoInsignia}" method="POST"">
 				  <div class="form-group">
 				  	<label for="nombre">Nombre</label>
 					<input type="text" th:field="*{nombre}" class="form-control"/>
 					<label th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="validation-message error"></label>
 				  </div>
 				   <div class="form-group">
-				  	<label for="nombre">Descripcion</label>
+				  	<label for="descripcion">Descripcion</label>
 					<input type="text" th:field="*{descripcion}" class="form-control"/>
 					<label th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="validation-message error"></label>
 				  </div>
+				
+				<div class="form-group">
+	    				<label for="variable">Variable</label>
+	    				<select class="form-control" th:field="*{variable}">
+	      					<option th:each="variable : ${T(tfg.modelo.Variable).values()}"
+                            th:value="${variable}"
+                            th:text="${variable}"/>
+	    				</select>
+	 			</div>
+				  	  
 				  <div class="form-group">
-				  	<label for="grupo">Variable</label>
-					<input type="text" th:field="*{variable}" class="form-control"/>
-					<label th:if="${#fields.hasErrors('variable')}" th:errors="*{variable}" class="validation-message error"></label>
-				  </div>			  
-				  <div class="form-group">
-				  	<label for="curso">Valor</label>
+				  	<label for="valor">Valor</label>
 				  	<input type="text" th:field="*{valor}" class="form-control"/>
 				  	<label th:if="${#fields.hasErrors('valor')}" th:errors="*{valor}" class="validation-message error"></label>
+				  </div>
+								  
+				  <div class="form-group">
+	    				<label for="comparacion">Comparacion</label>
+	    				<select class="form-control" th:field="*{comparacion}">
+	      					<option th:each="comparacion : ${T(tfg.modelo.Comparacion).values()}"
+                            th:value="${comparacion}"
+                            th:text="${comparacion}"/>
+	    				</select>
+	 			</div>
+	 			<div class="form-group">
+	    				<label for="premiopal">Variable a incrementar</label>
+	    				<select class="form-control" th:field="*{premiopal}">
+	      					<option th:each="variable : ${T(tfg.modelo.Variable).values()}"
+                            th:value="${variable}"
+                            th:text="${variable}"/>
+	    				</select>
+	 			</div>
+				  	  
+				  <div class="form-group">
+				  	<label for="premionum">Valor a incrementar</label>
+				  	<input type="text" th:field="*{premionum}" class="form-control"/>
+				  	<label th:if="${#fields.hasErrors('premionum')}" th:errors="*{premionum}" class="validation-message error"></label>
 				  </div>
 				</form>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-		        <button type="submit" class="btn btn-naranja" form="insertar-logro">Añadir Logro</button>
+		        <button type="submit" class="btn btn-naranja" form="insertar-insignia">Añadir Insignia</button>
 		      </div>
 		    </div>
 		  </div>

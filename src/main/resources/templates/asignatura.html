@@ -31,7 +31,7 @@
 		    <a class="nav-link" id="alumnos-tab" data-toggle="tab" href="#alumnos" role="tab" aria-controls="alumnos" aria-selected="false">Gamificación</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link" id="logros-tab" data-toggle="tab" href="#logros" role="tab" aria-controls="logros" aria-selected="false">Logros</a>
+		    <a class="nav-link" id="insignias-tab" data-toggle="tab" href="#insignias" role="tab" aria-controls="insignias" aria-selected="false">Insignias</a>
 		  </li>
 		</ul>
 		<div class="tab-content" id="myTabContent">
@@ -41,8 +41,8 @@
 		  <div class="tab-pane fade" id="alumnos" role="tabpanel" aria-labelledby="alumnos-tab">
 			<table th:replace="fragments/tablas :: tablaAlumnos"></table>
 		  </div>
-		  <div class="tab-pane fade" id="logros" role="tabpanel" aria-labelledby="logros-tab">
-			<table th:replace="fragments/tablas :: tablaLogros"></table>
+		  <div class="tab-pane fade" id="insignias" role="tabpanel" aria-labelledby="insignias-tab">
+			<table th:replace="fragments/tablas :: tablaInsignias"></table>
 		  </div>
 		</div>	  	
 	</div>
@@ -53,9 +53,8 @@
 	<!-- MODAL AÑADIR RETO -->
 	<div th:replace="fragments/modals :: modalNuevoReto"></div>
 	
-	<!-- MODAL AÑADIR LOGRO -->
-	<!--  <div th:replace="fragments/modals :: modalNuevoLogro"></div>-->
-	
+	<!-- MODAL AÑADIR insignia -->
+	<div th:replace="fragments/modals :: modalNuevaInsignia"></div>
 	
 	<!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

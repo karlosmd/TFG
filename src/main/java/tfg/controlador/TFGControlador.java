@@ -30,24 +30,25 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import tfg.dto.DTOAlumno;
 import tfg.dto.DTOAlumnoComp;
 import tfg.dto.DTOAsignatura;
-import tfg.dto.DTOLogro;
+import tfg.dto.DTOInsignia;
 import tfg.dto.DTOProfesor;
 import tfg.dto.DTOReto;
 import tfg.dto.DTOUsuario;
 import tfg.excepcion.ExcepcionPeticionHTTP;
 import tfg.modelo.Alumno;
 import tfg.modelo.Asignatura;
+import tfg.modelo.Insignia;
 import tfg.modelo.Profesor;
-import tfg.modelo.Logro;
+import tfg.modelo.Insignia;
 import tfg.modelo.Mensaje;
 import tfg.modelo.Reto;
 import tfg.modelo.Rol;
 import tfg.modelo.Usuario;
+import tfg.modelo.Variable;
 import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAlumnoAsignatura;
 import tfg.servicioAplicacion.SAAsignatura;
 import tfg.servicioAplicacion.SAGamificacion;
-import tfg.servicioAplicacion.SALogro;
 import tfg.servicioAplicacion.SAProfesor;
 import tfg.servicioAplicacion.SAReto;
 import tfg.servicioAplicacion.SAUsuario;
@@ -69,8 +70,7 @@ public class TFGControlador {
 	private SAAlumnoAsignatura saAlumnoAsignatura;
 	@Autowired	
 	private SAGamificacion saGamificacion;
-	@Autowired	
-	private SALogro saLogro;
+	
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
 	public ModelAndView mostrarInicioSesion() throws InvalidFormatException, IOException{
@@ -172,6 +172,7 @@ public class TFGControlador {
 		Set<DTOAlumno> dtoAlumnosMatriculados = new TreeSet<DTOAlumno>(new DTOAlumnoComp());
 		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoReto", new DTOReto());
+		modelAndView.addObject("dtoInsignia", new DTOInsignia());
 		
 		for(Alumno alumno : alumnosMatriculados) {
 			DTOAlumno dtoAlumno = new DTOAlumno();
@@ -213,8 +214,14 @@ public class TFGControlador {
 			Asignatura asignatura = Asignatura.toAsignatura(dtoAsignatura);
 			asignatura.setProfesor(saProfesor.leer(idProfesor));
 			try {					
-				saGamificacion.crearGrupo(asignatura); // Lo guardamos en el Motor de Gamificación
+				saGamificacion.crearGrupo(asignatura); // Lo guardamos como grupo en el Motor de Gamificación
+				saGamificacion.crearJuego(asignatura); // Lo guardamos como juego  en el Motor de Gamificación
 				saAsignatura.crearAsignatura(asignatura); // Lo guardamos en nuestro sistema
+				Variable variable[] = Variable.values();//Coge todas las variables en un array
+				for (Variable var : variable)  //Crea un tablero por cada variable que tenemos
+		        {
+					saGamificacion.crearTablero(asignatura, var); 
+		        }
 			} catch (Exception e) {
 				Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente la asignatura. Operación cancelada", "rojo");
 				mensaje.setIcono("block");
@@ -234,7 +241,7 @@ public class TFGControlador {
 	public ModelAndView eliminarAsignatura(int id, final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
 		Asignatura asignatura = saAsignatura.leerPorId(id);
 		saAsignatura.actualizarActivo(asignatura.getId(), 0);
-		saGamificacion.eliminarAsigntura(asignatura);
+		//saGamificacion.eliminarAsignatura(asignatura);
 		Mensaje mensaje = new Mensaje("Atención", "la asignatura " + asignatura.getNombre() + " se ha eliminado", "rojo");
 		mensaje.setIcono("reply");
 		
@@ -322,7 +329,6 @@ public class TFGControlador {
 		reto.setAsignatura(asignatura);
 		
 		try {					
-			saGamificacion.crearJuego(reto); // Lo guardamos en el Motor de Gamificación
 			saReto.crearReto(reto); // Lo guardamos en nuestro sistema
 		} catch (Exception e) {
 			Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente el reto " + reto.getNombre() + ". Operación cancelada", "rojo");
@@ -339,28 +345,32 @@ public class TFGControlador {
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 	}
 	
-	@RequestMapping(value = "/asignatura/{idAsignatura}/insertar-logro", method = RequestMethod.POST)
-	public ModelAndView asignaturaInsertarLogro(@PathVariable("idAsignatura") int idAsignatura, int idReto,			@ModelAttribute("dtoLogro") DTOLogro dtoLogro,
+	
+	@RequestMapping(value = "/asignatura/{idAsignatura}/insertar-insignia", method = RequestMethod.POST)
+	public ModelAndView asignaturaInsertarinsignia(@PathVariable("idAsignatura") int idAsignatura,
+			@ModelAttribute("dtoInsignia") DTOInsignia dtoInsignia, BindingResult bindingResult,
 			final RedirectAttributes redirectAttrs) throws ClientProtocolException, IOException {
-		Reto reto = saReto.leerPorId(idReto);
+		//Reto reto = saReto.leerPorId(idReto);
+		
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
-		Logro logro = Logro.toLogro(dtoLogro);
-		logro.setAsignatura(asignatura);
-		
-		try {					
-			saGamificacion.crearLogro(logro, reto); // Lo guardamos en el Motor de Gamificación
-			saLogro.crearLogro(logro); // Lo guardamos en nuestro sistema
-		} catch (Exception e) {
-			Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente el logro " + logro.getNombre() + ". Operación cancelada", "rojo");
-			mensaje.setIcono("block");
+		//Insignia insignia = new Insignia();
+		Insignia insignia = Insignia.toInsignia(dtoInsignia);
+		if (!bindingResult.hasErrors()) {
+			try {					
+				saGamificacion.crearAchievement(insignia, asignatura); // Lo guardamos en el Motor de Gamificación
+				//saInsignia.crearInsignia(insignia); // Lo guardamos en nuestro sistema
+			} catch (Exception e) {
+				Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente el insignia " + insignia.getNombre() + ". Operación cancelada", "rojo");
+				mensaje.setIcono("block");
+				redirectAttrs.addFlashAttribute("mensaje", mensaje);
+				return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
+			}
+			
+			Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido la insignia '" + insignia.getNombre() +
+					"' a la asignatura " + asignatura.getNombre(), "verde");
+			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
-			return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 		}
-		
-		Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido el logro '" + logro.getNombre() +
-				"' a la asignatura " + asignatura.getNombre(), "verde");
-		mensaje.setIcono("check_circle");
-		redirectAttrs.addFlashAttribute("mensaje", mensaje);
 		
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 	}
@@ -370,7 +380,6 @@ public class TFGControlador {
 		Reto reto = saReto.leerPorId(idReto);
 		reto.setActivo(false);
 		saReto.modificarReto(reto);
-		saGamificacion.eliminarJuego(reto);
 		Mensaje mensaje = new Mensaje("Atención", "el reto '" + reto.getNombre() + "' se ha eliminado", "rojo");
 		mensaje.setIcono("reply");
 		
@@ -391,7 +400,7 @@ public class TFGControlador {
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	
-	@RequestMapping(value="/recibirResultados", method = RequestMethod.POST)
+	/*@RequestMapping(value="/recibirResultados", method = RequestMethod.POST)
 	public ModelAndView recibirResultados(int aciertos, int numPreguntas, int tiempo, int idReto, int idAlumno,
 			final RedirectAttributes redirectAttrs){
 		Reto reto = saReto.leerPorId(idReto);
@@ -413,7 +422,7 @@ public class TFGControlador {
 		mensaje.setIcono("check_circle");
 		redirectAttrs.addFlashAttribute("mensaje", mensaje);						
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
-	}
+	}*/
 	
 	@ModelAttribute("usuario")
 	public void atributosDelModelo(Model model) {

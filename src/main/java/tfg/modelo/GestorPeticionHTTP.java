@@ -25,9 +25,9 @@ public class GestorPeticionHTTP {
 	
 	private int codigoEstado;
 	
-	private Map<String, String> parametros;
+	private Map<String, Object> parametros;
 	
-	private Map<String, String> cabeceras;
+	private Map<String, Object> cabeceras;
 	
 	private HttpResponse respuesta;
 	
@@ -37,7 +37,7 @@ public class GestorPeticionHTTP {
 		this.url = url;
 	}
 	
-	public GestorPeticionHTTP(String url, Map<String, String> parametros){
+	public GestorPeticionHTTP(String url, Map<String, Object> parametros){
 		this.url = url;
 		this.parametros = parametros;
 	}
@@ -51,7 +51,7 @@ public class GestorPeticionHTTP {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost peticion = new HttpPost(url);
         for (String clave : cabeceras.keySet()) {
-        	peticion.addHeader(clave, cabeceras.get(clave));
+        	peticion.addHeader(clave, (String) cabeceras.get(clave));
         }
         peticion.setEntity(entity);
         
@@ -64,13 +64,13 @@ public class GestorPeticionHTTP {
         jsonRespuesta = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
 	}
 	
-	public void eliminar() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
+	public void conseguir() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
 		String parametrosRespuesta;
 		
 		HttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet peticion = new HttpGet(url);
         for (String clave : cabeceras.keySet()) {
-        	peticion.addHeader(clave, cabeceras.get(clave));
+        	peticion.addHeader(clave, (String) cabeceras.get(clave));
         }
         
         respuesta = httpClient.execute(peticion);
@@ -82,11 +82,11 @@ public class GestorPeticionHTTP {
         jsonRespuesta = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
 	}
 	
-	public void conseguir() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
+	public void eliminar() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
 		HttpClient httpClient = HttpClientBuilder.create().build();
         HttpDelete peticion = new HttpDelete(url);
         for (String clave : cabeceras.keySet()) {
-        	peticion.addHeader(clave, cabeceras.get(clave));
+        	peticion.addHeader(clave, (String) cabeceras.get(clave));
         }
         
         respuesta = httpClient.execute(peticion);
@@ -112,19 +112,19 @@ public class GestorPeticionHTTP {
 		this.codigoEstado = codigoEstado;
 	}
 
-	public Map<String, String> getParametros() {
+	public Map<String, Object> getParametros() {
 		return parametros;
 	}
 
-	public void setParametros(Map<String, String> parametros) {
+	public void setParametros(Map<String, Object> parametros) {
 		this.parametros = parametros;
 	}
 
-	public Map<String, String> getCabeceras() {
+	public Map<String, Object> getCabeceras() {
 		return cabeceras;
 	}
 
-	public void setCabeceras(Map<String, String> cabeceras) {
+	public void setCabeceras(Map<String, Object> cabeceras) {
 		this.cabeceras = cabeceras;
 	}
 

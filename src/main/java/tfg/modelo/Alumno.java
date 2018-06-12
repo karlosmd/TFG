@@ -25,6 +25,8 @@ public class Alumno extends Usuario {
 	@Column(nullable = false)
 	private int idGamificacion;
 	
+	private int valor;
+	
 	public Alumno(){
 		super(Rol.Alumno);
 		alumnosAsignaturas = new HashSet<>();
@@ -96,5 +98,12 @@ public class Alumno extends Usuario {
 
 	public void setIdGamificacion(int idGamificacion) {
 		this.idGamificacion = idGamificacion;
+	}
+	public int getValor() {
+		return valor;
+	}
+
+	public void setValor(int valor) {
+		this.valor = valor;
 	}
 }
