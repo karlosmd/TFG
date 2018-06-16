@@ -30,6 +30,6 @@ INSERT INTO `profesores` (`id`, `departamento`, `despacho`) VALUES
 (12, "IA", 596),
 (13, "Informatica", 301);
 
-INSERT INTO `asignaturas` (`id`, `activo`, `nombre`, `grupo`, `curso`, `profesor`, `id_gamificacion_juego`, `id_gamificacion_grupo`, `nombre_tablero`, `nombre_juego`) VALUES
+INSERT INTO `asignaturas` (`id`, `activo`, `nombre`, `grupo`, `curso`, `profesor`, `id_gamificacion_juego`, `id_gamificacion_grupo`, `nombre_ranking`, `nombre_juego`) VALUES
 (1, 1, 'Modelado del Software', '3ºE', '2017/2018', 11, 33, 40, 'ZZZ0', 'ZZZ0'),
 (2, 1, 'Fundamentos de la Programación', '1ºB', '2016/2017', 11, 34, 41, 'ZZZZ', 'ZZZZ');

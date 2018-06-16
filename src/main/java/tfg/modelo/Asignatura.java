@@ -35,6 +35,7 @@ public class Asignatura {
 	
 	private Variable variable;
 	
+	
 	@OneToMany(mappedBy = "asignatura")
 	private Set<AlumnoAsignatura> alumnosAsignaturas;
 	
@@ -56,10 +57,11 @@ public class Asignatura {
 	private int idGamificacionGrupo;
 	
 	@Column(nullable = true)
-	private String nombreTablero;
+	private String nombreRanking;
 	
 	@Column(nullable = true)
 	private String nombreJuego;
+	
 	
 	private int activo;
 	
@@ -141,6 +143,8 @@ public class Asignatura {
 	public void setIdGamificacionJuego(int idGamificacionJuego) {
 		this.idGamificacionJuego = idGamificacionJuego;
 	}
+	
+	
 	public int getIdGamificacionGrupo() {
 		return idGamificacionGrupo;
 	}
@@ -148,11 +152,11 @@ public class Asignatura {
 	public void setIdGamificacionGrupo(int idGamificacionGrupo) {
 		this.idGamificacionGrupo = idGamificacionGrupo;
 	}
-	public String getNombreTablero(){
-		return nombreTablero;
+	public String getNombreRanking(){
+		return nombreRanking;
 	}
-	public void setNombreTablero(String nombreTablero){
-		this.nombreTablero = nombreTablero;
+	public void setNombreRanking(String nombreRanking){
+		this.nombreRanking = nombreRanking;
 	}
 	public String getNombreJuego(){
 		return nombreJuego;

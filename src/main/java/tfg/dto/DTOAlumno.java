@@ -16,6 +16,8 @@ public class DTOAlumno extends DTOUsuario {
 	private String titulacion;
 	
 	private long puntuacion;
+	private long tiempomedio;
+	private long porcentaje;
 	
 	private List<Insignia> insignias;
 	
@@ -52,6 +54,20 @@ public class DTOAlumno extends DTOUsuario {
 		this.titulacion = titulacion;
 	}
 
+	public long getTiempomedio() {
+		return tiempomedio;
+	}
+
+	public void setTiempomedio(long tiempomedio) {
+		this.tiempomedio = tiempomedio;
+	}
+	public long getPorcentaje() {
+		return porcentaje;
+	}
+
+	public void setPorcentaje(long porcentaje) {
+		this.porcentaje = porcentaje;
+	}
 	public long getPuntuacion() {
 		return puntuacion;
 	}
@@ -59,7 +75,6 @@ public class DTOAlumno extends DTOUsuario {
 	public void setPuntuacion(long puntuacion) {
 		this.puntuacion = puntuacion;
 	}
-
 	public List<Insignia> getInsignias() {
 		return insignias;
 	}
