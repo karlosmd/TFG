@@ -463,21 +463,19 @@ public class SAGamificacionImp implements SAGamificacion{
 			throws ClientProtocolException, IOException, ExcepcionPeticionHTTP {
 		JsonObject jsonObject = new JsonParser().parse(resultados).getAsJsonObject();
 		JsonArray jsonUsuarios = jsonObject.get("usuarios").getAsJsonArray();
-		int idUsuario, tiempoTotal, tiempoMedio, puntos, porcentajeAciertos;
+		int idUsuario, tiempoMedio, puntos, porcentajeAciertos;
 		JsonObject jsonUsuario = new JsonObject();
 		for(int i=0; i<jsonUsuarios.size(); i++) {
 			jsonUsuario = jsonUsuarios.get(i).getAsJsonObject();
 			idUsuario = jsonUsuario.get("usuarioId").getAsInt();
-			tiempoTotal = jsonUsuario.get("tiempoTotal").getAsInt();
 			tiempoMedio = jsonUsuario.get("tiempoMedio").getAsInt();
 			puntos = jsonUsuario.get("puntos").getAsInt();
 			porcentajeAciertos = jsonUsuario.get("porcentajeAciertos").getAsInt();
 			
 			Alumno alumno = saAlumno.leer(idUsuario);
-			mandarResultado(reto, alumno, "tiempoTotal", tiempoTotal);
-			mandarResultado(reto, alumno, "tiempoMedio", tiempoMedio);
-			mandarResultado(reto, alumno, "puntos", puntos);
-			mandarResultado(reto, alumno, "porcentajeAciertos", porcentajeAciertos);
+			mandarResultado(reto, alumno, "TiempoMedio", tiempoMedio);
+			mandarResultado(reto, alumno, "Puntuacion", puntos);
+			mandarResultado(reto, alumno, "PorcentajeAciertos", porcentajeAciertos);
 		}
 	}
 	
