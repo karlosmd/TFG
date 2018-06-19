@@ -203,12 +203,12 @@
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(insignias)}">
 		  <tr th:each="insignia : ${insignias}">
-		  		<td><i th:class="'material-icons insignia-' + ${dtoInsignia.categoria}">stars</i></td>
-		      	<td th:text="${dtoInsignia.nombre}"></td>
-		      	<td th:text="${dtoInsignia.variable}"></td>
-		      	<td th:text="${dtoInsignia.insignia.valor}"></td>
-		      	<td th:text="${dtoInsignia.insignia.premiopal}"></td>
-		      	<td th:text="${dtoInsignia.insignia.premionum}"></td>	      	      
+		  		<td><i th:class="'material-icons insignia-' + ${insignia.categoria}">stars</i></td>
+		      	<td th:text="${insignia.nombre}"></td>
+		      	<td th:text="${insignia.variable}"></td>
+		      	<td th:text="${insignia.valor}"></td>
+		      	<td th:text="${insignia.premiopal}"></td>
+		      	<td th:text="${insignia.premionum}"></td>	      	      
 		    </tr>
 		  </tbody>
 		  <tfoot>

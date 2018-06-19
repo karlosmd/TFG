@@ -173,7 +173,6 @@ public class TFGControlador {
 		List<Reto> retos = saReto.leerPorAsignatura(asignatura);
 		List<DTOReto> dtoRetos = new ArrayList<>();
 		List<Insignia> listaInsignias = new ArrayList<>();
-		List<DTOInsignia> dtoInsignia = new ArrayList<>();
 		Set<DTOAlumno> dtoAlumnosMatriculados = new TreeSet<DTOAlumno>(new DTOAlumnoComp());
 		modelAndView.addObject("asignatura", asignatura);
 		modelAndView.addObject("dtoReto", new DTOReto());
@@ -215,16 +214,15 @@ public class TFGControlador {
 			dtoRetos.add(dtoReto);
 		}
 		
-		DTOInsignia dtoInsignias = new DTOInsignia();
+
 		listaInsignias = new ArrayList<>();
 		saGamificacion.cogerAchievement(listaInsignias, asignatura);
-		dtoInsignias.setInsignias(listaInsignias);
-		dtoInsignia.add(dtoInsignias);
-	
+		
+		
 		modelAndView.addObject("alumnosMatriculados", dtoAlumnosMatriculados);
 		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(idAsignatura));
 		modelAndView.addObject("retos", dtoRetos);
-		modelAndView.addObject("insignias", dtoInsignia);
+		modelAndView.addObject("insignias", listaInsignias);
 		
 		modelAndView.setViewName("asignatura");
 		return modelAndView;
