@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
   <head th:fragment="head">
@@ -33,4 +34,41 @@
     	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 	</div>
   </body>
+=======
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="head">
+    <title>Navbar</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+    <!-- Style CSS -->
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+    <body>
+	  <div class="container">
+		<div th:class="'alert alert-' + ${mensaje.tipo} + ' alert-dismissible fade show collapse'" id="collapseAlert" role="alert" th:if="${mensaje} != null" th:fragment="mensaje">
+		 	<strong th:text="${mensaje.titulo}"></strong><span th:text="', ' + ${mensaje.contenido} + '. '"></span>
+		 	<form class="formulario-oculto" th:action="${mensaje.enlace}" th:if="#{mensaje.enlace != null}" method="POST">
+				<input type="hidden" th:each="campo : ${mensaje.campos}" th:name="${campo.key}" th:value="${campo.value}" />
+				<a class="enlace-mensaje" onclick="this.parentNode.submit()" th:text="${mensaje.textoEnlace}"></a>
+			</form>
+		 	<i class="material-icons" th:text="${mensaje.icono}"></i>
+			<button type="button" class="close" data-toggle="collapse" href="#collapseAlert" aria-label="Close">
+		  		<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		
+		<!-- Optional JavaScript -->
+    	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	</div>
+  </body>
+>>>>>>> pr/4
 </html>
