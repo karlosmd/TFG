@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package tfg.modelo;
 
 public enum Categoria {
@@ -7,12 +6,3 @@ public enum Categoria {
 	Plata,
 	Bronce
 }
-=======
-package tfg.modelo;
-
-public enum Categoria {
-	Oro,
-	Plata,
-	Bronce
-}
->>>>>>> pr/4

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 $(document).ready(function() {
 	$('div.atributosProfesor').hide();
 	$('#rol').change(function() {
@@ -11,18 +10,4 @@ $(document).ready(function() {
 			$('div.atributosProfesor').show();
 		}
 	});
-=======
-$(document).ready(function() {
-	$('div.atributosProfesor').hide();
-	$('#rol').change(function() {
-		if($(this).val()=="Alumno"){
-			$('div.atributosAlumno').show();
-			$('div.atributosProfesor').hide();
-		}
-		else{
-			$('div.atributosAlumno').hide();
-			$('div.atributosProfesor').show();
-		}
-	});
->>>>>>> pr/4
 });
