@@ -37,6 +37,7 @@ public class GestorPeticionHTTP {
 		this.url = url;
 	}
 	
+	//public GestorPeticionHTTP(String url, Map<String, String> parametros){
 	public GestorPeticionHTTP(String url, Map<String, Object> parametros){
 		this.url = url;
 		this.parametros = parametros;
@@ -51,6 +52,7 @@ public class GestorPeticionHTTP {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost peticion = new HttpPost(url);
         for (String clave : cabeceras.keySet()) {
+        	//peticion.addHeader(clave, cabeceras.get(clave));
         	peticion.addHeader(clave, (String) cabeceras.get(clave));
         }
         peticion.setEntity(entity);
@@ -63,7 +65,7 @@ public class GestorPeticionHTTP {
         parametrosRespuesta = EntityUtils.toString(respuesta.getEntity());
         jsonRespuesta = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
 	}
-	
+
 	public void conseguir() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
 		String parametrosRespuesta;
 		
@@ -95,7 +97,7 @@ public class GestorPeticionHTTP {
         	throw new ExcepcionPeticionHTTP(codigoEstado);
         }
 	}
-
+	
 	public String getUrl() {
 		return url;
 	}
@@ -127,6 +129,21 @@ public class GestorPeticionHTTP {
 	public void setCabeceras(Map<String, Object> cabeceras) {
 		this.cabeceras = cabeceras;
 	}
+	/*public Map<String, String> getParametros() {
+		return parametros;
+	}
+
+	public void setParametros(Map<String, String> parametros) {
+		this.parametros = parametros;
+	}
+
+	public Map<String, String> getCabeceras() {
+		return cabeceras;
+	}
+
+	public void setCabeceras(Map<String, String> cabeceras) {
+		this.cabeceras = cabeceras;
+	}*/
 
 	public HttpResponse getRespuesta() {
 		return respuesta;
