@@ -35,7 +35,6 @@ public class Asignatura {
 	
 	private Variable variable;
 	
-	
 	@OneToMany(mappedBy = "asignatura")
 	private Set<AlumnoAsignatura> alumnosAsignaturas;
 	
@@ -62,8 +61,8 @@ public class Asignatura {
 	@Column(nullable = true)
 	private String nombreJuego;
 	
-	
 	private int activo;
+	
 	
 	public Asignatura(){
 		activo = 1;
@@ -171,6 +170,7 @@ public class Asignatura {
 	public void setVariable(Variable variable) {
 		this.variable = variable;
 	}
+
 	public int getActivo() {
 		return activo;
 	}

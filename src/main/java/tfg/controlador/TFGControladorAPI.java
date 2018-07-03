@@ -1,5 +1,8 @@
 package tfg.controlador;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.Gson;
 
 import tfg.modelo.Reto;
 import tfg.modelo.Usuario;
@@ -64,7 +69,9 @@ public class TFGControladorAPI {
 	
 	@RequestMapping(value = "/comprobar-usuario", method = RequestMethod.GET)
 	@ResponseBody
-	public String comprobarUsuario(int idUsuario, String token) {		
+	public String comprobarUsuario(int idUsuario, String token) {
+		Map<String, String> respuesta = new HashMap<>();
+		Gson gson = new Gson(); 
 		boolean usuarioVerificado = false;
 		Usuario usuario = saUsuario.leer(idUsuario);
 		
@@ -73,6 +80,10 @@ public class TFGControladorAPI {
 				usuarioVerificado = true;
 			}
 		}
-		return Boolean.toString(usuarioVerificado);
+		
+		respuesta.put("verificado", Boolean.toString(usuarioVerificado));
+		respuesta.put("rol", usuario.getRol().toString());
+		
+		return gson.toJson(respuesta);
 	}
 }

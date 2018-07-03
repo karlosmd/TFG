@@ -19,8 +19,10 @@ public class SAProfesorImp implements SAProfesor{
     @Transactional
 	@Override
 	public void crear(Profesor profesor) {
-		   	profesor.setPassword(bCryptPasswordEncoder.encode(profesor.getPassword()));
-    }
+    	profesor.setPassword(bCryptPasswordEncoder.encode(profesor.getPassword()));
+		repositorioProfesor.save(profesor);
+	}
+	
 	@Override
     public void sobrescribir(Profesor profesor) {
     	repositorioProfesor.save(profesor);
