@@ -30,9 +30,6 @@
 		  <li class="nav-item">
 		    <a class="nav-link" id="alumnos-tab" data-toggle="tab" href="#alumnos" role="tab" aria-controls="alumnos" aria-selected="false">Gamificación</a>
 		  </li>
-		  <li class="nav-item">
-		    <a class="nav-link" id="insignias-tab" data-toggle="tab" href="#insignias" role="tab" aria-controls="insignias" aria-selected="false">Insignias</a>
-		  </li>
 		</ul>
 		<div class="tab-content" id="myTabContent">
 		  <div class="tab-pane fade show active" id="retos" role="tabpanel" aria-labelledby="retos-tab">
@@ -40,9 +37,6 @@
 		  </div>
 		  <div class="tab-pane fade" id="alumnos" role="tabpanel" aria-labelledby="alumnos-tab">
 			<table th:replace="fragments/tablas :: tablaAlumnos"></table>
-		  </div>
-		  <div class="tab-pane fade" id="insignias" role="tabpanel" aria-labelledby="insignias-tab">
-			<table th:replace="fragments/tablas :: tablaInsignias"></table>
 		  </div>
 		</div>	  	
 	</div>
@@ -53,8 +47,6 @@
 	<!-- MODAL AÑADIR RETO -->
 	<div th:replace="fragments/modals :: modalNuevoReto"></div>
 	
-	<!-- MODAL AÑADIR insignia -->
-	<div th:replace="fragments/modals :: modalNuevaInsignia"></div>
 	
 	<!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

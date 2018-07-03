@@ -41,23 +41,24 @@ public class Profesor extends Usuario {
 	public void eliminarAsignatura(Asignatura asignatura) {
 		asignaturas.remove(asignatura);
 	}
+	
+	public static Profesor toProfesor (DTOProfesor dtoProfesor) {
+		Profesor profesor = new Profesor();   
+		profesor.setId(dtoProfesor.getId());
+		profesor.setNombre(dtoProfesor.getNombre());
+		profesor.setApellidos(dtoProfesor.getApellidos());
+		profesor.setRol(dtoProfesor.getRol());
+		profesor.setEmail(dtoProfesor.getEmail());
+		profesor.setPassword(dtoProfesor.getPassword());
+		profesor.setDepartamento(dtoProfesor.getDepartamento());
+		profesor.setDespacho(dtoProfesor.getDespacho());		
+		
+		return profesor;
+	}
 
 	public Set<Asignatura> getAsignaturas() {
 		return asignaturas;
 	}
-	public static Profesor toProfesor (DTOProfesor dtoProfesor) {
-				Profesor profesor = new Profesor();   
-				profesor.setId(dtoProfesor.getId());
-				profesor.setNombre(dtoProfesor.getNombre());
-				profesor.setApellidos(dtoProfesor.getApellidos());
-				profesor.setRol(dtoProfesor.getRol());
-				profesor.setEmail(dtoProfesor.getEmail());
-				profesor.setPassword(dtoProfesor.getPassword());
-				profesor.setDepartamento(dtoProfesor.getDepartamento());
-				profesor.setDespacho(dtoProfesor.getDespacho());		
-				
-				return profesor;
-			}
 
 	public void setAsignaturas(Set<Asignatura> asignaturas) {
 		this.asignaturas = asignaturas;

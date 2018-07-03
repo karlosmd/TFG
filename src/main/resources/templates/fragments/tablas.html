@@ -89,7 +89,11 @@
 		      	<a th:href="${reto.enlace}">Iniciar reto</a>
 		      </td>
 		      <td class="text-center" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-		      	<a href="|http://localhost:8000/reto/${reto.id}|" title="Modificar Reto"><i class="material-icons icono-verde">create</i></a>
+		      	<form class="formulario-oculto" th:action="@{|http://localhost:8000/reto/${reto.id}/validar-profesor|}" method="POST">
+					<input type="hidden" name="idUsuario" th:value="${usuario.id}" />
+					<input type="hidden" name="token" th:value="${usuario.token}" />
+					<a onclick="this.parentNode.submit()" title="Modificar Reto"><i class="material-icons icono-verde">create</i></a>
+				</form>
 		      	<form class="formulario-oculto" th:action="@{/asignatura/eliminar-reto}" method="POST">
 					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
 					<input type="hidden" name="idReto" th:value="${reto.id}" />
@@ -124,16 +128,15 @@
 		    <tr>
 		      <th scope="col" class="text-center">#</th>
 		      <th scope="col">Nombre</th>
+		      <th scope="col">Titulación</th>
 		      <th scope="col">Puntuación</th>
-		      <th scope="col">Tiempo Medio</th>
-		      <th scope="col">Porcentaje</th>
 		      <th scope="col">Insignias</th>
 		      <th scope="col" class="text-center" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">Acciones</th>
 		    </tr>
 		  </thead>
 		  <tbody th:if="${#lists.isEmpty(alumnosMatriculados)}">
 		    <tr>
-		      <td colspan="7" class="text-center">No hay alumnos que mostrar</td>
+		      <td colspan="6" class="text-center">No hay alumnos que mostrar</td>
 		    </tr>
 		  </tbody>
 		  <tbody th:if="${not #lists.isEmpty(alumnosMatriculados)}">
@@ -145,13 +148,9 @@
 			    <td scope="row" th:case="*" class="text-center" th:text="${iterador.index + 1}"></td>
 			  </th:block>
 		      <td th:text="${alumno.nombre} + ' ' + ${alumno.apellidos}"></td>
+		      <td th:text="${alumno.titulacion}"></td>
 		      <td th:text="${alumno.puntuacion}"></td>
-		      <td th:text="${alumno.tiempomedio}"></td>
-		      <td th:text="${alumno.porcentaje}"></td>
-		      
 		      <td><i th:each="insignia : ${alumno.insignias}" th:class="'material-icons insignia-' + ${insignia.categoria}" th:title="${insignia.nombre}">stars</i></td>
-		      
-		      
 		      <td class="text-center" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
 		      	<form class="formulario-oculto" th:action="@{/asignatura/baja-alumno}" method="POST">
 					<input type="hidden" name="idAsignatura" th:value="${asignatura.id}" />
@@ -172,7 +171,6 @@
 			    <td></td>
 			    <td></td>
 			    <td></td>
-			    <td></td>
 			    <td class="text-center">
 			      	<!-- Button trigger modal -->
 					<button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevoAlumno">
@@ -183,52 +181,6 @@
 		  </tfoot>
 		</table>
 		<!-- ****** -->		
-		
-		<!-- TABLA MIS insigniaS -->
-	  	<table class="table table-striped table-dark" th:fragment="tablaInsignias">
-		  <thead>
-		    <tr>
-		    	<th scope="col">Categoria</th>
-			    <th scope="col">Nombre</th>
-			    <th scope="col">Variable</th>
-			    <th scope="col">Valor</th>
-			    <th scope="col">Variable a Incrementar</th>
-			    <th scope="col">Valor a Incrementar</th>			      
-		    </tr>
-		  </thead>
-		  <tbody th:if="${#lists.isEmpty(insignias)}">
-		    <tr>
-		      <td colspan="6" class="text-center">No hay insignias que mostrar</td>
-		    </tr>
-		  </tbody>
-		  <tbody th:if="${not #lists.isEmpty(insignias)}">
-		  <tr th:each="insignia : ${insignias}">
-		  		<td><i th:class="'material-icons insignia-' + ${insignia.categoria}">stars</i></td>
-		      	<td th:text="${insignia.nombre}"></td>
-		      	<td th:text="${insignia.variable}"></td>
-		      	<td th:text="${insignia.valor}"></td>
-		      	<td th:text="${insignia.premiopal}"></td>
-		      	<td th:text="${insignia.premionum}"></td>	      	      
-		    </tr>
-		  </tbody>
-		  <tfoot>
-		    <tr>
-			    <td></td>
-			    <td></td>
-			    <td></td>
-			    <td></td>
-			    <td></td>
-			    <td class="text-center">
-			      	<!-- Button trigger modal -->
-					  <button type="button" class="btn btn-naranja" data-toggle="modal" data-target="#modalNuevaInsignia" th:if="${usuario.rol == T(tfg.modelo.Rol).Profesor}">
-						Añadir Insignia
-					</button>
-				</td>
-		    </tr>
-		  </tfoot>
-		</table> 
-		<!-- ****** -->
-		
 		
 		<!-- Optional JavaScript -->
     	<!-- jQuery first, then Popper.js, then Bootstrap JS -->

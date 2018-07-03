@@ -6,8 +6,6 @@ import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -25,9 +23,9 @@ public class GestorPeticionHTTP {
 	
 	private int codigoEstado;
 	
-	private Map<String, Object> parametros;
+	private Map<String, String> parametros;
 	
-	private Map<String, Object> cabeceras;
+	private Map<String, String> cabeceras;
 	
 	private HttpResponse respuesta;
 	
@@ -37,7 +35,7 @@ public class GestorPeticionHTTP {
 		this.url = url;
 	}
 	
-	public GestorPeticionHTTP(String url, Map<String, Object> parametros){
+	public GestorPeticionHTTP(String url, Map<String, String> parametros){
 		this.url = url;
 		this.parametros = parametros;
 	}
@@ -51,7 +49,7 @@ public class GestorPeticionHTTP {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost peticion = new HttpPost(url);
         for (String clave : cabeceras.keySet()) {
-        	peticion.addHeader(clave, (String) cabeceras.get(clave));
+        	peticion.addHeader(clave, cabeceras.get(clave));
         }
         peticion.setEntity(entity);
         
@@ -62,38 +60,6 @@ public class GestorPeticionHTTP {
         }
         parametrosRespuesta = EntityUtils.toString(respuesta.getEntity());
         jsonRespuesta = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
-	}
-	
-	public void conseguir() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
-		String parametrosRespuesta;
-		
-		HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet peticion = new HttpGet(url);
-        for (String clave : cabeceras.keySet()) {
-        	peticion.addHeader(clave, (String) cabeceras.get(clave));
-        }
-        
-        respuesta = httpClient.execute(peticion);
-        codigoEstado = respuesta.getStatusLine().getStatusCode();
-        if(codigoEstado >= 400) {
-        	throw new ExcepcionPeticionHTTP(codigoEstado);
-        }
-        parametrosRespuesta = EntityUtils.toString(respuesta.getEntity());
-        jsonRespuesta = new JsonParser().parse(parametrosRespuesta).getAsJsonObject();
-	}
-	
-	public void eliminar() throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
-		HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpDelete peticion = new HttpDelete(url);
-        for (String clave : cabeceras.keySet()) {
-        	peticion.addHeader(clave, (String) cabeceras.get(clave));
-        }
-        
-        respuesta = httpClient.execute(peticion);
-        codigoEstado = respuesta.getStatusLine().getStatusCode();
-        if(codigoEstado >= 400) {
-        	throw new ExcepcionPeticionHTTP(codigoEstado);
-        }
 	}
 
 	public String getUrl() {
@@ -112,19 +78,19 @@ public class GestorPeticionHTTP {
 		this.codigoEstado = codigoEstado;
 	}
 
-	public Map<String, Object> getParametros() {
+	public Map<String, String> getParametros() {
 		return parametros;
 	}
 
-	public void setParametros(Map<String, Object> parametros) {
+	public void setParametros(Map<String, String> parametros) {
 		this.parametros = parametros;
 	}
 
-	public Map<String, Object> getCabeceras() {
+	public Map<String, String> getCabeceras() {
 		return cabeceras;
 	}
 
-	public void setCabeceras(Map<String, Object> cabeceras) {
+	public void setCabeceras(Map<String, String> cabeceras) {
 		this.cabeceras = cabeceras;
 	}
 

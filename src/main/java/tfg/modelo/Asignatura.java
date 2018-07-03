@@ -33,9 +33,6 @@ public class Asignatura {
 	@NotEmpty
 	private String curso;
 	
-	private Variable variable;
-	
-	
 	@OneToMany(mappedBy = "asignatura")
 	private Set<AlumnoAsignatura> alumnosAsignaturas;
 	
@@ -50,18 +47,8 @@ public class Asignatura {
 	)
 	private Set<Reto> retos;
 	
-	@Column(nullable = true)
-	private int idGamificacionJuego;
-	
-	@Column(nullable = true)
-	private int idGamificacionGrupo;
-	
-	@Column(nullable = true)
-	private String nombreRanking;
-	
-	@Column(nullable = true)
-	private String nombreJuego;
-	
+	@Column(nullable = false)
+	private int idGamificacion;
 	
 	private int activo;
 	
@@ -136,41 +123,14 @@ public class Asignatura {
 		this.retos = retos;
 	}
 
-	public int getIdGamificacionJuego() {
-		return idGamificacionJuego;
+	public int getIdGamificacion() {
+		return idGamificacion;
 	}
 
-	public void setIdGamificacionJuego(int idGamificacionJuego) {
-		this.idGamificacionJuego = idGamificacionJuego;
-	}
-	
-	
-	public int getIdGamificacionGrupo() {
-		return idGamificacionGrupo;
+	public void setIdGamificacion(int idGamificacion) {
+		this.idGamificacion = idGamificacion;
 	}
 
-	public void setIdGamificacionGrupo(int idGamificacionGrupo) {
-		this.idGamificacionGrupo = idGamificacionGrupo;
-	}
-	public String getNombreRanking(){
-		return nombreRanking;
-	}
-	public void setNombreRanking(String nombreRanking){
-		this.nombreRanking = nombreRanking;
-	}
-	public String getNombreJuego(){
-		return nombreJuego;
-	}
-	public void setNombreJuego(String nombreJuego){
-		this.nombreJuego = nombreJuego;
-	}
-	public Variable getVariable() {
-		return variable;
-	}
-
-	public void setVariable(Variable variable) {
-		this.variable = variable;
-	}
 	public int getActivo() {
 		return activo;
 	}

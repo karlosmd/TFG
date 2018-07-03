@@ -72,9 +72,9 @@
 				  <div class="form-group">
 				    <label for="id">Correo electrónico</label>
 				    <select class="form-control" name="idAlumno">
-				       <option th:each="alumno : ${alumnosNoMatriculados}"
+				      <option th:each="alumno : ${alumnosNoMatriculados}"
 			                            th:value="${alumno.id}"
-			                            th:utext="${alumno.email}"/>     
+			                            th:utext="${alumno.email}"/>
 				    </select>
 				  </div>
 				</form>
@@ -115,81 +115,6 @@
 		  </div>
 		</div>
 		<!-- ****** -->
-		
-		<!-- MODAL CREAR insignia -->
-		<div class="modal fade" id="modalNuevaInsignia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" th:fragment="modalNuevaInsignia">
-		  <div class="modal-dialog modal-dialog-centered" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLongTitle">Añadir Insignia</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
-		        <form class="formulario form-crear-cuenta" id="insertar-insignia" th:action="@{/asignatura/{idAsignatura}/insertar-insignia(idAsignatura=${asignatura.id})}" th:object="${dtoInsignia}" method="POST"">
-				  <div class="form-group">
-				  	<label for="nombre">Nombre</label>
-					<input type="text" th:field="*{nombre}" class="form-control"/>
-					<label th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="validation-message error"></label>
-				  </div>
-				<div class="form-group">
-	    				<label for="categoria">Categoria</label>
-	    				<select class="form-control" th:field="*{categoria}">
-	      					<option th:each="categoria : ${T(tfg.modelo.Categoria).values()}"
-                            th:value="${categoria}"
-                            th:text="${categoria}"/>
-	    				</select>
-	 			</div>
-				<div class="form-group">
-	    				<label for="variable">Variable</label>
-	    				<select class="form-control" th:field="*{variable}">
-	      					<option th:each="variable : ${T(tfg.modelo.Variable).values()}"
-                            th:value="${variable}"
-                            th:text="${variable}"/>
-	    				</select>
-	 			</div>
-				  	  
-				  <div class="form-group">
-				  	<label for="valor">Valor</label>
-				  	<input type="text" th:field="*{valor}" class="form-control"/>
-				  	<label th:if="${#fields.hasErrors('valor')}" th:errors="*{valor}" class="validation-message error"></label>
-				  </div>
-								  
-				  <div class="form-group">
-	    				<label for="comparacion">Comparacion</label>
-	    				<select class="form-control" th:field="*{comparacion}">
-	      					<option th:each="comparacion : ${T(tfg.modelo.Comparacion).values()}"
-                            th:value="${comparacion}"
-                            th:text="${comparacion}"/>
-	    				</select>
-	 			</div>
-	 			<div class="form-group">
-	    				<label for="premiopal">Variable a incrementar</label>
-	    				<select class="form-control" th:field="*{premiopal}">
-	      					<option th:each="variable : ${T(tfg.modelo.Variable).values()}"
-                            th:value="${variable}"
-                            th:text="${variable}"/>
-	    				</select>
-	 			</div>
-				  	  
-				  <div class="form-group">
-				  	<label for="premionum">Valor a incrementar</label>
-				  	<input type="text" th:field="*{premionum}" class="form-control"/>
-				  	<label th:if="${#fields.hasErrors('premionum')}" th:errors="*{premionum}" class="validation-message error"></label>
-				  </div>
-				   
-	 			
-				</form>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-		        <button type="submit" class="btn btn-naranja" form="insertar-insignia">Añadir Insignia</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-	  	<!-- ****** -->
 		
 		<!-- Optional JavaScript -->
     	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
