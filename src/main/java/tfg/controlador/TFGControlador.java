@@ -1,6 +1,7 @@
 package tfg.controlador;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,8 +187,10 @@ public class TFGControlador {
 				saGamificacion.cogerRankingVersionMejorada(asignatura, var, alumno);
 				if(var == Variable.Puntuacion)
 					dtoAlumno.setPuntuacion(alumno.getValor());
-				else if(var == Variable.TiempoMedio)
-					dtoAlumno.setTiempomedio(alumno.getValor());
+				else if(var == Variable.TiempoMedio){
+					DecimalFormat df = new DecimalFormat("0.000");
+					dtoAlumno.setTiempomedio( df.format((float)alumno.getValor() / 1000));
+				}
 				else if(var == Variable.PorcentajeAciertos)
 					dtoAlumno.setPorcentaje(alumno.getValor());
 				alumno.setValor(0);
@@ -234,7 +237,7 @@ public class TFGControlador {
 			Asignatura asignatura = Asignatura.toAsignatura(dtoAsignatura);
 			asignatura.setProfesor(saProfesor.leer(idProfesor));
 			try {					
-				saGamificacion.crearJuego(asignatura); // Lo guardamos como juego  en el Motor de Gamificación
+				saGamificacion.crearJuego(asignatura); // Lo guardamos como juego  en el Motor de Gamificaciï¿½n
 				saAsignatura.crearAsignatura(asignatura); // Lo guardamos en nuestro sistema
 				Variable variable[] = Variable.values();//Coge todas las variables en un array
 					for (Variable var : variable)  //Crea un Ranking por cada variable que tenemos
@@ -396,17 +399,17 @@ public class TFGControlador {
 		Insignia insignia = Insignia.toInsignia(dtoInsignia);
 		if (!bindingResult.hasErrors()) {
 			try {					
-				saGamificacion.crearAchievement(insignia, asignatura); // Lo guardamos en el Motor de Gamificación
+				saGamificacion.crearAchievement(insignia, asignatura); // Lo guardamos en el Motor de Gamificaciï¿½n
 			} catch (Exception e) {
 				Mensaje mensaje = new Mensaje("Error", "No se ha podido crear correctamente el insignia " +
-						insignia.getNombre() + ". Operación cancelada", "rojo");
+						insignia.getNombre() + ". Operaciï¿½n cancelada", "rojo");
 				
 				mensaje.setIcono("block");
 				redirectAttrs.addFlashAttribute("mensaje", mensaje);
 				return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
 			}
 			
-			Mensaje mensaje = new Mensaje("Enhorabuena", "se ha añadido la insignia '" + insignia.getNombre() +
+			Mensaje mensaje = new Mensaje("Enhorabuena", "se ha aï¿½adido la insignia '" + insignia.getNombre() +
 					"' a la asignatura " + asignatura.getNombre(), "verde");
 			mensaje.setIcono("check_circle");
 			redirectAttrs.addFlashAttribute("mensaje", mensaje);
