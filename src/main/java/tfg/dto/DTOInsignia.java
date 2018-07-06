@@ -10,7 +10,6 @@ import tfg.modelo.Comparacion;
 import tfg.modelo.Insignia;
 
 public class DTOInsignia {
-//private int id;
 	private List<Insignia> insignias;
 	@NotEmpty(message = "* Por favor, introduzca el nombre")
 	private String nombre;

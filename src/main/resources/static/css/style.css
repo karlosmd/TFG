@@ -138,6 +138,10 @@ i{
 	cursor: pointer;
 }
 
+.icono-rojo{
+	color: #FF1744;
+}
+
 .alert-verde{
 	background: #2C3034;
 	color: #00E676;

@@ -1,7 +1,6 @@
 package tfg.controlador;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +39,7 @@ import tfg.modelo.Alumno;
 import tfg.modelo.Asignatura;
 import tfg.modelo.Insignia;
 import tfg.modelo.Profesor;
+import tfg.modelo.Resultado;
 import tfg.modelo.Mensaje;
 import tfg.modelo.Reto;
 import tfg.modelo.Rol;
@@ -47,6 +47,7 @@ import tfg.modelo.Usuario;
 import tfg.modelo.Variable;
 import tfg.servicioAplicacion.SAAlumno;
 import tfg.servicioAplicacion.SAAlumnoAsignatura;
+import tfg.servicioAplicacion.SAAnaliticas;
 import tfg.servicioAplicacion.SAAsignatura;
 import tfg.servicioAplicacion.SAGamificacion;
 import tfg.servicioAplicacion.SAProfesor;
@@ -70,6 +71,8 @@ public class TFGControlador {
 	private SAAlumnoAsignatura saAlumnoAsignatura;
 	@Autowired	
 	private SAGamificacion saGamificacion;
+	@Autowired	
+	private SAAnaliticas saAnaliticas;
 
 	@RequestMapping(value={"/", "/iniciar-sesion"}, method = RequestMethod.GET)
 	public ModelAndView mostrarInicioSesion() throws InvalidFormatException, IOException{
@@ -161,9 +164,8 @@ public class TFGControlador {
 	}
 	
 	@RequestMapping(value = "/asignatura", method = RequestMethod.GET)
-	public ModelAndView mostrarAsignatura(@ModelAttribute("usuario") Usuario usuario,
-			@RequestParam("idAsignatura") int idAsignatura) 
-					throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
+	public ModelAndView mostrarAsignatura(@ModelAttribute("usuario") Usuario usuario, @RequestParam("idAsignatura") int idAsignatura) 
+			throws ClientProtocolException, IOException, ExcepcionPeticionHTTP{
 		ModelAndView modelAndView = new ModelAndView();
 		Asignatura asignatura = saAsignatura.leerPorId(idAsignatura);
 		List<Alumno> alumnosMatriculados = saAlumno.leerMatriculadosAsignatura(idAsignatura);
@@ -187,10 +189,8 @@ public class TFGControlador {
 				saGamificacion.cogerRankingVersionMejorada(asignatura, var, alumno);
 				if(var == Variable.Puntuacion)
 					dtoAlumno.setPuntuacion(alumno.getValor());
-				else if(var == Variable.TiempoMedio){
-					DecimalFormat df = new DecimalFormat("0.000");
-					dtoAlumno.setTiempomedio( df.format((float)alumno.getValor() / 1000));
-				}
+				else if(var == Variable.TiempoMedio)
+					dtoAlumno.setTiempomedio(alumno.getValor());
 				else if(var == Variable.PorcentajeAciertos)
 					dtoAlumno.setPorcentaje(alumno.getValor());
 				alumno.setValor(0);
@@ -217,10 +217,12 @@ public class TFGControlador {
 		
 		listaInsignias = new ArrayList<>();
 		saGamificacion.cogerAchievement(listaInsignias, asignatura);
+		List<Resultado> resultados = saAnaliticas.obtenerResultados(asignatura);
 		
 		modelAndView.addObject("alumnosMatriculados", dtoAlumnosMatriculados);
 		modelAndView.addObject("alumnosNoMatriculados", saAlumno.leerNoMatriculadosAsignatura(idAsignatura));
 		modelAndView.addObject("retos", dtoRetos);
+		modelAndView.addObject("resultados", resultados);
 		modelAndView.addObject("insignias", listaInsignias);
 		
 		modelAndView.setViewName("asignatura");
@@ -354,8 +356,7 @@ public class TFGControlador {
 		Reto reto = Reto.toReto(dtoReto);
 		reto.setAsignatura(asignatura);
 		
-		try {					
-			//saGamificacion.crearJuego(reto); // Lo guardamos en el Motor de Gamificación
+		try {
 			saReto.crearReto(reto); // Lo guardamos en nuestro sistema
 		} catch (Exception e) {
 			Mensaje mensaje = new Mensaje("Error", "no se ha podido crear correctamente el reto " + reto.getNombre() + ". Operación cancelada", "rojo");
@@ -426,29 +427,7 @@ public class TFGControlador {
 		return new ModelAndView("redirect:/asignatura?idAsignatura=" + idAsignatura);
 	}
 	
-	/*@RequestMapping(value="/recibirResultados", method = RequestMethod.POST)
-	public ModelAndView recibirResultados(int aciertos, int numPreguntas, int tiempo, int idReto, int idAlumno,
-			final RedirectAttributes redirectAttrs){
-		Reto reto = saReto.leerPorId(idReto);
-		Asignatura asignatura = reto.getAsignatura();
-		
-		try {					
-			//Actualiza las variables en el Motor de Gamificación
-			saGamificacion.setVariable("puntuacion", aciertos * 10, saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
-			saGamificacion.setVariable("porcentajeAciertos", (int)(aciertos * 100 / numPreguntas), saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
-			saGamificacion.setVariable("tiempo", tiempo, saAlumnoAsignatura.leerId(asignatura.getId(), idAlumno));
-		} catch (Exception e) {
-			Mensaje mensaje = new Mensaje("Error", "no se han podido mandar correctamente las puntuaciones al Motor de Gamificación. Operación cancelada", "rojo");
-			mensaje.setIcono("block");
-			redirectAttrs.addFlashAttribute("mensaje", mensaje);
-			return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
-		}
-		
-		Mensaje mensaje = new Mensaje("Enhorabuena", "se han importado correctamente las puntuaciones", "verde");
-		mensaje.setIcono("check_circle");
-		redirectAttrs.addFlashAttribute("mensaje", mensaje);						
-		return new ModelAndView("redirect:/asignatura?idAsignatura=" + asignatura.getId());
-	}*/
+	
 	
 	@ModelAttribute("usuario")
 	public void atributosDelModelo(Model model) {

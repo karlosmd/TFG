@@ -31,6 +31,9 @@
 		    <a class="nav-link" id="alumnos-tab" data-toggle="tab" href="#alumnos" role="tab" aria-controls="alumnos" aria-selected="false">Gamificación</a>
 		  </li>
 		  <li class="nav-item">
+		    <a class="nav-link" id="analiticas-tab" data-toggle="tab" href="#analiticas" role="tab" aria-controls="analiticas" aria-selected="false">Analíticas</a>
+		  </li>
+		  <li class="nav-item">
 		    <a class="nav-link" id="insignias-tab" data-toggle="tab" href="#insignias" role="tab" aria-controls="insignias" aria-selected="false">Insignias</a>
 		  </li>
 		</ul>
@@ -40,6 +43,9 @@
 		  </div>
 		  <div class="tab-pane fade" id="alumnos" role="tabpanel" aria-labelledby="alumnos-tab">
 			<table th:replace="fragments/tablas :: tablaAlumnos"></table>
+		  </div>
+		  <div class="tab-pane fade" id="analiticas" role="tabpanel" aria-labelledby="analiticas-tab">
+			<table th:replace="fragments/tablas :: tablaAnaliticas"></table>
 		  </div>
 		  <div class="tab-pane fade" id="insignias" role="tabpanel" aria-labelledby="insignias-tab">
 			<table th:replace="fragments/tablas :: tablaInsignias"></table>
